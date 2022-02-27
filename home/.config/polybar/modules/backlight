@@ -1,0 +1,17 @@
+[module/backlight]
+type = internal/backlight
+card = intel_backlight
+use-actual-brightness = true
+enable-scroll = true
+
+format = <ramp> <label>
+format-underline = ${colors.underline}
+
+label = %percentage%%
+
+ramp-foreground = #ffd700
+ramp-0 = "ﯧ   "
+ramp-1 = "ﯧ   "
+ramp-2 = "ﯧ   "
+ramp-3 = "ﯦ   "
+ramp-4 = "ﯦ   "

@@ -1,0 +1,10 @@
+[module/date]
+type = internal/date
+interval = 5
+
+format = <label>
+
+date = "%Y-%m-%d"
+time = "%H:%M"
+
+label = %date% %time%

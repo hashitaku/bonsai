@@ -1,0 +1,13 @@
+[module/wlan]
+type = internal/network
+interface = wlp2s0
+; interface = eth0
+interval = 3.0
+
+format-connected = <label-connected>
+format-connected-underline = ${colors.underline}
+label-connected = "祝  %upspeed%    %downspeed%"
+
+format-disconnected = <label-disconnected>
+format-disconnected-underline = ${colors.error}
+label-disconnected = "祝  %upspeed%    %downspeed%"

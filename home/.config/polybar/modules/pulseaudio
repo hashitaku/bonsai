@@ -1,0 +1,16 @@
+[module/pulseaudio]
+type = internal/pulseaudio
+
+; sink =
+use-ui-max = false
+interval = 5
+
+format-volume = <label-volume>
+format-volume-underline = ${colors.underline}
+format-muted-underline = ${colors.warn}
+
+label-volume = "墳   %percentage%%"
+label-volume-foreground = ${colors.foreground}
+
+label-muted = "婢   muted"
+label-muted-foreground = ${colors.foreground-alt}

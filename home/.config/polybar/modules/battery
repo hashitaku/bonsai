@@ -1,0 +1,42 @@
+[module/battery]
+type = internal/battery
+full-at = 100
+battery = BAT0
+adapter = AC0
+poll-interval = 5
+
+format-charging = <animation-charging> <label-charging>
+format-charging-underline = ${colors.underline}
+
+format-discharging = <ramp-capacity> <label-discharging>
+format-discharging-underline = ${colors.underline}
+
+ramp-capacity-9 = " "
+ramp-capacity-8 = " "
+ramp-capacity-7 = " "
+ramp-capacity-6 = " "
+ramp-capacity-5 = " "
+ramp-capacity-4 = " "
+ramp-capacity-3 = " "
+ramp-capacity-2 = " "
+ramp-capacity-1 = " "
+ramp-capacity-0 = " "
+
+ramp-capacity-9-foreground = ${colors.foreground}
+ramp-capacity-8-foreground = ${colors.foreground}
+ramp-capacity-7-foreground = ${colors.foreground}
+ramp-capacity-6-foreground = ${colors.foreground}
+ramp-capacity-5-foreground = ${colors.warn}
+ramp-capacity-4-foreground = ${colors.warn}
+ramp-capacity-3-foreground = ${colors.warn}
+ramp-capacity-2-foreground = ${colors.error}
+ramp-capacity-1-foreground = ${colors.error}
+ramp-capacity-0-foreground = ${colors.error}
+
+animation-charging-4 = "  "
+animation-charging-3 = "  "
+animation-charging-2 = "  "
+animation-charging-1 = "  "
+animation-charging-0 = "  "
+animation-charging-foreground = ${colors.foreground}
+animation-charging-framerate = 750

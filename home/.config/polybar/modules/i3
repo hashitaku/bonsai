@@ -1,0 +1,34 @@
+[module/i3]
+type = internal/i3
+
+; pin-workspaces = false
+; strip-wsnumbers = false
+index-sort = true
+enable-click = true
+enable-scroll = false
+; wrapping-scroll = false
+; reverse-scroll = false
+; fuzzy-match = false
+
+format = <label-state> <label-mode>
+
+label-mode = %mode%
+label-mode-padding = 2
+label-mode-foreground = ${colors.warn}
+label-mode-background = ${colors.background-alt}
+
+label-focused = %index%
+label-focused-foreground = ${colors.foreground}
+label-focused-background = ${colors.background-alt}
+; label-focused-underline =
+label-focused-padding = 2
+
+label-unfocused = %index%
+label-unfocused-foreground = ${colors.foreground}
+label-unfocused-background = ${colors.background}
+; label-unfocused-underline =
+label-unfocused-padding = 2
+
+label-separator = |
+; label-separator-padding =
+label-separator-foreground = ${colors.foreground}

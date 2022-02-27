@@ -1,0 +1,107 @@
+include-directory = "~/.config/polybar/modules"
+
+[colors]
+desktop = #6c848d
+background = #333333
+background-alt = #555555
+foreground = #e0e0e0
+foreground-alt = #555555
+underline = #0a6cf5
+
+warn = #c9bc0e
+error = #ff5252
+
+[bar/tmp]
+bottom = false
+width = 10%
+background = ${colors.background}
+foreground = ${colors.foreground}
+border-left-size = 0
+border-bottom-size = 2
+border-top-size = 2
+modules-right = date
+
+[bar/default]
+;monitor =
+;monitor-fallback =
+monitor-strict = false
+monitor-exact = true
+override-redirect = false
+
+bottom = false
+fixed-center = true
+width = 90%
+height = 30
+offset-x = 0%
+offset-y = 0%
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+;background-[0-9]
+;background-0 =
+;radius-{top, bottom}-{left, right}
+radius = 15.0
+;{overline, underline}-size
+line-size = 3
+;{overline, underline}-color
+; line-color =
+;border-{left, top, right, bottom}-size
+border-left-size = 96
+border-bottom-size = 2
+border-top-size = 2
+border-size = 0
+;border-{left, top, right, bottom}-color
+; border-color =
+;padding-{left, right}
+padding = 5
+;module-margin-{left, right}
+module-margin = 2
+
+font-0 = NotoSans:Bold:size=12;4
+font-1 = UbuntuMono Nerd Font:size=18;4
+font-2 = NotoSansCJK:size=12;4
+
+modules-left = i3
+modules-center = date powermenu
+modules-right = filesystem pulseaudio memory cpu battery wlan backlight
+;separator =
+;dim-value =
+
+wm-name = i3-gaps
+locale = ja_JP.UTF-8
+
+tray-position = none
+;tray-detached =
+;tray-maxsize =
+;tray-background =
+;tray-offset-x =
+;tray-offset-y =
+;tray-padding =
+;tray-scale =
+
+; wm-restack = i3
+
+dpi-x = 0
+dpi-y = 0
+
+enable-ipc = false
+
+;click-left = 
+;click-middle = 
+;click-right =
+;scroll-up =
+;scroll-down =
+;double-click-left =
+;double-click-middle =
+;double-click-right =
+
+;cursor-click =
+;cursor-scroll =
+
+[settings]
+screenchange-reload = true
+
+[global/wm]
+
+; https://github.com/polybar/polybar/pull/724
+;dbus-send --session --print-reply --dest=org.fcitx.Fcitx5 /controller --type=method_call org.fcitx.Fcitx.Controller1.CurrentInputMethod

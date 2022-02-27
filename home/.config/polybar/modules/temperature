@@ -1,0 +1,14 @@
+[module/temperature]
+type = internal/temperature
+interval = 5
+thermal-zone = 0
+warn-temperature = 60
+units = true
+
+format = <label>
+format-underline = ${colors.underline}
+format-warn = <label-warn>
+format-warn-underline = ${colors.warn}
+
+label = %temperature-c%
+label-warn = %temperature-c%
