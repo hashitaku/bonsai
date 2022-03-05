@@ -91,14 +91,6 @@ GRUB_CMDLINE_LINUX=""
     # systemctl enable systemd-networkd.service
     ```
 
-## aptの設定
-
-推奨と提案パッケージをインストールしない
-
-```
-# echo -e "APT::Install-Suggests 0;\nAPT::Install-Recommends 0;" | tee /etc/apt/apt.conf.d/00-no-install-recommends
-```
-
 ## sudo設定
 
 ```
@@ -107,18 +99,6 @@ GRUB_CMDLINE_LINUX=""
 ```
 
 # 全般設定、開発環境のインストールなど
-
-## fbtermの設定
-
-`fbterm`コマンドを一度実行するとホームディレクトリに`.fbtermrc`が生成されるのでそれを編集する
-
-`fbterm(1)`要参照
-
-## readlineの設定
-
-- ビープ音、大小文字無視して補完など
-
-`readline(3)`要参照
 
 ## インストールするパッケージ
 
@@ -169,26 +149,6 @@ $ ssh-keygen -t ed25519 -C "mail"
 	    IdentityFile ~/.ssh/id_ed25519
 	    User git
     ```
-
-## .bashrc .profileの設定
-
-- .profile
-
-- .bashrc
-
-## .gitconfig
-
-```
-[user]
-	name = "name"
-	email = "email"
-[color]
-	ui = auto
-[merge]
-	ff = false
-[pull]
-	ff = only
-```
 
 # nvidiaドライバインストール
 
@@ -262,7 +222,7 @@ $ sudo apt install i3lock-fancy polybar feh dunst light
 
 ```sh
 # i3-gaps
-$ sudo apt install libstartup-notification0 libxcb-xkb1 libxcb-xinerama0 libxcb-randr0 libxcb-cursor0 libxcb-keysyms1 libxcb-icccm4 libxcb-xrm0 libxkbcommon0 libxkbcommon-x11-0 libyajl2 libcairo2 libpango-1.0-0 libpangocairo-1.0-0 libpango libev4
+$ sudo apt install libstartup-notification0 libxcb-xkb1 libxcb-xinerama0 libxcb-randr0 libxcb-cursor0 libxcb-keysyms1 libxcb-icccm4 libxcb-xrm0 libxkbcommon0 libxkbcommon-x11-0 libyajl2 libcairo2 libpango-1.0-0 libpangocairo-1.0-0 libev4
 # rofi
 $ sudo apt install libgdk-pixbud-2.0-0 libxcb-ewmh2
 # xob 
@@ -274,14 +234,9 @@ $ sudo apt install libconfig9
 ### ビルド環境構築
 
 ```sh
-$ sudo apt install mmdebstrap
+$ sudo apt install mmdebstrap systemd-container
 $ sudo mmdebstrap --components=main --variant=buildd bullseye buildfs
-$ sudo cp -r /usr/share/terminfo ./buildfs/usr/share
-$ sudo mount -o bind /dev buildfs/dev
-$ sudo mount -o bind /dev/pts buildfs/dev/pts
-$ sudo mount -o bind /sys buildfs/sys
-$ sudo mount -t proc /proc buildfs/proc
-$ sudo chroot buildfs
+$ sudo systemd-nspawn -D buildfs
 ```
 
 以下chroot内
@@ -289,7 +244,7 @@ $ sudo chroot buildfs
 ### ビルドに必要なライブラリのインストール
 
 ```
-# apt install git cmake meson libconfig-dev dh-autoreconf libxcb-keysyms1-dev libpango1.0-dev libxcb-util0-dev xcb libxcb1-dev libxcb-icccm4-dev libyajl-dev libev-dev libxcb-xkb-dev libxcb-cursor-dev libxkbcommon-dev libxcb-xinerama0-dev libxkbcommon-x11-dev libstartup-notification0-dev libxcb-randr0-dev libxcb-xrm-dev libxcb-shape0-dev libgdk-pixbud-2.0-dev libxcb-ewmh-dev flex bison
+# apt install git cmake meson libconfig-dev dh-autoreconf libxcb-keysyms1-dev libpango1.0-dev libxcb-util0-dev xcb libxcb1-dev libxcb-icccm4-dev libyajl-dev libev-dev libxcb-xkb-dev libxcb-cursor-dev libxkbcommon-dev libxcb-xinerama0-dev libxkbcommon-x11-dev libstartup-notification0-dev libxcb-randr0-dev libxcb-xrm-dev libxcb-shape0-dev libgdk-pixbuf-2.0-dev libxcb-ewmh-dev flex bison
 ```
 
 ### i3-gapsのビルド
@@ -298,7 +253,7 @@ $ sudo chroot buildfs
 # git clone https://github.com/Airblader/i3.git
 # cd i3
 # meson build --prefix=${HOME}/local && cd build
-# ninja
+# ninja install
 ```
 
 ### rofiのビルド
@@ -307,7 +262,7 @@ $ sudo chroot buildfs
 # git clone
 # cd rofi
 # meson build --prefix=${HOME}/local && cd build
-# ninja
+# ninja install
 ```
 
 ### xobのビルド
@@ -315,12 +270,12 @@ $ sudo chroot buildfs
 ```
 # git clone https://github.com/florentc/xob.git
 # cd xob
-# prefix=${HOME}/local make
+# prefix=${HOME}/local make install
 ```
 
 ### ビルドした物のインストール
 
-`buildfs`からプロジェクトごと`cp`して`ninja install`を実行する。
+`buildfs`から`local`ごと`cp`してくる。
 
 その時`sudo chowm -R ${USER}:${USER} proj`をするとファイルの所有者と所有グループを再帰的に変更できる。
 
@@ -398,6 +353,5 @@ $ light -N 5 -s sysfs/backlight/auto
 ### 環境変数
 
 - ~/.config/enviroment.d/*.conf
-    
-    systemd依存だから.profileのほうが良い？
 
+    systemd依存だから.profileのほうが良い？
