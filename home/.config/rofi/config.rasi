@@ -137,15 +137,15 @@ configuration {
 	//me-accept-entry: "MouseDPrimary";
 	//me-accept-custom: "Control+MouseDPrimary";
 
-  	timeout {
-    	action: "kb-cancel";
-      	delay:  0;
-  	}
-  
-  	filebrowser {
-      	directories-first: true;
-      	sorting-method:    "name";
-  	}
+	timeout {
+		action: "kb-cancel";
+		delay:  0;
+	}
+
+	filebrowser {
+		directories-first: true;
+		sorting-method:    "name";
+	}
 }
 
-@theme "default"
+@theme "default.rasi"
