@@ -7,7 +7,7 @@ if [ -d "$HOME/.local/bin" ] ; then
 fi
 
 # Rust
-. ~/.cargo/env
+[ -f "${HOME}/.cargo/env" ] && . ~/.cargo/env
 
 # 野良ビルド用変数
 PATH="${PATH}:${HOME}/local/bin"
