@@ -102,17 +102,8 @@ GRUB_CMDLINE_LINUX=""
 
 ## インストールするパッケージ
 
-- curl
-- wget
-- build-essential
-- git
-- bash-completion
-- zip
-- tree
-- file
-
 ```sh
-$ sudo apt install curl wget build-essential git bash-completion zip tree file
+$ sudo apt install curl wget gpg build-essential git bash-completion zip tree file
 ```
 
 ## linuxbrewのインストール
@@ -224,7 +215,7 @@ $ sudo apt install i3lock-fancy polybar feh dunst light
 # i3-gaps
 $ sudo apt install libstartup-notification0 libxcb-xkb1 libxcb-xinerama0 libxcb-randr0 libxcb-cursor0 libxcb-keysyms1 libxcb-icccm4 libxcb-xrm0 libxkbcommon0 libxkbcommon-x11-0 libyajl2 libcairo2 libpango-1.0-0 libpangocairo-1.0-0 libev4
 # rofi
-$ sudo apt install libgdk-pixbud-2.0-0 libxcb-ewmh2
+$ sudo apt install libgdk-pixbuf-2.0-0 libxcb-ewmh2
 # xob 
 $ sudo apt install libconfig9
 ```
@@ -259,7 +250,7 @@ $ sudo systemd-nspawn -D buildfs
 ### rofiのビルド
 
 ```
-# git clone
+# git clone https://github.com/davatorium/rofi.git
 # cd rofi
 # meson build --prefix=${HOME}/local && cd build
 # ninja install
