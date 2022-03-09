@@ -207,8 +207,8 @@ $ ssh-keygen -t ed25519 -C "mail"
 ## 必要なパッケージのインストール
 
 ```sh
-$ sudo apt install xorg picom kitty pulseaudio alsa-utils fonts-noto fcitx5-mozc
-$ sudo apt install i3lock-fancy polybar feh dunst light
+$ sudo apt install xorg xclip picom kitty polybar feh dunst light pulseaudio alsa-utils fonts-noto fcitx5-mozc
+$ sudo apt install --no-install-recommends --no-install-suggests i3blocks
 ```
 
 ```sh
@@ -216,7 +216,7 @@ $ sudo apt install i3lock-fancy polybar feh dunst light
 $ sudo apt install libstartup-notification0 libxcb-xkb1 libxcb-xinerama0 libxcb-randr0 libxcb-cursor0 libxcb-keysyms1 libxcb-icccm4 libxcb-xrm0 libxkbcommon0 libxkbcommon-x11-0 libyajl2 libcairo2 libpango-1.0-0 libpangocairo-1.0-0 libev4
 # rofi
 $ sudo apt install libgdk-pixbuf-2.0-0 libxcb-ewmh2
-# xob 
+# xob
 $ sudo apt install libconfig9
 ```
 
@@ -262,6 +262,17 @@ $ sudo systemd-nspawn -D buildfs
 # git clone https://github.com/florentc/xob.git
 # cd xob
 # prefix=${HOME}/local make install
+```
+
+### i3lock-colorのビルド
+
+```
+# git clone https://github.com/Raymo111/i3lock-color.git
+# cd i3lock-color
+# autoreconf -fiv
+# mkdir build && cd build
+# ../configure --prefix=${HOME}/local --sysconfdir=${HOME}/local/etc
+# make install
 ```
 
 ### ビルドした物のインストール
