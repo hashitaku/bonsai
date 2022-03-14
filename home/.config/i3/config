@@ -7,10 +7,8 @@ set $right l
 
 set $term kitty
 set $menu rofi -show drun
-set $browser brave-browser
 
 bindsym $mod+Return exec --no-startup-id $term
-bindsym $mod+p exec --no-startup-id $browser
 bindsym $mod+d exec --no-startup-id $menu
 
 bindsym $mod+Shift+q kill
@@ -76,8 +74,8 @@ bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 
-default_border pixel 5
-default_floating_border pixel 5
+default_border pixel 2
+default_floating_border pixel 2
 
 bindsym $mod+r mode "resize"
 
@@ -97,22 +95,37 @@ mode "resize" {
 }
 
 bar {
-	status_command i3blocks
+    status_command i3blocks
+    mode dock
+    position top
+    font pango:Ubuntu Mono Bold 14
+    workspace_buttons on
+    binding_mode_indicator yes
+
+    colors {
+        background #2c3643
+        statusline #f8f8f2
+        separator  #f8f8f2
+
+        focused_workspace  #2c3643 #2c3643 #16c98d
+        inactive_workspace #2c3643 #2c3643 #f8f8f2
+        binding_mode       #fa5e5b #fa5e5b #f8f8f2
+    }
 }
 
 # color
 # class                 border  backgr  text    indicator child_border
-client.focused          #000000 #000000 #000000 #9dbfcc   #8c6c84
-client.unfocused        #000000 #000000 #000000 #000000   #4f6066
+client.focused          #000000 #000000 #000000 #89bde4   #89bde4
+client.unfocused        #000000 #000000 #000000 #435266   #435266
 
 # autoexec
 # exec --no-startup-id polybar default
-# exec --no-startup-id picom
+exec --no-startup-id picom
 exec --no-startup-id fcitx5 -rd
 exec --no-startup-id feh --no-fehbg --recursive --randomize --bg-fill ~/.wallpaper
 
 # i3-gaps
-gaps inner 10 
+gaps inner 10
 gaps outer 0
 smart_gaps on
 smart_borders on
