@@ -48,6 +48,7 @@ alias pbpaste='xclip -selection c -o'
 type rustup >/dev/null 2>&1 && eval "$(rustup completions bash cargo)"
 type rustup >/dev/null 2>&1 && eval "$(rustup completions bash rustup)"
 [ -f /etc/bash_completion.d/git-prompt ] && source /etc/bash_completion.d/git-prompt
+[ -f /usr/share/git/git-prompt.sh ] && source /usr/share/git/git-prompt.sh
 type brew >/dev/null 2>&1 && source "$(brew --prefix)/etc/bash_completion.d/brew"
 
 # プロンプト設定
