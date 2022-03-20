@@ -13,7 +13,7 @@ bindsym $mod+d exec --no-startup-id $menu
 
 bindsym $mod+Shift+q kill
 bindsym $mod+Shift+e exit
-bindsym $mod+Shift+c reload
+bindsym $mod+Shift+r reload
 
 bindsym $mod+$left focus left
 bindsym $mod+$down focus down
@@ -94,38 +94,38 @@ mode "resize" {
     bindsym Escape mode "default"
 }
 
-bar {
-    status_command i3blocks
-    mode dock
-    position top
-    font pango:Ubuntu Mono Bold 14
-    workspace_buttons on
-    binding_mode_indicator yes
-
-    colors {
-        background #2c3643
-        statusline #f8f8f2
-        separator  #f8f8f2
-
-        focused_workspace  #2c3643 #2c3643 #16c98d
-        inactive_workspace #2c3643 #2c3643 #f8f8f2
-        binding_mode       #fa5e5b #fa5e5b #f8f8f2
-    }
-}
+# bar {
+#     status_command i3blocks
+#     mode dock
+#     position top
+#     font pango:Ubuntu Mono Bold 14
+#     workspace_buttons on
+#     binding_mode_indicator yes
+# 
+#     colors {
+#         background #2c3643
+#         statusline #f8f8f2
+#         separator  #f8f8f2
+# 
+#         focused_workspace  #2c3643 #2c3643 #16c98d
+#         inactive_workspace #2c3643 #2c3643 #f8f8f2
+#         binding_mode       #fa5e5b #fa5e5b #f8f8f2
+#     }
+# }
 
 # color
 # class                 border  backgr  text    indicator child_border
-client.focused          #000000 #000000 #000000 #89bde4   #89bde4
+client.focused          #000000 #000000 #000000 #87a5cc   #87a5cc
 client.unfocused        #000000 #000000 #000000 #435266   #435266
 
 # autoexec
-# exec --no-startup-id polybar default
-exec --no-startup-id picom
+exec --no-startup-id polybar default
+exec --no-startup-id picom -b
 exec --no-startup-id fcitx5 -rd
 exec --no-startup-id feh --no-fehbg --recursive --randomize --bg-fill ~/.wallpaper
 
 # i3-gaps
 gaps inner 10
 gaps outer 0
-smart_gaps on
+# smart_gaps off
 smart_borders on
