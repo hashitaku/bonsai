@@ -31,7 +31,7 @@ if ! shopt -oq posix; then
 	fi
 fi
 
-export EDITOR='micro'
+export EDITOR='vim'
 
 # エイリアス
 alias cl='clang -Wall -Wextra -std=c11 -pedantic'
@@ -57,7 +57,7 @@ GIT_PS1_SHOWUNTRACKEDFILES=1
 GIT_PS1_SHOWSTASHSTATE=1
 GIT_PS1_SHOWDIRTYSTYLE=1
 
-title='\[\e]0;\u@\h:\w$(__git_ps1)\a\]'
+title='\[\e]0;\w$(__git_ps1)\a\]'
 prompt='\[\e[31m\]\u\[\e[0m\] at\[\e[33m\] \h\[\e[0m\] in\[\e[32m\] \w\[\e[36m\]$(__git_ps1)\[\e[0m\]\$ '
 case "${TERM}" in
 	xterm*|rxvt*)
