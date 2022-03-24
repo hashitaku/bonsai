@@ -124,7 +124,7 @@ paru -S nvidia
 paru -S bash-completion vim zip unzip tree btop wget
 
 # デスクトップ環境インストール
-paru -S xorg-server i3-gaps kitty xclip lightdm lightdm-gtk-greeter picom rofi feh dunst light pulseaudio alsa-utils fcitx5-mozc fcitx5-configtool noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji
+paru -S xorg-server i3-gaps kitty xclip lightdm lightdm-webkit2-greeter lightdm-webkit-theme-litarvan picom rofi feh dunst light pulseaudio alsa-utils fcitx5-mozc fcitx5-configtool noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji
 
 # lightdmの有効化
 sudo systemctl enable lightdm.service
