@@ -148,4 +148,4 @@ configuration {
 	}
 }
 
-@theme "default.rasi"
+@theme "themes/default.rasi"
