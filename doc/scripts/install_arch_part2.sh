@@ -3,9 +3,18 @@
 ip l
 lsblk
 
-read -rp 'nif: ' nif
-read -rp 'ssid: ' ssid
-read -rsp 'passphrase: ' passphrase; echo
+read -rp 'wireless? [Y/n] ' is_wireless
+
+case $is_wireless in
+    "" | [Y/y]* )
+        read -rp 'ssid: ' ssid
+        read -rp 'passphrase: ' passphrase; echo
+        ;;
+    * )
+        ;;
+esac
+
+read -rp 'nif name: ' nif_name
 read -rp 'esp: ' esp
 read -rp 'hostname: ' hostname
 read -rp 'keymap: ' keymap
@@ -25,18 +34,29 @@ sudo localectl set-keymap "${keymap}"
 sudo hostnamectl hostname "${hostname}"
 
 # ネットワーク設定
-wpa_passphrase "${ssid}" "${passphrase}" | sudo tee "/etc/wpa_supplicant/wpa_supplicant-${nif}.conf"
-echo "[Match]
-Name = ${nif}
+case $is_wireless in
+    "" | [Y/y]* )
+        wpa_passphrase "${ssid}" "${passphrase}" | sudo tee "/etc/wpa_supplicant/wpa_supplicant-${nif_name}.conf"
+        sudo systemctl start "wpa_supplicant@${nif_name}.service"
+        sudo systemctl enable "wpa_supplicant@${nif_name}.service"
+        ;;
+    * )
+        ;;
+esac
+
+echo \
+"[Match]
+Name = ${nif_name}
 
 [Network]
-DHCP = yes" | sudo tee "/etc/systemd/network/50-wireless.network"
-sudo systemctl start "wpa_supplicant@${nif}.service"
-sudo systemctl enable "wpa_supplicant@${nif}.service"
+DHCP = yes
+MulticastDNS = yes" | sudo tee "/etc/systemd/network/50-${nif_name}.network"
+
 sudo systemctl start systemd-networkd.service
 sudo systemctl enable systemd-networkd.service
 sudo systemctl start systemd-resolved.service
 sudo systemctl enable systemd-resolved.service
+
 set +e
 while ! ping -c 1 -W 1 archlinux.jp; do
     echo 'waiting for connect archlinux.jp'
@@ -53,14 +73,15 @@ cd ~
 git clone https://aur.archlinux.org/paru-bin.git
 cd paru-bin
 makepkg -si
+cd ~
 rm -rf paru-bin
 paru -Syyu
 
 # セキュアブートに必要なパッケージのインストール
-paru -S shim-signed sbsigntools mokutil efibootmgr
+paru -S --noconfirm shim-signed sbsigntools mokutil efibootmgr
 
 # ブートローダーの名前を変更
-sudo mv /boot/EFI/BOOT/BOOTX64.EFI /boot/EFI/BOOT/grubx64.efi
+sudo cp /boot/EFI/BOOT/BOOTX64.EFI /boot/EFI/BOOT/grubx64.efi
 
 # shimをコピー
 sudo cp /usr/share/shim-signed/{shimx64.efi,mmx64.efi} /boot/EFI/BOOT/
@@ -76,7 +97,8 @@ done
 sudo efibootmgr -c -d "/dev/${esp:0:3}" -p "${esp:3}" -l '\EFI\BOOT\shimx64.efi' -L 'Linux shim'
 
 read -rp 'boot order num: ' -a arr
-sudo efibootmgr -
+printf -v arr '%s,' "${arr[@]}"
+sudo efibootmgr -o "${arr%,}"
 
 # 秘密鍵と証明書の生成
 # サブコマンドreqの引数-nodesがopenssl3では非推奨
@@ -91,9 +113,10 @@ sudo sbsign --key /root/mok.priv --cert /root/mok.pem --output /boot/EFI/BOOT/gr
 sudo mokutil --import /root/mok.der
 
 # pacman hookの設定
-mkdir /etc/pacman.d/hooks
+sudo mkdir /etc/pacman.d/hooks
 
-echo '[Trigger]
+echo \
+'[Trigger]
 Operation = Install
 Operation = Upgrade
 Type = Package
@@ -105,7 +128,8 @@ When = PostTransaction
 Exec = /usr/bin/sbsign --key /root/mok.priv --cert /root/mok.pem --output /boot/vmlinuz-linux /boot/vmlinuz-linux
 Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-kernel.hook
 
-echo '[Trigger]
+echo \
+'[Trigger]
 Operation = Install
 Operation = Upgrade
 Type = Package
@@ -118,19 +142,83 @@ Exec = /usr/bin/bash -c "/usr/bin/bootctl --no-variables --path=/boot update; /u
 Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloader.hook
 
 # nvidiaドライバインストール
-paru -S nvidia
+paru -S --noconfirm nvidia
 
 # ユーティリティのインストール
-paru -S bash-completion vim zip unzip tree btop wget
+paru -S --noconfirm bash-completion clang vim zip unzip tree wget man-db
 
-# デスクトップ環境インストール
-paru -S xorg-server i3-gaps kitty xclip lightdm lightdm-webkit2-greeter lightdm-webkit-theme-litarvan picom rofi feh dunst light pulseaudio alsa-utils fcitx5-mozc fcitx5-configtool noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji
+# デスクトップ環境のインストール
+paru -S --noconfirm xorg-server i3-gaps kitty xclip lightdm lightdm-webkit2-greeter lightdm-webkit-theme-litarvan picom polybar rofi feh dunst light playerctl pipewire pipewire-pulse pipewire-jack wireplumber alsa-utils fcitx5-mozc fcitx5-configtool fcitx5-qt fcitx5-gtk
+
+# フォントのインストール
+paru -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji
+
+# その他インストール
+paru -S --noconfirm gnome-keyring visual-studio-code-bin brave-bin firefox firefox-i18n-ja
+paru -S --noconfirm btop pipes.sh cava
 
 # lightdmの有効化
 sudo systemctl enable lightdm.service
 
+# lightdmの設定
+echo \
+'[LightDM]
+run-directory=/run/lightdm
+
+[Seat:*]
+greeter-session = lightdm-webkit2-greeter
+session-wrapper=/etc/lightdm/Xsession
+
+[XDMCPServer]
+
+[VNCServer]' | sudo tee /etc/lightdm/lightdm.conf
+
+echo \
+'[greeter]
+debug_mode          = false
+detect_theme_errors = true
+screensaver_timeout = 300
+secure_mode         = true
+time_format         = LT
+time_language       = auto
+webkit_theme        = litarvan
+
+[branding]
+background_images = /usr/share/backgrounds
+logo              = /usr/share/pixmaps/archlinux-logo.svg
+user_image        = /usr/share/pixmaps/archlinux-user.svg' | sudo tee /etc/lightdm/lightdm-webkit2-greeter.conf
+
+# マウス、タッチパッド設定
+read -rp 'mouse or touchpad [m/t]: ' ans
+case $ans in
+    [M/m]* )
+        echo \
+'Section "InputClass"
+    Identifier "libinput mouse"
+    Driver "libinput"
+    MatchIsPointer "true"
+    MatchDevicePath "/dev/input/event*"
+    Option "AccelProfile" "flat"
+EndSection' | sudo tee /etc/X11/xorg.conf.d/20-mouse.conf
+        ;;
+    [T/t]* )
+        echo \
+'Section "InputClass"
+	Identifier "libinput touchpad"
+	Driver "libinput"
+	MatchIsTouchpad "true"
+	MatchDevicePath "/dev/input/event*"
+	Option "Tapping" "true"
+	Option "NaturalScrolling" "true"
+	Option "DisableWhileTyping" "false"
+EndSection' | sudo tee /etc/X11/xorg.conf.d/20-touchpad.conf
+        ;;
+    * )
+        ;;
+esac
+
 # dotfileのコピー
 cd ~
 git clone https://github.com/hashitaku/dotfile
-cp -r ~/dotfile/home/{.config,.bashrc,.profile,.xprofile,.inputrc,.gitconfig} ~/
+cp -r ~/dotfile/home/{.bashrc,.config,.gitconfig,.inputrc,.profile,.vim,.xprofile} ~/
 rm -rf ~/dotfile

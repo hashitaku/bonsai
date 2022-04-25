@@ -3,22 +3,41 @@
 ip l
 lsblk
 
-read -rp 'nif: ' nif
-read -rp 'ssid: ' ssid
-read -rsp 'passphrase: ' passphrase; echo
+read -rp 'wireless? [Y/n] ' is_wireless
+
+case $is_wireless in
+    "" | [Y/y]* )
+        read -rp 'nif name: ' nif_name
+        read -rp 'ssid: ' ssid
+        read -rp 'passphrase: ' passphrase; echo
+        ;;
+    * )
+        ;;
+esac
+
 read -rp 'esp: ' esp
 read -rp 'root part: ' root
 read -rp 'username: ' user
 
 # ライブ環境の設定
 set +e
-pkill wpa_supplicant
-wpa_supplicant -B -i "${nif}" -c <(wpa_passphrase "${ssid}" "${passphrase}")
+
+case $is_wireless in
+    "" | [Y/y]* )
+        pkill wpa_supplicant
+        wpa_supplicant -B -i "${nif_name}" -c <(wpa_passphrase "${ssid}" "${passphrase}")
+        ;;
+    * )
+        ;;
+esac
+
 while ! ping -c 1 -W 1 archlinux.jp; do
     echo 'waiting for connect archlinux.jp'
     sleep 5
 done
+
 set -e
+
 setfont sun12x22
 timedatectl set-ntp true
 reflector --country 'Japan' --age 24 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
@@ -36,7 +55,14 @@ mkdir /mnt/boot
 mount "/dev/${esp}" /mnt/boot
 
 # パッケージのインストール
-pacstrap /mnt base linux linux-firmware intel-ucode base-devel git wpa_supplicant
+pacstrap /mnt base linux linux-firmware intel-ucode base-devel git
+case $is_wireless in
+    "" | [Y/y]* )
+        pacstrap /mnt wpa_supplicant
+        ;;
+    * )
+        ;;
+esac
 
 # fstab生成
 genfstab -U /mnt > /mnt/etc/fstab
