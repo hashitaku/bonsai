@@ -145,7 +145,7 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
 paru -S --noconfirm nvidia
 
 # ユーティリティのインストール
-paru -S --noconfirm bash-completion clang vim zip unzip tree wget man-db
+paru -S --noconfirm bash-completion clang vim zip unzip tree wget man-db arch-install-scripts
 
 # デスクトップ環境のインストール
 paru -S --noconfirm xorg-server i3-gaps kitty xclip lightdm lightdm-webkit2-greeter lightdm-webkit-theme-litarvan picom polybar rofi feh dunst light playerctl pipewire pipewire-pulse pipewire-jack wireplumber alsa-utils fcitx5-mozc fcitx5-configtool fcitx5-qt fcitx5-gtk
