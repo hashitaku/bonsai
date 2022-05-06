@@ -145,10 +145,10 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
 paru -S --noconfirm nvidia
 
 # ユーティリティのインストール
-paru -S --noconfirm bash-completion clang vim zip unzip tree wget man-db arch-install-scripts
+paru -S --noconfirm bash-completion clang vim zip unzip tree wget man-db man-pages-ja arch-install-scripts
 
 # デスクトップ環境のインストール
-paru -S --noconfirm xorg-server i3-gaps kitty xclip lightdm lightdm-webkit2-greeter lightdm-webkit-theme-litarvan picom polybar rofi feh dunst light playerctl pipewire pipewire-pulse pipewire-jack wireplumber alsa-utils fcitx5-mozc fcitx5-configtool fcitx5-qt fcitx5-gtk
+paru -S --noconfirm xorg-server i3-gaps kitty xclip ly picom polybar rofi feh dunst light playerctl pipewire pipewire-pulse pipewire-jack wireplumber alsa-utils fcitx5-mozc fcitx5-configtool fcitx5-qt fcitx5-gtk
 
 # フォントのインストール
 paru -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji
@@ -157,36 +157,14 @@ paru -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji
 paru -S --noconfirm gnome-keyring visual-studio-code-bin brave-bin firefox firefox-i18n-ja
 paru -S --noconfirm btop pipes.sh cava
 
-# lightdmの有効化
-sudo systemctl enable lightdm.service
+# lyの有効化
+sudo systemctl enable ly.service
 
-# lightdmの設定
-echo \
-'[LightDM]
-run-directory=/run/lightdm
-
-[Seat:*]
-greeter-session = lightdm-webkit2-greeter
-session-wrapper=/etc/lightdm/Xsession
-
-[XDMCPServer]
-
-[VNCServer]' | sudo tee /etc/lightdm/lightdm.conf
-
-echo \
-'[greeter]
-debug_mode          = false
-detect_theme_errors = true
-screensaver_timeout = 300
-secure_mode         = true
-time_format         = LT
-time_language       = auto
-webkit_theme        = litarvan
-
-[branding]
-background_images = /usr/share/backgrounds
-logo              = /usr/share/pixmaps/archlinux-logo.svg
-user_image        = /usr/share/pixmaps/archlinux-user.svg' | sudo tee /etc/lightdm/lightdm-webkit2-greeter.conf
+# systemd-logindの設定
+sudo mkdir /etc/systemd/logind.conf.d
+echo '[Login]
+IdleAction=suspend
+IdleActionSec=30min' | sudo tee /etc/systemd/logind.conf.d/50-suspend.conf
 
 # マウス、タッチパッド設定
 read -rp 'mouse or touchpad [m/t]: ' ans
@@ -220,5 +198,5 @@ esac
 # dotfileのコピー
 cd ~
 git clone https://github.com/hashitaku/dotfile
-cp -r ~/dotfile/home/{.bashrc,.config,.gitconfig,.inputrc,.profile,.vim,.xprofile} ~/
+cp -r ~/dotfile/home/{.bashrc,.config,.gitconfig,.inputrc,.profile,.vim,.xprofile,.xinitrc} ~/
 rm -rf ~/dotfile
