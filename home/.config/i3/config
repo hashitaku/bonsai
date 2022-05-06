@@ -68,15 +68,14 @@ bindsym $mod+a focus parent
 bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
 
-bindsym XF86MonBrightnessDown exec light -U 1
-bindsym XF86MonBrightnessUp exec light -A 1
-bindsym XF86AudioNext exec playerctl next
-bindsym XF86AudioPrev exec playerctl previous
-bindsym XF86AudioPlay exec playerctl play-pause
-bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
-bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
-bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
-bindsym XF86ScreenSaver exec light-locker-command --lock
+bindsym XF86MonBrightnessDown exec --no-startup-id light -U 1
+bindsym XF86MonBrightnessUp exec --no-startup-ida light -A 1
+bindsym XF86AudioNext exec --no-startup-id playerctl next
+bindsym XF86AudioPrev exec --no-startup-id playerctl previous
+bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
 
 default_border pixel 2
 default_floating_border pixel 2
@@ -127,7 +126,6 @@ exec --no-startup-id polybar default
 exec --no-startup-id picom -b
 exec --no-startup-id fcitx5 -rd
 exec --no-startup-id feh --no-fehbg --recursive --randomize --bg-fill ~/.wallpaper
-exec --no-startup-id light-locker --lock-on-suspend
 
 # i3-gaps
 gaps inner 10
