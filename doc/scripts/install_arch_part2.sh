@@ -160,11 +160,13 @@ paru -S --noconfirm btop pipes.sh cava
 # lyの有効化
 sudo systemctl enable ly.service
 
-# systemd-logindの設定
-sudo mkdir /etc/systemd/logind.conf.d
-echo '[Login]
-IdleAction=suspend
-IdleActionSec=30min' | sudo tee /etc/systemd/logind.conf.d/50-suspend.conf
+# gnome-keyringの設定
+tac /etc/pam.d/login | \
+sed '0,/auth/ s/auth/auth       optional     pam_gnome_keyring.so\n&/' | \
+sed '0,/session/ s/session/session    optional     pam_gnome_keyring.so    auto_start\n&/' | \
+tac | \
+uniq | \
+sudo tee /etc/pam.d/login
 
 # マウス、タッチパッド設定
 read -rp 'mouse or touchpad [m/t]: ' ans
