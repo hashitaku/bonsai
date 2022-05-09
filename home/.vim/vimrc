@@ -1,0 +1,16 @@
+let s:cache_dir = expand("~/.cache/vim")
+let s:viminfo = s:cache_dir."/viminfo"
+
+execute "set viminfo+=n".s:viminfo
+
+set number
+set tabstop=4
+set shiftwidth=4
+set expandtab
+syntax enable
+
+inoremap [ []<LEFT>
+inoremap { {}<LEFT>
+inoremap ( ()<LEFT>
+inoremap ' ''<LEFT>
+inoremap " ""<LEFT>
