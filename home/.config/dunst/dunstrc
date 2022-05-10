@@ -73,7 +73,7 @@
 [urgency_low]
     background = "#2c3643"
     foreground = "#f8f8f2"
-    frame_color = "#435266"
+    frame_color = "#16c98d"
     timeout = 10
 
 [urgency_normal]
