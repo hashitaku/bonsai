@@ -1,0 +1,89 @@
+# 参照: https://dunst-project.org/documentation/
+# テスト: https://www.bennish.net/web-notifications.html
+
+[global]
+    enable_posix_regex = true
+
+    # ウィンドウサイズ
+    width = 300
+    height = 150
+
+    # ウィンドウ位置
+    origin = top-right
+    offset = 10x40
+
+    # プログレスバー
+    progress_bar = true
+    progress_bar_horizontal_alignment = center
+    progress_bar_height = 10
+    progress_bar_min_width = 150
+    progress_bar_max_width = 300
+    progress_bar_frame_width = 1
+
+    # 透過 [0-100]
+    transparency = 10
+
+    # ウィンドウの丸め
+    corner_radius = 5
+
+    # ウィンドウの外枠の大きさ
+    frame_width = 2
+
+    # 通知間の区切り線の大きさ
+    separator_height = 2
+
+    # 通知間の区切り線の色
+    separator_color = frame
+
+    # 通知を緊急度でソート
+    sort = yes
+
+    # ウィンドウと通知内容の間隔
+    padding = 8
+    horizontal_padding = 8
+
+    # フォント
+    font = Monospace 10
+
+    # フォーマット
+    format = "<b>%a</b>\n<b>%s\n</b>%b"
+
+    # アイコンの位置
+    icon_position = left
+    vertical_alignment = center
+
+    # アイコンサイズ
+    min_icon_size = 0
+    max_icon_size = 64
+
+    # アイコンパス
+    icon_path = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
+
+    # アイコンテーマ
+    icon_theme = Paper
+
+    # 通知にアクションや開くことのできるURLが含まれている場合、インジケータを表示します。
+    show_indicators = true
+
+    # マウスクリック時の動作
+    mouse_left_click = close_current
+    mouse_middle_click = do_action, close_current
+    mouse_right_click = close_all
+
+[urgency_low]
+    background = "#2c3643"
+    foreground = "#f8f8f2"
+    frame_color = "#435266"
+    timeout = 10
+
+[urgency_normal]
+    background = "#2c3643"
+    foreground = "#f8f8f2"
+    frame_color = "#435266"
+    timeout = 10
+
+[urgency_critical]
+    background = "#2c3643"
+    foreground = "#f8f8f2"
+    frame_color = "#fa5e5b"
+    timeout = 0
