@@ -1,0 +1,4 @@
+[submodule "home/.vim/pack/package/start/vimdoc-ja"]
+	path = home/.vim/pack/package/start/vimdoc-ja
+	url = https://github.com/vim-jp/vimdoc-ja.git
+	branch = master
