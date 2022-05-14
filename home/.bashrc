@@ -49,7 +49,6 @@ type rustup >/dev/null 2>&1 && eval "$(rustup completions bash cargo)"
 type rustup >/dev/null 2>&1 && eval "$(rustup completions bash rustup)"
 [ -f /etc/bash_completion.d/git-prompt ] && source /etc/bash_completion.d/git-prompt
 [ -f /usr/share/git/git-prompt.sh ] && source /usr/share/git/git-prompt.sh
-type brew >/dev/null 2>&1 && source "$(brew --prefix)/etc/bash_completion.d/brew"
 
 # プロンプト設定
 GIT_PS1_SHOWUPSTREAM=1
@@ -57,7 +56,7 @@ GIT_PS1_SHOWUNTRACKEDFILES=1
 GIT_PS1_SHOWSTASHSTATE=1
 GIT_PS1_SHOWDIRTYSTYLE=1
 
-title='\[\e]0;\w$(__git_ps1)\a\]'
+type __git_ps1 >/dev/null 2>&1 && title='\[\e]0;\w$(__git_ps1)\a\]'
 prompt='\[\e[31m\]\u\[\e[0m\] at\[\e[33m\] \h\[\e[0m\] in\[\e[32m\] \w\[\e[36m\]$(__git_ps1)\[\e[0m\]\$ '
 case "${TERM}" in
 	xterm*|rxvt*)
