@@ -209,7 +209,7 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
 - デスクトップ環境のインストール
 
     ```sh
-    paru -S --noconfirm xorg-server i3-gaps kitty xclip ly picom polybar rofi feh dunst libnotify light playerctl pipewire pipewire-pulse pipewire-jack wireplumber alsa-utils fcitx5-mozc fcitx5-configtool fcitx5-qt fcitx5-gtk
+    paru -S --noconfirm xorg-server i3-gaps kitty xclip picom polybar rofi feh dunst libnotify light playerctl pipewire pipewire-pulse pipewire-jack wireplumber alsa-utils fcitx5-mozc fcitx5-configtool fcitx5-qt fcitx5-gtk
     ```
 
 - フォントのインストール
@@ -257,12 +257,6 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
         ```
 
 # その他設定
-
-## lyの有効化
-
-```sh
-sudo systemctl enable ly.service
-```
 
 ## gnome-keyringの設定
 
@@ -312,6 +306,6 @@ esac
 ```sh
 cd ~
 git clone https://github.com/hashitaku/dotfile
-cp -r ~/dotfile/home/{.bashrc,.config,.gitconfig,.inputrc,.profile,.vim,.xprofile,.xinitrc} ~/
+cp -r ~/dotfile/home/{.bashrc,.config,.gitconfig,.inputrc,.profile,.vim,.xinitrc} ~/
 rm -rf ~/dotfile
 ```
