@@ -203,7 +203,7 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
 - ユーティリティのインストール
 
     ```sh
-    paru -S --noconfirm bash-completion vim zip unzip tree wget man-db man-pages-ja arch-install-scripts usbutils
+    paru -S --noconfirm bash-completion vim zip unzip tree wget polkit man-db man-pages-ja arch-install-scripts usbutils nftables
     ```
 
 - デスクトップ環境のインストール
@@ -222,7 +222,7 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
 
     ```sh
     curl -sS https://download.spotify.com/debian/pubkey_5E3C45D7B312C643.gpg | gpg --import -
-    paru -S --noconfirm gnome-keyring visual-studio-code-bin brave-bin firefox firefox-i18n-ja spotifyd spotify-tui spotify
+    paru -S --noconfirm gnome-keyring seahorse discord visual-studio-code-bin brave-bin firefox firefox-i18n-ja spotifyd spotify-tui spotify gnome-screenshot
     paru -S --noconfirm btop pipes.sh cava bat
     ```
 
@@ -241,7 +241,7 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
         wget https://sh.rustup.rs -O rs.sh
         bash rs.sh -y --no-modify-path
         ~/.cargo/bin/rustup default nightly
-        rm -r ~/tmp.sh
+        rm -r ~/rs.sh
         ```
 
     - Python
@@ -257,6 +257,12 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
         ```
 
 # その他設定
+
+## ファイアウォールの有効化
+
+```sh
+sudo systemctl enable nftables.service
+```
 
 ## gnome-keyringの設定
 
