@@ -1,17 +1,47 @@
-let s:cache_dir = expand("~/.cache/vim")
-let s:viminfo = s:cache_dir."/viminfo"
+source $VIMRUNTIME/defaults.vim
+source $VIMRUNTIME/delmenu.vim
 
-execute "set viminfo+=n".s:viminfo
+if has("gui_running")
+    set columns=120
+    set lines=40
+    let &guifont = "Ubuntu Mono:b:h14"
+    let &guifontwide = "源真ゴシック等幅_Bold:h12"
+    set guioptions+=M
+    set guioptions-=e
+    set guioptions-=g
+    set guioptions-=m
+    set guioptions-=r
+    set guioptions-=L
+    set guioptions-=t
+    set guioptions-=T
+endif
+
+":cache_dir = expand("~/.cache/vim")
+"let s:viminfo = s:cache_dir."/viminfo"
+
+"execute "set viminfo+=n".s:viminfo
 
 set number
 set tabstop=4
 set shiftwidth=4
 set expandtab
 set belloff=all
+set fileformat=unix
+set fileformats=unix,dos
+set fileencoding=utf-8
+set fileencodings=utf-8,dos
+set termguicolors
+set encoding=utf-8
 syntax enable
+
+set laststatus=2
+let &statusline = '%h %m [%F] [%{&fileformat}] [%{&fileencoding}] %=行:%l 列:%v'
 
 inoremap [ []<LEFT>
 inoremap { {}<LEFT>
 inoremap ( ()<LEFT>
 inoremap ' ''<LEFT>
 inoremap " ""<LEFT>
+
+packadd! dracula
+colorscheme dracula
