@@ -125,7 +125,7 @@ client.unfocused        #000000 #000000 #000000 #435266   #435266
 exec --no-startup-id polybar default
 exec --no-startup-id picom -b
 exec --no-startup-id fcitx5 -rd
-exec --no-startup-id feh --no-fehbg --recursive --randomize --bg-fill ~/.wallpaper
+exec --no-startup-id feh --no-fehbg --recursive --randomize --bg-fill ~/.local/share/wallpapers
 
 # i3-gaps
 gaps inner 10
