@@ -128,3 +128,5 @@ gaps inner 10
 gaps outer 0
 # smart_gaps off
 smart_borders on
+
+for_window [class = "Spotify"] floating enable, resize set 1600 900, move position 0 0
