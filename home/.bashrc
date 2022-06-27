@@ -4,7 +4,7 @@ case $- in
 esac
 
 HISTTIMEFORMAT='%F %T '
-HISTCONTROL=ignoreboth
+HISTCONTROL=ignoredups
 HISTSIZE=1000
 HISTFILESIZE=2000
 
@@ -47,8 +47,8 @@ alias pbpaste='xclip -selection c -o'
 # 補完
 type rustup >/dev/null 2>&1 && eval "$(rustup completions bash cargo)"
 type rustup >/dev/null 2>&1 && eval "$(rustup completions bash rustup)"
-[ -f /etc/bash_completion.d/git-prompt ] && source /etc/bash_completion.d/git-prompt
-[ -f /usr/share/git/git-prompt.sh ] && source /usr/share/git/git-prompt.sh
+test -f /etc/bash_completion.d/git-prompt && source /etc/bash_completion.d/git-prompt
+test -f /usr/share/git/git-prompt.sh && source /usr/share/git/git-prompt.sh
 
 # プロンプト設定
 GIT_PS1_SHOWUPSTREAM=1
