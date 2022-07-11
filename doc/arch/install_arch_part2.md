@@ -222,7 +222,7 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
 
     ```sh
     curl -sS https://download.spotify.com/debian/pubkey_5E3C45D7B312C643.gpg | gpg --import -
-    paru -S --noconfirm gnome-keyring seahorse discord visual-studio-code-bin brave-bin firefox firefox-i18n-ja spotify gnome-screenshot
+    paru -S --noconfirm gnome-keyring seahorse discord visual-studio-code-bin brave-bin gimp vlc firefox firefox-i18n-ja spotify gnome-screenshot
     paru -S --noconfirm btop pipes.sh cava bat
     ```
 
@@ -247,7 +247,7 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
     - Python
 
         ```sh
-        paru -S --noconfirm python
+        paru -S --noconfirm python python-black flake8
         ```
 
     - JavaScript
@@ -259,6 +259,26 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
 # その他設定
 
 ## ファイアウォールの有効化
+
+```sh
+echo \
+'#!/bin/nft
+
+flush ruleset
+
+table inet filter {
+    chain input {
+        type filter hook input priority filter; policy drop;
+
+        meta iif "lo" accept
+        ct state { established, related } accept
+        icmp type { echo-reply, echo-request } accept
+        udp dport { mdns, llmnr } accept
+
+        log prefix "[nft] "
+    }
+}' | sudo tee /etc/nftables.conf
+```
 
 ```sh
 sudo systemctl enable nftables.service

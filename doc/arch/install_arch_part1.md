@@ -106,7 +106,7 @@ bootctl --path=/boot install
 
 echo 'default arch
 timeout 10
-console-mode auto' > /boot/loader/loader.conf
+console-mode max' > /boot/loader/loader.conf
 
 echo 'title Arch Linux
 linux /vmlinuz-linux
