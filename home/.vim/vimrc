@@ -17,9 +17,9 @@ if has("gui_running")
 endif
 
 let s:cache_dir = expand("~/.cache/vim")
-let s:viminfo = s:cache_dir."/viminfo"
+let s:viminfo = s:cache_dir .. "/viminfo"
 
-execute "set viminfo+=n".s:viminfo
+execute "set viminfo+=n" .. s:viminfo
 
 set helplang=ja,en
 set number
@@ -33,12 +33,25 @@ set fileencoding=utf-8
 set fileencodings=utf-8,dos
 set termguicolors
 set encoding=utf-8
+set cursorline
+set hlsearch
+set ignorecase
+set smartcase
+set incsearch
+set splitbelow
+set splitright
 syntax enable
+
+let g:netrw_liststyle = 3
+let g:netrw_winsize = 85
+let g:netrw_special_syntax = 1
 
 set laststatus=2
 let &statusline = '%h %m [%F] [%{&fileformat}] [%{&fileencoding}] %=行:%l 列:%v'
 
 let &t_ut = ''
+
+set fillchars+=vert:│
 
 inoremap [ []<LEFT>
 inoremap { {}<LEFT>
@@ -46,5 +59,7 @@ inoremap ( ()<LEFT>
 inoremap ' ''<LEFT>
 inoremap " ""<LEFT>
 
-packadd! dracula
-colorscheme dracula
+"let g:rainbow_active = 1
+let g:lsp_semantic_enabled = 1
+
+colorscheme chester
