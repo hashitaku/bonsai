@@ -1,20 +1,4 @@
 source $VIMRUNTIME/defaults.vim
-source $VIMRUNTIME/delmenu.vim
-
-if has("gui_running")
-    set columns=120
-    set lines=40
-    let &guifont = "Ubuntu Mono:b:h14"
-    let &guifontwide = "源真ゴシック等幅_Bold:h12"
-    set guioptions+=M
-    set guioptions-=e
-    set guioptions-=g
-    set guioptions-=m
-    set guioptions-=r
-    set guioptions-=L
-    set guioptions-=t
-    set guioptions-=T
-endif
 
 let s:cache_dir = expand("~/.cache/vim")
 let s:viminfo = s:cache_dir .. "/viminfo"
@@ -31,8 +15,8 @@ set fileformat=unix
 set fileformats=unix,dos
 set fileencoding=utf-8
 set fileencodings=utf-8,dos
-set termguicolors
 set encoding=utf-8
+set termguicolors
 set cursorline
 set hlsearch
 set ignorecase
@@ -40,16 +24,19 @@ set smartcase
 set incsearch
 set splitbelow
 set splitright
+set wildoptions=pum
 syntax enable
 
+let g:netrw_banner = 0
+let g:netrw_browse_split = 2
 let g:netrw_liststyle = 3
-let g:netrw_winsize = 85
 let g:netrw_special_syntax = 1
+let g:netrw_winsize = 85
 
 set laststatus=2
 let &statusline = '%h %m [%F] [%{&fileformat}] [%{&fileencoding}] %=行:%l 列:%v'
 
-let &t_ut = ''
+"let &t_ut = ''
 
 set fillchars+=vert:│
 
@@ -59,7 +46,34 @@ inoremap ( ()<LEFT>
 inoremap ' ''<LEFT>
 inoremap " ""<LEFT>
 
-"let g:rainbow_active = 1
+let s:jetpackfile = expand('<sfile>:p:h') .. '/pack/jetpack/opt/vim-jetpack/plugin/jetpack.vim'
+let s:jetpackurl = "https://raw.githubusercontent.com/tani/vim-jetpack/master/plugin/jetpack.vim"
+if !filereadable(s:jetpackfile)
+  call system(printf('curl -fsSLo %s --create-dirs %s', s:jetpackfile, s:jetpackurl))
+endif
+
+packadd vim-jetpack
+call jetpack#begin()
+call jetpack#add('tani/vim-jetpack', {'opt': v:true})
+call jetpack#add('vim-jp/vimdoc-ja')
+call jetpack#add('prabirshrestha/vim-lsp')
+call jetpack#add('prabirshrestha/asyncomplete.vim')
+call jetpack#add('prabirshrestha/asyncomplete-lsp.vim')
+call jetpack#add('mattn/vim-lsp-settings')
+call jetpack#add('uochen1990/rainbow')
+call jetpack#end()
+
+let g:rainbow_active = 1
 let g:lsp_semantic_enabled = 1
+let g:lsp_diagnostics_enabled = 1
+let g:lsp_diagnostics_echo_cursor = 1
+
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
+
+set foldmethod=expr
+  \ foldexpr=lsp#ui#vim#folding#foldexpr()
+  \ foldtext=lsp#ui#vim#folding#foldtext()
 
 colorscheme chester

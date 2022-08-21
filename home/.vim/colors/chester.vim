@@ -84,7 +84,9 @@ hi StatusLineNC cterm=NONE
 call SetCtermHighlight("CursorLine", "NONE", "NONE", "NONE")
 call SetCtermHighlight("CursorLineNr", "NONE", "NONE", "NONE")
 
-"call SetGuiHighlight("Normal", s:foreground, s:background)
+call SetGuiHighlight("Normal", "chester_foreground", "chester_background")
+
+hi Pmenu guibg=#3F4D5E
 
 if has('terminal')
     let g:terminal_ansi_colors = []
