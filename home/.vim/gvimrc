@@ -1,8 +1,9 @@
 source $VIMRUNTIME/delmenu.vim
 
 set columns=120
-set lines=40
-let &guifont = "Ubuntu Mono:b:h14"
+set lines=30
+"let &guifont = "Ubuntu Mono:b:h14"
+let &guifont = "Consolas:b:h14"
 let &guifontwide = "源真ゴシック等幅_Bold:h12"
 set guioptions+=M
 set guioptions-=e

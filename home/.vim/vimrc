@@ -38,7 +38,7 @@ let &statusline = '%h %m [%F] [%{&fileformat}] [%{&fileencoding}] %=行:%l 列:%
 
 "let &t_ut = ''
 
-set fillchars+=vert:│
+let &fillchars = 'vert:│,fold:-,eob:\x20'
 
 inoremap [ []<LEFT>
 inoremap { {}<LEFT>

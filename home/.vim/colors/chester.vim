@@ -1,10 +1,14 @@
 "function
-def SetGuiHighlight(group: string, fg: string, bg: string = "chester_background", attr: string = "NONE")
-    execute "hi " .. group .. " guifg=" .. fg .. " guibg=" .. bg .. " gui=" .. attr
+def SetTermHighlight(group: string, fg: string = "NONE", bg: string = "NONE", attr: string = "NONE")
+    execute "hi " .. group .. " termfg=" .. fg .. "termbg=" .. bg .. " term" .. attr
 enddef
 
-def SetCtermHighlight(group: string, fg: string, bg: string, attr: string = "NONE")
+def SetCtermHighlight(group: string, fg: string = "NONE", bg: string = "NONE", attr: string = "NONE")
     execute "hi " .. group .. " ctermfg=" .. fg .. " ctermbg=" .. bg .. " cterm=" .. attr
+enddef
+
+def SetGuiHighlight(group: string, fg: string = "NONE", bg: string = "NONE", attr: string = "NONE")
+    execute "hi " .. group .. " guifg=" .. fg .. " guibg=" .. bg .. " gui=" .. attr
 enddef
 
 "init
@@ -72,7 +76,7 @@ call SetGuiHighlight("Todo", "chester_foreground", "chester_yellow")
 call SetGuiHighlight("ColorColumn", "NONE", "NONE")
 call SetGuiHighlight("CursorColumn", "NONE", "NONE")
 call SetGuiHighlight("CursorLine", "NONE", "chester_select")
-call SetGuiHighlight("VertSplit", "chester_background", "chester_comment")
+hi VertSplit term=None cterm=None gui=None guifg=chester_comment guibg=chester_background
 call SetGuiHighlight("LineNr", "chester_comment", "NONE", "bold")
 call SetGuiHighlight("CursorLineNr", "chester_comment_alt", "NONE", "bold")
 
@@ -87,6 +91,7 @@ call SetCtermHighlight("CursorLineNr", "NONE", "NONE", "NONE")
 call SetGuiHighlight("Normal", "chester_foreground", "chester_background")
 
 hi Pmenu guibg=#3F4D5E
+hi PmenuSel guifg=#3F4D5E guibg=chester_foreground
 
 if has('terminal')
     let g:terminal_ansi_colors = []
