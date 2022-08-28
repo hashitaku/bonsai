@@ -1,9 +1,9 @@
 source $VIMRUNTIME/defaults.vim
 
-let s:cache_dir = expand("~/.cache/vim")
-let s:viminfo = s:cache_dir .. "/viminfo"
-
-execute "set viminfo+=n" .. s:viminfo
+set viminfo=
+set noundofile
+set nobackup
+set noswapfile
 
 set helplang=ja,en
 set number
@@ -11,10 +11,10 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 set belloff=all
-set fileformat=unix
 set fileformats=unix,dos
+set fileformat=unix
+set fileencodings=utf-8,sjis
 set fileencoding=utf-8
-set fileencodings=utf-8,dos
 set encoding=utf-8
 set termguicolors
 set cursorline
@@ -24,7 +24,15 @@ set smartcase
 set incsearch
 set splitbelow
 set splitright
+set laststatus=2
+set wildmenu
 set wildoptions=pum
+set wildmode=longest,full
+set backspace=indent,eol,start
+
+"let &t_ut = ''
+let &fillchars = "vert:│,fold:-,eob:\x20"
+
 syntax enable
 
 let g:netrw_banner = 0
@@ -33,47 +41,31 @@ let g:netrw_liststyle = 3
 let g:netrw_special_syntax = 1
 let g:netrw_winsize = 85
 
-set laststatus=2
-let &statusline = '%h %m [%F] [%{&fileformat}] [%{&fileencoding}] %=行:%l 列:%v'
-
-"let &t_ut = ''
-
-let &fillchars = 'vert:│,fold:-,eob:\x20'
-
-inoremap [ []<LEFT>
-inoremap { {}<LEFT>
-inoremap ( ()<LEFT>
-inoremap ' ''<LEFT>
-inoremap " ""<LEFT>
-
-let s:jetpackfile = expand('<sfile>:p:h') .. '/pack/jetpack/opt/vim-jetpack/plugin/jetpack.vim'
+let s:jetpackfile = expand("<sfile>:p:h") .. "/pack/jetpack/opt/vim-jetpack/plugin/jetpack.vim"
 let s:jetpackurl = "https://raw.githubusercontent.com/tani/vim-jetpack/master/plugin/jetpack.vim"
 if !filereadable(s:jetpackfile)
-  call system(printf('curl -fsSLo %s --create-dirs %s', s:jetpackfile, s:jetpackurl))
+  call system(printf("curl -fsSLo %s --create-dirs %s", s:jetpackfile, s:jetpackurl))
 endif
 
 packadd vim-jetpack
 call jetpack#begin()
-call jetpack#add('tani/vim-jetpack', {'opt': v:true})
-call jetpack#add('vim-jp/vimdoc-ja')
-call jetpack#add('prabirshrestha/vim-lsp')
-call jetpack#add('prabirshrestha/asyncomplete.vim')
-call jetpack#add('prabirshrestha/asyncomplete-lsp.vim')
-call jetpack#add('mattn/vim-lsp-settings')
-call jetpack#add('uochen1990/rainbow')
+call jetpack#add("tani/vim-jetpack", { "opt": v:true })
+call jetpack#add("vim-jp/vimdoc-ja")
+call jetpack#add("prabirshrestha/vim-lsp")
+call jetpack#add("prabirshrestha/asyncomplete.vim")
+call jetpack#add("prabirshrestha/asyncomplete-lsp.vim")
+call jetpack#add("mattn/vim-lsp-settings")
+call jetpack#add("hrsh7th/vim-vsnip")
+call jetpack#add("hrsh7th/vim-vsnip-integ")
+call jetpack#add("lambdalisue/fern.vim")
+call jetpack#add("lambdalisue/fern-hijack.vim")
+call jetpack#add("luochen1990/rainbow")
+call jetpack#add("itchyny/lightline.vim")
+call jetpack#add("dracula/vim", { "as": "dracula" })
 call jetpack#end()
 
-let g:rainbow_active = 1
-let g:lsp_semantic_enabled = 1
-let g:lsp_diagnostics_enabled = 1
-let g:lsp_diagnostics_echo_cursor = 1
-
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
-
-set foldmethod=expr
-  \ foldexpr=lsp#ui#vim#folding#foldexpr()
-  \ foldtext=lsp#ui#vim#folding#foldtext()
+for elem in sort(split(globpath(&runtimepath, "config.d/*.vim")))
+    execute("source " .. elem)
+endfor
 
 colorscheme chester
