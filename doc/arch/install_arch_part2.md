@@ -327,6 +327,19 @@ EndSection' | sudo tee /etc/X11/xorg.conf.d/20-touchpad.conf
 esac
 ```
 
+## reflectorの設定
+
+```sh
+echo \
+'--save /etc/pacman.d/mirrorlist
+--country Japan
+--protocol https
+--latest 5
+--sort rate' | sudo tee /etc/xdg/reflector/reflector.conf
+
+sudo systemctl enable reflector.timer
+```
+
 # dotfileのコピー
 
 ```sh
