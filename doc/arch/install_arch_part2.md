@@ -140,7 +140,7 @@ sudo efibootmgr -o "${arr%,}"
 
 ## 秘密鍵と証明書の生成
 
-    - サブコマンドreqの引数-nodesがopenssl3では非推奨
+- サブコマンドreqの引数-nodesがopenssl3では非推奨
 
 ```sh
 sudo openssl req -x509 -newkey rsa:4096 -keyout '/root/mok.priv' -out '/root/mok.pem' -days 36500 -nodes -subj '/CN=Arch Linux Secure Boot/'
@@ -199,7 +199,7 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
     ```sh
     paru -S --noconfirm nvidia
     ```
-    
+
 - ユーティリティのインストール
 
     ```sh
@@ -257,6 +257,12 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
         ```
 
 # その他設定
+
+## カーネルモジュールの自動ロード
+
+```sh
+echo 'ntfs3' | sudo tee /etc/modules-load.d/ntfs3.conf
+```
 
 ## ファイアウォールの有効化
 
