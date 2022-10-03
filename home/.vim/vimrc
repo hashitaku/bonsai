@@ -7,6 +7,7 @@ set noswapfile
 
 set helplang=ja,en
 set number
+set signcolumn=number
 set tabstop=4
 set shiftwidth=4
 set expandtab
@@ -21,31 +22,35 @@ set cursorline
 set hlsearch
 set ignorecase
 set smartcase
+set smartindent
+set smarttab
 set incsearch
 set splitbelow
 set splitright
 set laststatus=2
+set pumheight=10
 set wildmenu
 set wildoptions=pum
 set wildmode=longest,full
 set backspace=indent,eol,start
+let &shell = has("win32") ? "powershell -nologo" : "bash"
 
 "let &t_ut = ''
 let &fillchars = "vert:│,fold:-,eob:\x20"
 
 syntax enable
 
-let g:netrw_banner = 0
-let g:netrw_browse_split = 2
-let g:netrw_liststyle = 3
-let g:netrw_special_syntax = 1
-let g:netrw_winsize = 85
-
 let s:jetpackfile = expand("<sfile>:p:h") .. "/pack/jetpack/opt/vim-jetpack/plugin/jetpack.vim"
 let s:jetpackurl = "https://raw.githubusercontent.com/tani/vim-jetpack/master/plugin/jetpack.vim"
 if !filereadable(s:jetpackfile)
-  call system(printf("curl -fsSLo %s --create-dirs %s", s:jetpackfile, s:jetpackurl))
+    call system(printf("curl -fsSLo %s --create-dirs %s", s:jetpackfile, s:jetpackurl))
 endif
+
+let g:loaded_netrw = 1
+let g:loaded_netrwPlugin = 1
+
+packadd matchit
+packadd termdebug
 
 packadd vim-jetpack
 call jetpack#begin()
@@ -64,8 +69,8 @@ call jetpack#add("itchyny/lightline.vim")
 call jetpack#add("dracula/vim", { "as": "dracula" })
 call jetpack#end()
 
-for elem in sort(split(globpath(&runtimepath, "config.d/*.vim")))
-    execute("source " .. elem)
-endfor
-
 colorscheme chester
+
+for elem in sort(split(globpath(&runtimepath, "config.d/*.vim")))
+    execute "source" elem
+endfor

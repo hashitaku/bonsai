@@ -54,7 +54,7 @@
 	"scanf": {
 		"prefix": "scanf",
 		"body": [
-			"scanf(\"%$1\",$0);"
+			"scanf(\"%$1\", $0);"
 		],
 		"description": "scanf"
 	},

@@ -22,72 +22,111 @@ let g:colors_name = "chester"
 runtime colors/lists/chestercolors.vim
 
 "group-name
-call s:SetGuiHighlight("Comment", "chester_comment", "chester_background", "italic")
+hi Comment        guifg=chester_comment    guibg=NONE gui=italic
 
-call s:SetGuiHighlight("Constant", "chester_yellow")
-call s:SetGuiHighlight("String", "chester_green")
-call s:SetGuiHighlight("Character", "chester_green")
-call s:SetGuiHighlight("Number", "chester_yellow")
-call s:SetGuiHighlight("Boolean", "chester_yellow")
-call s:SetGuiHighlight("Float", "chester_yellow")
+hi Constant       guifg=chester_yellow     guibg=NONE gui=NONE
+hi String         guifg=chester_green      guibg=NONE gui=NONE
+hi Character      guifg=chester_green      guibg=NONE gui=NONE
+hi Number         guifg=chester_yellow     guibg=NONE gui=NONE
+hi Boolean        guifg=chester_yellow     guibg=NONE gui=NONE
+hi Float          guifg=chester_yellow     guibg=NONE gui=NONE
 
-call s:SetGuiHighlight("Identifier", "chester_red")
-call s:SetGuiHighlight("Function", "chester_blue")
+hi Identifier     guifg=chester_red        guibg=NONE gui=NONE
+hi Function       guifg=chester_blue       guibg=NONE gui=NONE
 
-call s:SetGuiHighlight("Statement", "chester_cyan")
-call s:SetGuiHighlight("Conditional", "chester_cyan")
-call s:SetGuiHighlight("Repeat", "chester_cyan")
-call s:SetGuiHighlight("Label", "chester_cyan")
-call s:SetGuiHighlight("Operator", "chester_cyan")
-call s:SetGuiHighlight("Keyword", "chester_cyan")
-call s:SetGuiHighlight("Exeption", "chester_cyan")
+hi Statement      guifg=chester_cyan       guibg=NONE gui=NONE
+hi Conditional    guifg=chester_cyan       guibg=NONE gui=NONE
+hi Repeat         guifg=chester_cyan       guibg=NONE gui=NONE
+hi Label          guifg=chester_cyan       guibg=NONE gui=NONE
+hi Operator       guifg=chester_cyan       guibg=NONE gui=NONE
+hi Keyword        guifg=chester_cyan       guibg=NONE gui=NONE
+hi Exeption       guifg=chester_cyan       guibg=NONE gui=NONE
 
-call s:SetGuiHighlight("PreProc", "chester_cyan")
-call s:SetGuiHighlight("Include", "chester_cyan")
-call s:SetGuiHighlight("Define", "chester_cyan")
-call s:SetGuiHighlight("Macro", "chester_cyan")
-call s:SetGuiHighlight("PreCondit", "chester_cyan")
+hi PreProc        guifg=chester_cyan       guibg=NONE gui=NONE
+hi Include        guifg=chester_cyan       guibg=NONE gui=NONE
+hi Define         guifg=chester_cyan       guibg=NONE gui=NONE
+hi Macro          guifg=chester_cyan       guibg=NONE gui=NONE
+hi PreConditit    guifg=chester_cyan       guibg=NONE gui=NONE
 
-call s:SetGuiHighlight("Type", "chester_yellow")
-call s:SetGuiHighlight("StorageClass", "chester_red_alt")
-call s:SetGuiHighlight("Structure", "chester_red_alt")
-call s:SetGuiHighlight("Typedef", "chester_cyan")
+hi Type           guifg=chester_yellow     guibg=NONE gui=NONE
+hi StorageClass   guifg=chester_red_alt    guibg=NONE gui=NONE
+hi Structure      guifg=chester_red_alt    guibg=NONE gui=NONE
+hi Typedef        guifg=chester_cyan       guibg=NONE gui=NONE
 
-call s:SetGuiHighlight("Special", "chester_red")
-call s:SetGuiHighlight("SpecialChar", "chester_red")
-call s:SetGuiHighlight("Tag", "chester_red")
-call s:SetGuiHighlight("Delimiter", "chester_red")
-call s:SetGuiHighlight("SpecialComment", "chester_red")
-call s:SetGuiHighlight("Debug", "chester_red")
+hi Special        guifg=chester_red        guibg=NONE gui=NONE
+hi SpecialChar    guifg=chester_red        guibg=NONE gui=NONE
+hi Tab            guifg=chester_red        guibg=NONE gui=NONE
+hi Delimiter      guifg=chester_red        guibg=NONE gui=NONE
+hi SpecialComment guifg=chester_red        guibg=NONE gui=NONE
+hi Debug          guifg=chester_red        guibg=NONE gui=NONE
 
-call s:SetGuiHighlight("Underlined", "chester_foreground", "chester_background", "underline")
+hi Underline      guifg=chester_foreground guibg=NONE gui=underline
 
-call s:SetGuiHighlight("Ignore", "chester_foreground")
+hi Ignore         guifg=chester_foreground guibg=NONE gui=underline
 
-call s:SetGuiHighlight("Error", "chester_foreground", "chester_red")
-
-call s:SetGuiHighlight("Todo", "chester_foreground", "chester_yellow")
+hi Todo           guifg=NONE               guibg=NONE gui=undercurl guisp=chester_yellow
 
 "highlight-groups
-call s:SetGuiHighlight("ColorColumn", "NONE", "NONE")
-call s:SetGuiHighlight("CursorColumn", "NONE", "NONE")
-call s:SetGuiHighlight("CursorLine", "NONE", "chester_select")
-call s:SetGuiHighlight("VertSplit", "chester_comment", "chester_background", "NONE")
-call s:SetCtermHighlight("VertSplit", "NONE", "NONE", "NONE")
-call s:SetGuiHighlight("LineNr", "chester_comment", "NONE", "bold")
-call s:SetGuiHighlight("CursorLineNr", "chester_comment_alt", "NONE", "bold")
+hi ColorColumn guifg=NONE guibg=chester_select gui=NONE
+"hi Conceal guifg= guibg= gui=
+hi Cursor guifg=NONE guibg=chester_comment gui=NONE
+hi lCursor guifg=bg guibg=fg gui=NONE
+hi CursorIM guifg=bg guibg=fg gui=NONE
+hi CursorColumn guifg=NONE guibg=chester_select gui=NONE
+hi CursorLine guifg=NONE guibg=chester_select gui=NONE
+hi Directory guifg=chester_blue guibg=NONE gui=NONE
+"hi DiffAdd guifg=NONE guibg=chester_green_alt gui=NONE
+"hi DiffChange guifg=NONE guibg=chester_green_alt gui=NONE
+"hi DiffDelete guifg=NONE guibg=chester_red_alt gui=NONE
+"hi DiffText guifg=NONE guibg=chester_green gui=NONE
+hi link EndOfBuffer NonText
+hi ErrorMsg guifg=chester_red guibg=NONE gui=NONE
+hi VertSplit guifg=chester_comment guibg=NONE gui=NONE
+"hi Folded guifg= guibg= gui=
+"hi FoldColumn guifg= guibg= gui=
+"hi SignColumn guifg= guibg= gui=
+hi link IncSearch Search
+hi LineNr guifg=chester_comment guibg=NONE gui=bold
+hi link LineNrAbove LineNr
+hi link LineNrBelow LineNr
+hi CursorLineNr guifg=chester_comment_alt guibg=NONE gui=bold
+"hi link CursorLineSign SignColumn
+"hi link CursorLineFold FoldedColumn
+hi MatchParen guifg=NONE guibg=NONE gui=underline
+"hi ModeMsg guifg= guibg= gui=
+"hi MoreMsg guifg= guibg= gui=
+"hi NonText guifg= guibg= gui=
+hi Normal guifg=chester_foreground guibg=chester_background
+hi Pmenu guifg=NONE guibg=#3f4d5e gui=NONE
+"hi Pmenusel guifg=NONE guibg=NONE gui=NONE
+"hi PmenuSbar guifg=NONE guibg= gui=NONE
+"hi PmenuThumb guifg=NONE guibg= gui=NONE
+"hi Question guifg= guibg= gui=
+"hi QuickFixLine guifg= guibg= gui=
+hi Search guifg=NONE guibg=chester_select gui=NONE
+"hi CurSearch guifg= guibg= gui=
+"hi SpecialKey guifg= guibg= gui=
+"hi SpellBad guifg= guibg= gui=
+"hi SpellCap guifg= guibg= gui=
+"hi SpellLocal guifg= guibg= gui=
+"hi SpellRare guifg= guibg= gui=
+"hi StatusLine guifg= guibg= gui=
+"hi StatusLineNC guifg= guibg= gui=
+"hi StatusLineTerm guifg= guibg= gui=
+"hi StatusLineTermNC guifg= guibg= gui=
+"hi TabLine guifg= guibg= gui=
+"hi TabLineFill guifg= guibg= gui=
+"hi TabLineSel guifg= guibg= gui=
+hi Terminal guifg=chester_foreground guibg=chester_background gui=NONE
+"hi Title guifg= guibg= gui=
+hi Visual guifg=NONE guibg=chester_select gui=NONE
+hi link VisualNOS Visual
+"hi WarningMsg guifg= guibg= gui=
+"hi WildMenu guifg= guibg= gui=
 
-call s:SetGuiHighlight("StatusLine", "chester_foreground", "#3b444f", "bold")
-hi StatusLine cterm=bold
-call s:SetGuiHighlight("StatusLineNC", "chester_foreground", "#3b444f", "NONE")
-hi StatusLineNC cterm=NONE
-
-call s:SetCtermHighlight("CursorLine", "NONE", "NONE", "NONE")
-call s:SetCtermHighlight("CursorLineNr", "NONE", "NONE", "NONE")
-
-call s:SetGuiHighlight("Normal", "chester_foreground", "chester_background")
-
-hi Pmenu guibg=#3F4D5E
+hi CursorLine ctermfg=NONE ctermbg=NONE cterm=NONE
+hi VertSplit ctermfg=NONE ctermbg=NONE cterm=NONE
+hi CursorLineNr ctermfg=NONE ctermbg=NONE cterm=NONE
 
 if has('terminal')
     let g:terminal_ansi_colors = []
