@@ -84,7 +84,7 @@ hi ErrorMsg guifg=chester_red guibg=NONE gui=NONE
 hi VertSplit guifg=chester_comment guibg=NONE gui=NONE
 "hi Folded guifg= guibg= gui=
 "hi FoldColumn guifg= guibg= gui=
-"hi SignColumn guifg= guibg= gui=
+hi SignColumn guifg=fg guibg=NONE gui=NONE
 hi link IncSearch Search
 hi LineNr guifg=chester_comment guibg=NONE gui=bold
 hi link LineNrAbove LineNr
