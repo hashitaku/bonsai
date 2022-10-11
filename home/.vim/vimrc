@@ -27,6 +27,7 @@ set smarttab
 set incsearch
 set splitbelow
 set splitright
+set hidden
 set laststatus=2
 set pumheight=10
 set wildmenu

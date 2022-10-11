@@ -22,7 +22,11 @@ imap <expr> <tab>   <SID>imap_tab()
 imap <expr> <S-Tab> <SID>imap_stab()
 imap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
 
-nnoremap <C-n> <cmd>Fern . -reveal=% -drawer -toggle<cr>
+if has("gui_running")
+    nnoremap <C-n> <cmd>Fern %:h -reveal=% -drawer -toggle<cr>
+else
+    nnoremap <C-n> <cmd>Fern . -reveal=% -drawer -toggle<cr>
+endif
 
 inoremap [ []<LEFT>
 inoremap { {}<LEFT>
