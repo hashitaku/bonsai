@@ -203,7 +203,7 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
 - ユーティリティのインストール
 
     ```sh
-    paru -S --noconfirm bash-completion vim zip unzip tree wget polkit man-db man-pages-ja arch-install-scripts reflector usbutils nftables
+    paru -S --noconfirm bash-completion vim gdb zip unzip tree wget polkit man-db man-pages-ja arch-install-scripts reflector usbutils nftables
     ```
 
 - デスクトップ環境のインストール
@@ -231,7 +231,7 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
     - C/C++
 
         ```sh
-        paru -S --noconfirm clang libc++ libc++abi
+        paru -S --noconfirm clang lldb libc++ libc++abi
         ```
 
     - Rust
