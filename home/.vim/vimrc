@@ -35,6 +35,7 @@ set wildoptions=pum
 set wildmode=longest,full
 set backspace=indent,eol,start
 let &shell = has("win32") ? "powershell -nologo" : "bash"
+let mapleader = " "
 
 "let &t_ut = ''
 let &fillchars = "vert:\u2502,fold:-,eob:\x20"
@@ -71,6 +72,7 @@ call jetpack#add("lambdalisue/nerdfont.vim")
 call jetpack#add("itchyny/lightline.vim")
 call jetpack#add("luochen1990/rainbow")
 call jetpack#add("dracula/vim", { "as": "dracula" })
+call jetpack#add("easymotion/vim-easymotion")
 call jetpack#end()
 
 colorscheme chester
