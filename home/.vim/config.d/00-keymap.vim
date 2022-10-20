@@ -27,9 +27,3 @@ if has("gui_running")
 else
     nnoremap <C-n> <cmd>Fern . -reveal=% -drawer -toggle<cr>
 endif
-
-inoremap [ []<LEFT>
-inoremap { {}<LEFT>
-inoremap ( ()<LEFT>
-inoremap ' ''<LEFT>
-inoremap " ""<LEFT>
