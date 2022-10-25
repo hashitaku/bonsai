@@ -3,12 +3,8 @@ case $- in
     *) return;;
 esac
 
-HISTTIMEFORMAT='%F %T '
-HISTCONTROL=ignoredups
-HISTSIZE=1000
-HISTFILESIZE=2000
-
 export LESSHISTFILE=-
+export MANPAGER='less -M +gG'
 
 shopt -s histappend
 shopt -s checkwinsize
