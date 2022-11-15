@@ -37,7 +37,7 @@ return {
     animation_fps = 1,
 
     font = wezterm.font_with_fallback {
-        { family = "UbuntuMono Nerd Font", weight = "Bold" },
+        { family = "UbuntuMono Nerd Font Mono", weight = "Bold" },
         { family = "Consolas", weight = "Bold" },
 
         { family = "Noto Sans Mono CJK JP", weight = "Bold" },
