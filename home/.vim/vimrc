@@ -34,6 +34,7 @@ set wildmenu
 set wildoptions=pum
 set wildmode=longest,full
 set backspace=indent,eol,start
+let &termwinsize = "10x0"
 let &shell = has("win32") ? "powershell -nologo" : "bash"
 let mapleader = " "
 
