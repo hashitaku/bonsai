@@ -234,6 +234,12 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
         paru -S --noconfirm clang lldb libc++ libc++abi
         ```
 
+    - QMK firmware
+
+        ```sh
+        paru -S --noconfirm avr-gcc avr-libc dfu-programmer
+        ```
+
     - Rust
 
         ```sh
@@ -253,7 +259,7 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
     - JavaScript
 
         ```sh
-        paru -S --noconfirm nodejs npm
+        paru -S --noconfirm nodejs npm typescript typescript-language-server
         ```
 
 # その他設定
