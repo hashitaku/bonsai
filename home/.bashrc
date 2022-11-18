@@ -4,7 +4,7 @@ case $- in
 esac
 
 export LESSHISTFILE=-
-export MANPAGER='less -M +gG'
+export MANPAGER='less -M +Gg'
 
 shopt -s histappend
 shopt -s checkwinsize
@@ -43,17 +43,21 @@ alias pbpaste='xclip -selection c -o'
 # 補完
 type rustup >/dev/null 2>&1 && eval "$(rustup completions bash cargo)"
 type rustup >/dev/null 2>&1 && eval "$(rustup completions bash rustup)"
-test -f /etc/bash_completion.d/git-prompt && source /etc/bash_completion.d/git-prompt
 test -f /usr/share/git/git-prompt.sh && source /usr/share/git/git-prompt.sh
 
 # プロンプト設定
-GIT_PS1_SHOWUPSTREAM=1
-GIT_PS1_SHOWUNTRACKEDFILES=1
-GIT_PS1_SHOWSTASHSTATE=1
-GIT_PS1_SHOWDIRTYSTYLE=1
+if [[ "$(type -t __git_ps1)" == 'function' ]]; then
+    GIT_PS1_SHOWUPSTREAM=1
+    GIT_PS1_SHOWUNTRACKEDFILES=1
+    GIT_PS1_SHOWSTASHSTATE=1
+    GIT_PS1_SHOWDIRTYSTYLE=1
+    title='\[\e]0;\w$(__git_ps1)\a\]'
+    prompt='\[\e[31m\]\u\[\e[0m\] at\[\e[33m\] \h\[\e[0m\] in\[\e[32m\] \w\[\e[36m\]$(__git_ps1)\[\e[0m\]\$ '
+else
+    title='\[\e]0;\w\a\a]'
+    prompt='\[\e[31m\]\u\[\e[0m\] at\[\e[33m\] \h\[\e[0m\] in\[\e[32m\] \w\[\e[0m\]\$ '
+fi
 
-type __git_ps1 >/dev/null 2>&1 && title='\[\e]0;\w$(__git_ps1)\a\]'
-prompt='\[\e[31m\]\u\[\e[0m\] at\[\e[33m\] \h\[\e[0m\] in\[\e[32m\] \w\[\e[36m\]$(__git_ps1)\[\e[0m\]\$ '
 case "${TERM}" in
 	xterm*|rxvt*)
 		PS1="${title}${prompt}"
