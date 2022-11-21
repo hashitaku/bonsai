@@ -203,19 +203,19 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
 - ユーティリティのインストール
 
     ```sh
-    paru -S --noconfirm bash-completion vim gdb zip unzip tree wget polkit man-db man-pages-ja arch-install-scripts reflector usbutils nftables
+    paru -S --noconfirm bash-completion vim gdb zip unzip tree wget jq polkit man-db man-pages-ja arch-install-scripts reflector usbutils nftables
     ```
 
 - デスクトップ環境のインストール
 
     ```sh
-    paru -S --noconfirm xorg-server i3-gaps kitty xclip picom polybar rofi feh dunst libnotify light playerctl pipewire pipewire-pulse pipewire-jack wireplumber alsa-utils fcitx5-mozc fcitx5-configtool fcitx5-qt fcitx5-gtk
+    paru -S --noconfirm xorg-server xorg-xinit i3-gaps kitty xclip picom polybar rofi feh dunst libnotify light playerctl pipewire pipewire-pulse pipewire-jack wireplumber alsa-utils fcitx5-mozc fcitx5-configtool fcitx5-qt fcitx5-gtk
     ```
 
 - フォントのインストール
 
     ```sh
-    paru -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji
+    paru -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji ttf-ubuntumono-nerd
     ```
 
 - その他インストール
