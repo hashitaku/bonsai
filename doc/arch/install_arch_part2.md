@@ -345,11 +345,12 @@ esac
 echo \
 '--save /etc/pacman.d/mirrorlist
 --country Japan
---protocol https
+--protocol http,https,ftp
 --latest 5
---sort rate' | sudo tee /etc/xdg/reflector/reflector.conf
+--sort score' | sudo tee /etc/xdg/reflector/reflector.conf
 
 sudo systemctl enable reflector.timer
+sudo systemctl start reflector.service
 ```
 
 # dotfileのコピー
