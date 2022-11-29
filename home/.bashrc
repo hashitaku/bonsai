@@ -5,6 +5,7 @@ esac
 
 export LESSHISTFILE=-
 export MANPAGER='less -M +Gg'
+export HISTCONTROL='ignoreboth'
 
 shopt -s histappend
 shopt -s checkwinsize
