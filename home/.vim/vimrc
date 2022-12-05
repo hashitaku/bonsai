@@ -5,41 +5,42 @@ set noundofile
 set nobackup
 set noswapfile
 
-set helplang=ja,en
-set number
-set signcolumn=number
-set tabstop=4
-set shiftwidth=4
-set expandtab
+set backspace=indent,eol,start
 set belloff=all
-set fileformats=unix,dos
-set fileformat=unix
-set fileencodings=utf-8,sjis
-set fileencoding=utf-8
-set encoding=utf-8
-set termguicolors
 set cursorline
+set encoding=utf-8
+set expandtab
+set fileencoding=utf-8
+set fileencodings=utf-8,sjis
+set fileformat=unix
+set fileformats=unix,dos
+set helplang=ja,en
+set hidden
 set hlsearch
 set ignorecase
+set incsearch
+set laststatus=2
+set number
+set pumheight=10
+set shiftwidth=4
+set signcolumn=number
 set smartcase
 set smartindent
 set smarttab
-set incsearch
 set splitbelow
 set splitright
-set hidden
-set laststatus=2
-set pumheight=10
+set tabstop=4
+set termguicolors
 set wildmenu
-set wildoptions=pum
 set wildmode=longest,full
-set backspace=indent,eol,start
-let &termwinsize = "10x0"
-let &shell = has("win32") ? "powershell -nologo" : "bash"
-let mapleader = " "
+set wildoptions=pum
 
-"let &t_ut = ''
+let &shell = has("win32") ? "powershell -nologo" : "bash"
 let &fillchars = "vert:\u2502,fold:-,eob:\x20"
+let mapleader = " "
+let &t_Cs = "\e[4:3m"
+let &t_Ce = "\e[4:0m"
+"let &t_ut = ''
 
 syntax enable
 
@@ -52,7 +53,6 @@ endif
 let g:loaded_netrw = 1
 let g:loaded_netrwPlugin = 1
 
-packadd matchit
 packadd termdebug
 
 packadd vim-jetpack
