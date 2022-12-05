@@ -360,4 +360,5 @@ cd ~
 git clone https://github.com/hashitaku/dotfile
 cp -r ~/dotfile/home/{.bashrc,.config,.gitconfig,.inputrc,.profile,.vim,.xinitrc} ~/
 rm -rf ~/dotfile
+chmod 700 ~/.local/share/gnupg
 ```
