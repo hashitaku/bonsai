@@ -1,4 +1,5 @@
-if empty(globpath(&runtimepath, "autoload/lsp_settings.vim"))
+if !jetpack#tap("vim-lsp-settings")
+    echoerr "config.d/00-lsp-settings.vim is not loading"
     finish
 endif
 

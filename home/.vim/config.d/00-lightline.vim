@@ -1,4 +1,5 @@
-if empty(globpath(&runtimepath, "autoload/lightline.vim"))
+if !jetpack#tap("lightline.vim")
+    echoerr "config.d/00-lightline.vim is not loading"
     finish
 endif
 

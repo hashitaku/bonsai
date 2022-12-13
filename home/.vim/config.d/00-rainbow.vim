@@ -1,4 +1,5 @@
-if empty(globpath(&runtimepath, "autoload/rainbow.vim"))
+if !jetpack#tap("rainbow")
+    echoerr "config.d/00-rainbow.vim is not loading"
     finish
 endif
 

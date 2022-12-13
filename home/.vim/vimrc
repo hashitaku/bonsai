@@ -1,6 +1,6 @@
 source $VIMRUNTIME/defaults.vim
 
-set viminfo=
+let &viminfofile = expand("<sfile>:p:h") .. "/viminfo"
 set noundofile
 set nobackup
 set noswapfile
@@ -40,7 +40,6 @@ let &fillchars = "vert:\u2502,fold:-,eob:\x20"
 let mapleader = " "
 let &t_Cs = "\e[4:3m"
 let &t_Ce = "\e[4:0m"
-"let &t_ut = ''
 
 syntax enable
 
@@ -54,31 +53,33 @@ let g:loaded_netrw = 1
 let g:loaded_netrwPlugin = 1
 
 packadd termdebug
-
 packadd vim-jetpack
 call jetpack#begin()
 call jetpack#add("tani/vim-jetpack", { "opt": v:true })
-call jetpack#add("vim-jp/vimdoc-ja")
-call jetpack#add("prabirshrestha/vim-lsp")
-call jetpack#add("prabirshrestha/asyncomplete.vim")
-call jetpack#add("prabirshrestha/asyncomplete-lsp.vim")
-call jetpack#add("mattn/vim-lsp-settings")
-call jetpack#add("hrsh7th/vim-vsnip")
-call jetpack#add("hrsh7th/vim-vsnip-integ")
-call jetpack#add("lambdalisue/fern.vim")
-call jetpack#add("lambdalisue/fern-git-status.vim")
-call jetpack#add("lambdalisue/fern-renderer-nerdfont.vim")
-call jetpack#add("lambdalisue/fern-hijack.vim")
-call jetpack#add("lambdalisue/nerdfont.vim")
-call jetpack#add("itchyny/lightline.vim")
-call jetpack#add("luochen1990/rainbow")
-call jetpack#add("jiangmiao/auto-pairs")
+
 call jetpack#add("dracula/vim", { "as": "dracula" })
 call jetpack#add("easymotion/vim-easymotion")
+call jetpack#add("hrsh7th/vim-vsnip")
+call jetpack#add("hrsh7th/vim-vsnip-integ")
+call jetpack#add("itchyny/lightline.vim")
+call jetpack#add("jiangmiao/auto-pairs")
+call jetpack#add("lambdalisue/fern-git-status.vim")
+call jetpack#add("lambdalisue/fern-hijack.vim")
+call jetpack#add("lambdalisue/fern-renderer-nerdfont.vim")
+call jetpack#add("lambdalisue/fern.vim")
+call jetpack#add("lambdalisue/nerdfont.vim")
+call jetpack#add("luochen1990/rainbow")
+call jetpack#add("mattn/vim-lsp-settings")
+call jetpack#add("prabirshrestha/asyncomplete-lsp.vim")
+call jetpack#add("prabirshrestha/asyncomplete.vim")
+call jetpack#add("prabirshrestha/vim-lsp")
+call jetpack#add("rust-lang/rust.vim")
+call jetpack#add("vim-jp/vimdoc-ja")
 call jetpack#end()
-
-colorscheme chester
 
 for elem in sort(split(globpath(&runtimepath, "config.d/*.vim")))
     execute "source" elem
 endfor
+defcompile
+
+colorscheme chester

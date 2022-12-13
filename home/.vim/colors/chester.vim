@@ -1,12 +1,3 @@
-"function
-def s:SetGuiHighlight(group: string, fg: string, bg: string = "chester_background", attr: string = "NONE")
-    execute "hi " .. group .. " guifg=" .. fg .. " guibg=" .. bg .. " gui=" .. attr
-enddef
-
-def s:SetCtermHighlight(group: string, fg: string, bg: string, attr: string = "NONE")
-    execute "hi " .. group .. " ctermfg=" .. fg .. " ctermbg=" .. bg .. " cterm=" .. attr
-enddef
-
 "init
 highlight clear Normal
 set background=dark
@@ -75,10 +66,10 @@ hi CursorIM guifg=bg guibg=fg gui=NONE
 hi CursorColumn guifg=NONE guibg=chester_select gui=NONE
 hi CursorLine guifg=NONE guibg=chester_select gui=NONE
 hi Directory guifg=chester_blue guibg=NONE gui=NONE
-"hi DiffAdd guifg=NONE guibg=chester_green_alt gui=NONE
-"hi DiffChange guifg=NONE guibg=chester_green_alt gui=NONE
-"hi DiffDelete guifg=NONE guibg=chester_red_alt gui=NONE
-"hi DiffText guifg=NONE guibg=chester_green gui=NONE
+hi DiffAdd guifg=NONE guibg=chester_blend_green gui=NONE
+hi DiffChange guifg=NONE guibg=chester_blend_green gui=NONE
+hi DiffDelete guifg=NONE guibg=chester_blend_red gui=NONE
+hi DiffText guifg=NONE guibg=chester_blend_green_alt gui=NONE
 hi link EndOfBuffer NonText
 hi ErrorMsg guifg=chester_red guibg=NONE gui=NONE
 hi VertSplit guifg=chester_comment guibg=NONE gui=NONE
@@ -97,7 +88,7 @@ hi MatchParen guifg=NONE guibg=NONE gui=underline
 "hi MoreMsg guifg= guibg= gui=
 "hi NonText guifg= guibg= gui=
 hi Normal guifg=chester_foreground guibg=chester_background
-hi Pmenu guifg=NONE guibg=#3f4d5e gui=NONE
+hi Pmenu guifg=NONE guibg=chester_background_alt gui=NONE
 "hi Pmenusel guifg=NONE guibg=NONE gui=NONE
 "hi PmenuSbar guifg=NONE guibg= gui=NONE
 "hi PmenuThumb guifg=NONE guibg= gui=NONE
@@ -127,6 +118,15 @@ hi link VisualNOS Visual
 hi CursorLine ctermfg=NONE ctermbg=NONE cterm=NONE
 hi VertSplit ctermfg=NONE ctermbg=NONE cterm=NONE
 hi CursorLineNr ctermfg=NONE ctermbg=NONE cterm=NONE
+
+"plugins
+hi debugPC guifg=NONE guibg=chester_background_alt
+hi debugBreakpoint guifg=chester_red
+
+hi link lspInlayHintsParameter Comment
+hi link lspInlayHintsType Comment
+
+hi link FernIndentMarkers Comment
 
 if has('terminal')
     let g:terminal_ansi_colors = []

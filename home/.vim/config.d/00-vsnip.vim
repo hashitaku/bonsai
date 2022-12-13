@@ -1,4 +1,5 @@
-if empty(globpath(&runtimepath, "autoload/vsnip.vim"))
+if !jetpack#tap("vim-vsnip")
+    echoerr "config.d/00-vsnip.vim is not loading"
     finish
 endif
 
