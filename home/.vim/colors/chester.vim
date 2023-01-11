@@ -39,8 +39,8 @@ hi Define         guifg=chester_cyan       guibg=NONE gui=NONE
 hi Macro          guifg=chester_cyan       guibg=NONE gui=NONE
 hi PreConditit    guifg=chester_cyan       guibg=NONE gui=NONE
 
-hi Type           guifg=chester_yellow     guibg=NONE gui=NONE
-hi StorageClass   guifg=chester_red_alt    guibg=NONE gui=NONE
+hi Type           guifg=chester_yellow     guibg=NONE gui=italic cterm=italic
+hi StorageClass   guifg=chester_red_alt    guibg=NONE gui=italic cterm=italic
 hi Structure      guifg=chester_red_alt    guibg=NONE gui=NONE
 hi Typedef        guifg=chester_cyan       guibg=NONE gui=NONE
 
@@ -118,6 +118,13 @@ hi link VisualNOS Visual
 hi CursorLine ctermfg=NONE ctermbg=NONE cterm=NONE
 hi VertSplit ctermfg=NONE ctermbg=NONE cterm=NONE
 hi CursorLineNr ctermfg=NONE ctermbg=NONE cterm=NONE
+
+"language
+hi cFormat guifg=chester_yellow guibg=NONE gui=NONE
+hi link cCommentString  Comment
+hi link cComment2String Comment
+
+hi link vimCommentString  Comment
 
 "plugins
 hi debugPC guifg=NONE guibg=chester_background_alt
