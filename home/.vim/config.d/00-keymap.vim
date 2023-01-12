@@ -25,23 +25,23 @@ let s:comment_out_chars = {
 \   "rust": "// ",
 \}
 
-def s:toggle_comment_out(ft: string)
+def s:toggle_comment_out()
     var line = substitute(getline("."), "^\\s\\+", "", "")
-    var chars = get(s:comment_out_chars, ft, "")
+    var chars = get(s:comment_out_chars, &ft, "")
     var cur = getcurpos()
 
     if line[0 : len(chars) - 1] == chars
         execute("substitute " .. printf("#%s##", chars))
         cur[2] -= len(chars)
     else
+        execute("normal " .. printf("^i%s", chars))
         cur[2] += len(chars)
-        execute("substitute " .. printf("#\\<#%s#", chars))
     endif
 
     setpos(".", cur)
 enddef
 
-nnoremap <silent> <C-_> <cmd>call <SID>toggle_comment_out(&ft)<cr>
+nnoremap <silent> <C-/> <cmd>call <SID>toggle_comment_out()<cr>
 nnoremap          <C-k> <cmd>term ++close ++rows=10<cr>
 
 imap <expr> <tab>   <SID>imap_tab()

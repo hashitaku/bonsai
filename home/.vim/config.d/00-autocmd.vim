@@ -3,7 +3,7 @@ if executable("clang-format")
         w
         system(printf("clang-format --style '%s' -i '%s'", style, expand("%:p")))
         e!
-        enddef
+    enddef
     defcompile
 
     let s:style = {
