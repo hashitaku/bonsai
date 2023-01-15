@@ -1,0 +1,12 @@
+{
+  "fern-git-status.vim": { "branch": "master", "commit": "151336335d3b6975153dad77e60049ca7111da8e" },
+  "fern-hijack.vim": { "branch": "master", "commit": "5989a1ac6ddffd0fe49631826b6743b129992b32" },
+  "fern-renderer-nerdfont.vim": { "branch": "master", "commit": "1e90a78ab5510fbcedc85abeb9a251d978726935" },
+  "fern.vim": { "branch": "main", "commit": "41710c31fffa76d08b8cfcd53d5defa7c07a3fc6" },
+  "lazy.nvim": { "branch": "main", "commit": "666ed7bf73eb5895253c1155bd29270b066cbdac" },
+  "lightline.vim": { "branch": "master", "commit": "b1e91b41f5028d65fa3d31a425ff21591d5d957f" },
+  "nerdfont.vim": { "branch": "master", "commit": "3daf10116daad5da257486c9043c658cced4dd31" },
+  "nvim-treesitter": { "branch": "master", "commit": "d18851653e6edaeb6c0b381abf8def1305337942" },
+  "rust.vim": { "branch": "master", "commit": "889b9a7515db477f4cb6808bef1769e53493c578" },
+  "vim-easymotion": { "branch": "master", "commit": "b3cfab2a6302b3b39f53d9fd2cd997e1127d7878" }
+}

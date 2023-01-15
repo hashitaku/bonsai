@@ -203,7 +203,7 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
 - ユーティリティのインストール
 
     ```sh
-    paru -S --noconfirm bash-completion vim gdb zip unzip tree wget openssh jq polkit man-db man-pages man-pages-ja arch-install-scripts reflector usbutils nftables
+    paru -S --noconfirm bash-completion vim neovim gdb zip unzip tree wget openssh jq polkit man-db man-pages man-pages-ja arch-install-scripts reflector usbutils nftables
     ```
 
 - デスクトップ環境のインストール
