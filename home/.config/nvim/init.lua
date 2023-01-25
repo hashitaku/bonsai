@@ -1,13 +1,21 @@
 local options = {
     cursorline = true,
     encoding = 'utf-8',
+    expandtab = true,
+    fileencoding = 'utf-8',
+    fileencodings = 'utf-8,sjis',
+    fileformat = 'unix',
+    fileformats = 'unix,dos',
     fillchars = 'vert:\u{2502},fold:-,eob:\u{20}',
+    helplang = 'ja,en',
     hidden = true,
     hlsearch = true,
     ignorecase = true,
     incsearch = true,
     laststatus = 3,
+    list = true,
     number = true,
+    pumblend = 5,
     pumheight = 10,
     shiftwidth = 4,
     signcolumn = 'number',
@@ -16,48 +24,30 @@ local options = {
     smarttab = true,
     splitbelow = true,
     splitright = true,
+    tabstop = 4,
     termguicolors = true,
+    wildmenu = true,
+    wildmode = 'longest,full',
+    wildoptions = 'pum',
+    winblend = 5,
 }
 
 for k, v in pairs(options) do
     vim.opt[k] = v
 end
 
-vim.api.nvim_command('colorscheme habamax')
-vim.g.mapleader = ' '
-vim.g['fern#renderer'] = 'nerdfont'
-vim.g['fern#renderer#nerdfont#indent_markers'] = true
+vim.g['loaded_gzip'] = 1
+vim.g['loaded_netrw'] = 1
+vim.g['loaded_netrwPlugin'] = 1
+vim.g['loaded_tar'] = 1
+vim.g['loaded_tarPlugin'] = 1
+vim.g['loaded_zip'] = 1
+vim.g['loaded_zipPlugin'] = 1
+vim.api.nvim_command('packadd! termdebug')
+vim.api.nvim_command('packadd! matchit')
 
-vim.api.nvim_command('packadd termdebug')
-
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-    vim.fn.system({
-	"git",
-    	"clone",
-    	"--filter=blob:none",
-    	"https://github.com/folke/lazy.nvim.git",
-    	"--branch=stable",
-	lazypath,
-    })
-end
-vim.opt.rtp:prepend(lazypath)
-
-require('lazy').setup({
-    {'easymotion/vim-easymotion'},
-    {'itchyny/lightline.vim'},
-    {'lambdalisue/fern-git-status.vim', dependencies = {'lambdalisue/fern.vim'}},
-    {'lambdalisue/fern-hijack.vim', dependencies = {'lambdalisue/fern.vim'}},
-    {'lambdalisue/fern-renderer-nerdfont.vim', dependencies = {'lambdalisue/fern.vim'}},
-    {'lambdalisue/fern.vim'},
-    {'lambdalisue/nerdfont.vim'},
-    {'rust-lang/rust.vim'},
-    {'nvim-treesitter/nvim-treesitter'}
-})
-
-require('nvim-treesitter.configs').setup({
-    highlight = {
-	enable = true,
-    },
-})
 require('keymap')
+require('autocmd')
+require('plugin')
+
+vim.api.nvim_command('colorscheme dracula')
