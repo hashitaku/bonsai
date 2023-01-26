@@ -20,6 +20,7 @@ set hlsearch
 set ignorecase
 set incsearch
 set laststatus=2
+set list
 set number
 set pumheight=10
 set shiftwidth=4
@@ -35,8 +36,9 @@ set wildmenu
 set wildmode=longest,full
 set wildoptions=pum
 
+let &fillchars = "vert:\u2502,fold:-,eob:\u20"
+let &listchars = "tab:> ,trail:-,nbsp:+"
 let &shell = has("win32") ? "powershell -nologo" : "bash"
-let &fillchars = "vert:\u2502,fold:-,eob:\x20"
 let mapleader = " "
 let &t_Cs = "\e[4:3m"
 let &t_Ce = "\e[4:0m"
@@ -49,8 +51,13 @@ if !filereadable(s:jetpackfile)
     call system(printf("curl -fsSLo %s --create-dirs %s", s:jetpackfile, s:jetpackurl))
 endif
 
+let g:loaded_gzip = 1
 let g:loaded_netrw = 1
 let g:loaded_netrwPlugin = 1
+let g:loaded_tar = 1
+let g:loaded_tarPlugin = 1
+let g:loaded_zip = 1
+let g:loaded_zipPlugin = 1
 
 packadd termdebug
 packadd vim-jetpack

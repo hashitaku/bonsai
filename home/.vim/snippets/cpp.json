@@ -1,78 +1,77 @@
 {
-	"#include <.h>": {
-		"prefix": "inc",
-		"body": [
-			"#include <$1>$0"
-		],
-		"description": "include <>"
-	},
+    "#include <.h>": {
+        "prefix": "inc",
+        "body": [
+            "#include <$1>$0"
+        ],
+        "description": "include <>"
+    },
 
-	"#include \".h\"": {
-		"prefix": "Inc",
-		"body": [
-			"#include \"$1.hpp\"$0"
-		],
-		"description": "include \".hpp\""
-	},
+    "#include \".h\"": {
+        "prefix": "Inc",
+        "body": [
+            "#include \"$1.hpp\"$0"
+        ],
+        "description": "include \".hpp\""
+    },
 
-	"main()": {
-		"prefix" : "main",
-		"body" : [
-			"int main() {",
-			"\t$0",
-			"}"
-		],
-		"description": "int main()"
-	},
+    "main()": {
+        "prefix" : "main",
+        "body" : [
+            "int main() {",
+            "\t$0",
+            "}"
+        ],
+        "description": "int main()"
+    },
 
-	"main(int argc, char *argv[])": {
-		"prefix": "Main",
-		"body": [
-			"int main(int argc, char *argv[]) {",
-			"\t$0",
-			"}"
-		],
-		"description": "int main(int argc, char *argv[])"
-	},
+    "main(int argc, char *argv[])": {
+        "prefix": "Main",
+        "body": [
+            "int main(int argc, char *argv[]) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "int main(int argc, char *argv[])"
+    },
 
-	"if": {
-		"prefix": "if",
-		"body": [
-			"if ($1) {",
-			"\t$0",
-			"}"
-		],
-		"description": "if"
-	},
+    "if": {
+        "prefix": "if",
+        "body": [
+            "if ($1) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "if"
+    },
 
-	"for": {
-		"prefix": "for",
-		"body": [
-			"for ($1) {",
-			"\t$0",
-			"}"
-		],
-		"description": "for"
-	},
+    "for": {
+        "prefix": "for",
+        "body": [
+            "for ($1) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "for"
+    },
 
-	"range_based_for": {
-		"prefix": "range_based_for",
-		"body": [
-			"for ($1auto&$2 ${3:e} : $4) {",
-			"\t$0",
-			"}"
-		],
-		"description": "range_based_for"
-	},
+    "range_based_for": {
+        "prefix": "range_based_for",
+        "body": [
+            "for ($1auto&$2 ${3:e} : $4) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "range_based_for"
+    },
 
-	"while": {
-		"prefix": "while",
-		"body": [
-			"while ($1) {",
-			"\t$0",
-			"}"
-		],
-		"description": "while"
-	}
+    "while": {
+        "prefix": "while",
+        "body": [
+            "while ($1) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "while"
+    }
 }
-
