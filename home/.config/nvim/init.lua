@@ -36,6 +36,8 @@ for k, v in pairs(options) do
     vim.opt[k] = v
 end
 
+vim.g.mapleader = ' '
+
 vim.g['loaded_gzip'] = 1
 vim.g['loaded_netrw'] = 1
 vim.g['loaded_netrwPlugin'] = 1
@@ -46,8 +48,8 @@ vim.g['loaded_zipPlugin'] = 1
 vim.api.nvim_command('packadd! termdebug')
 vim.api.nvim_command('packadd! matchit')
 
-require('keymap')
 require('autocmd')
 require('plugin')
 
-vim.api.nvim_command('colorscheme dracula')
+--vim.api.nvim_command('colorscheme dracula')
+vim.api.nvim_command('colorscheme chester')

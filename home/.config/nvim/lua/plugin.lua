@@ -1,11 +1,11 @@
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
     vim.fn.system({
-    "git",
-        "clone",
-        "--filter=blob:none",
-        "https://github.com/folke/lazy.nvim.git",
-        "--branch=stable",
+    'git',
+        'clone',
+        '--filter=blob:none',
+        'https://github.com/folke/lazy.nvim.git',
+        '--branch=stable',
     lazypath,
     })
 end
@@ -26,7 +26,7 @@ require('lazy').setup({
 
     {
         'folke/noice.nvim',
-        dependecies = {
+        dependencies = {
             'MunifTanjim/nui.nvim'
         },
         opts = {
@@ -73,24 +73,27 @@ require('lazy').setup({
                     completion = cmp.config.window.bordered(),
                     documentation = cmp.config.window.bordered(),
                 },
-                --[[
                 mapping = cmp.mapping.preset.insert({
-                    ['<Tab>'] = function(fallback)
+                    ['<Tab>'] = cmp.mapping(function(fallback)
                         if cmp.visible() then
                             cmp.select_next_item()
-                        elseif vim.fn['vsnip#jumpable'](1)
-                            
+                        elseif vim.fn['vsnip#jumpable'](1) == 1 then
+                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Plug>(vsnip-jump-next)', true, true, true), '', false)
                         else
                             fallback()
                         end
-                    end,
-                    ['<S-Tab>'] = function(fallback)
+                    end, {'i', 's'}),
+
+                    ['<S-Tab>'] = cmp.mapping(function(fallback)
                         if cmp.visible() then
                             cmp.select_prev_item()
+                        elseif vim.fn['vsnip#jumpable'](-1) == 1 then
+                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Plug>(vsnip-jump-prev)', true, true, true), '', false)
                         else
                             fallback()
                         end
-                    end,
+                    end, {'i', 's'}),
+
                     ['<CR>'] = function(fallback)
                         if cmp.visible() then
                             cmp.confirm()
@@ -99,7 +102,6 @@ require('lazy').setup({
                         end
                     end
                 }),
-                ]]
                 sources = cmp.config.sources({
                     { name = 'nvim_lsp' },
                     { name = 'vsnip' },
@@ -162,6 +164,7 @@ require('lazy').setup({
             vim.g['fern#drawer_keep'] = true
             vim.g['fern#renderer#nerdfont#indent_markers'] = true
             vim.g['fern#renderer'] = 'nerdfont'
+            vim.api.nvim_set_keymap('n', '<C-n>', '<cmd>Fern . -reveal=% -drawer -toggle<cr>', { noremap = true })
         end,
     },
 
@@ -199,6 +202,24 @@ require('lazy').setup({
         'nvim-treesitter/nvim-treesitter',
         config = function()
             require('nvim-treesitter.configs').setup({
+                ensure_installed = {
+                    'bash',
+                    'c',
+                    'cmake',
+                    'cpp',
+                    'help',
+                    'json',
+                    'lua',
+                    'make',
+                    'markdown',
+                    'markdown_inline',
+                    'meson',
+                    'python',
+                    'regex',
+                    'rust',
+                    'vim',
+                },
+                sync_intall = true,
                 highlight = {
                     enable = true,
                 },
@@ -208,7 +229,7 @@ require('lazy').setup({
 
     {
         'rust-lang/rust.vim',
-        ft = "rust",
+        ft = 'rust',
         config = function()
             vim.g['rustfmt_autosave'] = true
         end,
@@ -219,5 +240,21 @@ require('lazy').setup({
         config = function()
             require('nvim-autopairs').setup({})
         end,
+    },
+
+    {
+        'lukas-reineke/indent-blankline.nvim',
+        config = function()
+            require('indent_blankline').setup({
+                char = '',
+                show_current_context = true,
+                --use_treesitter = true,
+                --show_current_context_start = true,
+            })
+        end,
+    },
+
+    {
+        'hashitaku/chester.nvim',
     },
 })
