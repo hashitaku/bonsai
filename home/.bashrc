@@ -21,11 +21,11 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 if ! shopt -oq posix; then
-	if [ -f /usr/share/bash-completion/bash_completion ]; then
-		. /usr/share/bash-completion/bash_completion
-	elif [ -f /etc/bash_completion ]; then
-    	. /etc/bash_completion
-	fi
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+        source /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]; then
+        source /etc/bash_completion
+    fi
 fi
 
 export EDITOR='vim'
@@ -48,10 +48,10 @@ test -f /usr/share/git/git-prompt.sh && source /usr/share/git/git-prompt.sh
 
 # プロンプト設定
 if [[ "$(type -t __git_ps1)" == 'function' ]]; then
-    GIT_PS1_SHOWUPSTREAM=1
-    GIT_PS1_SHOWUNTRACKEDFILES=1
-    GIT_PS1_SHOWSTASHSTATE=1
-    GIT_PS1_SHOWDIRTYSTYLE=1
+    GIT_PS1_SHOWDIRTYSTATE=true
+    GIT_PS1_SHOWSTASHSTATE=true
+    GIT_PS1_SHOWUNTRACKEDFILES=true
+    GIT_PS1_SHOWUPSTREAM='auto'
     title='\[\e]0;\w$(__git_ps1)\a\]'
     prompt='\[\e[31m\]\u\[\e[0m\] at\[\e[33m\] \h\[\e[0m\] in\[\e[32m\] \w\[\e[36m\]$(__git_ps1)\[\e[0m\]\$ '
 else
@@ -60,11 +60,11 @@ else
 fi
 
 case "${TERM}" in
-	xterm*|rxvt*)
-		PS1="${title}${prompt}"
-		;;
-	*)
-		PS1="${prompt}"
-		;;
+    xterm*|rxvt*)
+        PS1="${title}${prompt}"
+        ;;
+    *)
+        PS1="${prompt}"
+        ;;
 esac
 unset title prompt

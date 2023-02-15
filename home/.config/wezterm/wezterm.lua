@@ -4,19 +4,21 @@ local target = wezterm.target_triple
 
 local window_decorations
 local shell
-local font_name
 if target == 'x86_64-unknown-linux-gnu' then
     window_decorations = 'RESIZE'
-    shell = 'bash'
+    shell = {
+        'bash',
+    }
 elseif target == 'x86_64-pc-windows-msvc' then
     window_decorations = 'TITLE | RESIZE'
-    shell = 'powershell'
+    shell = {
+        'powershell',
+        '-nologo',
+    }
 end
 
 return {
-    default_prog = {
-        shell
-    },
+    default_prog = shell,
 
     initial_cols = 120,
     initial_rows = 30,
