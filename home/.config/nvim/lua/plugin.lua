@@ -1,23 +1,6 @@
-local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
-if not vim.loop.fs_stat(lazypath) then
-    vim.fn.system({
-    'git',
-        'clone',
-        '--filter=blob:none',
-        'https://github.com/folke/lazy.nvim.git',
-        '--branch=stable',
-    lazypath,
-    })
-end
-vim.opt.rtp:prepend(lazypath)
-
-require('lazy').setup({
+return {
     {
         'MunifTanjim/nui.nvim',
-    },
-
-    {
-        'dracula/vim',
     },
 
     {
@@ -40,11 +23,7 @@ require('lazy').setup({
     },
 
     {
-        'hrsh7th/cmp-buffer',
-    },
-
-    {
-        'hrsh7th/cmp-cmdline',
+        'folke/tokyonight.nvim',
     },
 
     {
@@ -70,8 +49,24 @@ require('lazy').setup({
                     end,
                 },
                 window = {
-                    completion = cmp.config.window.bordered(),
-                    documentation = cmp.config.window.bordered(),
+                    completion = {
+                        border = 'rounded',
+                        col_offset = 0,
+                        scrollbar = false,
+                        scrolloff = 0,
+                        side_padding = 1,
+                        winhighlight = 'Normal:Normal,FloatBorder:FloatBorder,CursorLine:CursorLine,Search:None',
+                    },
+                    documentation = {
+                        border = 'rounded',
+                        col_offset = 0,
+                        scrollbar = false,
+                        scrolloff = 0,
+                        side_padding = 1,
+                        winhighlight = 'Normal:Normal,FloatBorder:Normal,CursorLine:CursorLine,Search:None',
+                    },
+                    --completion = cmp.config.window.bordered(),
+                    --documentation = cmp.config.window.bordered(),
                 },
                 mapping = cmp.mapping.preset.insert({
                     ['<Tab>'] = cmp.mapping(function(fallback)
@@ -104,6 +99,7 @@ require('lazy').setup({
                 }),
                 sources = cmp.config.sources({
                     { name = 'nvim_lsp' },
+                    { name = 'path' },
                     { name = 'vsnip' },
                 }),
                 formatting = {
@@ -131,7 +127,13 @@ require('lazy').setup({
         'itchyny/lightline.vim',
         config = function()
             vim.g['lightline'] = {
-                colorscheme = 'dracula',
+                colorscheme = 'one',
+
+                separator            = { left = '\u{E0B4}', right = '\u{E0B6}' },
+                subseparator         = { left = '\u{E0B5}', right = '\u{E0B7}' },
+                tabline_separator    = { left = '\u{E0B4}', right = '\u{E0B6}' },
+                tabline_subseparator = { left = '\u{E0B5}', right = '\u{E0B7}' },
+
             }
         end,
     },
@@ -175,15 +177,8 @@ require('lazy').setup({
     {
         'neovim/nvim-lspconfig',
         config = function()
-            require('lspconfig')['clangd'].setup({
-                cmd = {
-                    'clangd',
-                    '--clang-tidy',
-                    '--header-insertion=never',
-                    '--malloc-trim',
-                    '-j=2',
-                },
-            })
+            vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })
+            vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'rounded' })
 
             vim.api.nvim_create_user_command('LspHover',
                 function(args)
@@ -195,6 +190,21 @@ require('lazy').setup({
             )
 
             vim.opt['keywordprg'] = ':LspHover'
+
+            require('lspconfig')['clangd'].setup({
+                cmd = {
+                    'clangd',
+                    '--clang-tidy',
+                    '--header-insertion=never',
+                    '--malloc-trim',
+                    '-j=2',
+                },
+                handlers = vim.lsp.handlers,
+            })
+
+            require('lspconfig')['rust_analyzer'].setup({
+                handlers = vim.lsp.handlers,
+            })
         end,
     },
 
@@ -228,6 +238,10 @@ require('lazy').setup({
     },
 
     {
+        'nvim-treesitter/playground',
+    },
+
+    {
         'rust-lang/rust.vim',
         ft = 'rust',
         config = function()
@@ -257,4 +271,11 @@ require('lazy').setup({
     {
         'hashitaku/chester.nvim',
     },
-})
+
+    {
+        'akinsho/toggleterm.nvim',
+        config = function()
+            require('toggleterm').setup({})
+        end,
+    },
+}

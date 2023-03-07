@@ -48,8 +48,30 @@ vim.g['loaded_zipPlugin'] = 1
 vim.api.nvim_command('packadd! termdebug')
 vim.api.nvim_command('packadd! matchit')
 
-require('autocmd')
-require('plugin')
+local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
+if not vim.loop.fs_stat(lazypath) then
+    vim.fn.system({
+    'git',
+        'clone',
+        '--filter=blob:none',
+        'https://github.com/folke/lazy.nvim.git',
+        '--branch=stable',
+    lazypath,
+    })
+end
+vim.opt.rtp:prepend(lazypath)
 
---vim.api.nvim_command('colorscheme dracula')
-vim.api.nvim_command('colorscheme chester')
+require('lazy').setup('plugin', {
+    ui = {
+        size = {
+            width = 0.7,
+            height = 0.7
+        },
+        border = 'rounded'
+    },
+})
+
+require('autocmd')
+
+--vim.api.nvim_command('colorscheme chester')
+vim.api.nvim_command('colorscheme tokyonight')
