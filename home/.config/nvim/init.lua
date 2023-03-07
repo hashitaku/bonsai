@@ -71,7 +71,5 @@ require('lazy').setup('plugin', {
     },
 })
 
-require('autocmd')
-
 --vim.api.nvim_command('colorscheme chester')
 vim.api.nvim_command('colorscheme tokyonight')
