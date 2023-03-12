@@ -127,7 +127,7 @@ return {
         'itchyny/lightline.vim',
         config = function()
             vim.g['lightline'] = {
-                colorscheme = 'one',
+                colorscheme = 'tokyonight',
 
                 separator            = { left = '\u{E0B4}', right = '\u{E0B6}' },
                 subseparator         = { left = '\u{E0B5}', right = '\u{E0B7}' },
@@ -167,6 +167,12 @@ return {
             vim.g['fern#renderer#nerdfont#indent_markers'] = true
             vim.g['fern#renderer'] = 'nerdfont'
             vim.api.nvim_set_keymap('n', '<C-n>', '<cmd>Fern . -reveal=% -drawer -toggle<cr>', { noremap = true })
+            vim.api.nvim_create_autocmd('FileType', {
+                pattern = { 'fern' },
+                callback = function()
+                    vim.opt_local['number'] = false
+                    vim.opt_local['signcolumn'] = 'auto'
+            })
         end,
     },
 
@@ -236,6 +242,10 @@ return {
             })
         end,
     },
+
+    {
+        'nvim-treesitter/nvim-treesitter-context',
+    }
 
     {
         'nvim-treesitter/playground',
