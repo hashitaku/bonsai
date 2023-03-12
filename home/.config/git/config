@@ -1,11 +1,13 @@
 [user]
-	name =
-	email =
+    name =
+    email =
 [color]
-	ui = auto
+    ui = auto
 [merge]
-	ff = false
+    ff = false
 [pull]
-	ff = only
+    ff = only
 [status]
-	showUntrackedFiles = all
+    showUntrackedFiles = all
+[init]
+    defaultBranch = main
