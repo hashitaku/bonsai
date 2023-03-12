@@ -133,7 +133,6 @@ return {
                 subseparator         = { left = '\u{E0B5}', right = '\u{E0B7}' },
                 tabline_separator    = { left = '\u{E0B4}', right = '\u{E0B6}' },
                 tabline_subseparator = { left = '\u{E0B5}', right = '\u{E0B7}' },
-
             }
         end,
     },
@@ -167,11 +166,13 @@ return {
             vim.g['fern#renderer#nerdfont#indent_markers'] = true
             vim.g['fern#renderer'] = 'nerdfont'
             vim.api.nvim_set_keymap('n', '<C-n>', '<cmd>Fern . -reveal=% -drawer -toggle<cr>', { noremap = true })
+
             vim.api.nvim_create_autocmd('FileType', {
                 pattern = { 'fern' },
                 callback = function()
                     vim.opt_local['number'] = false
                     vim.opt_local['signcolumn'] = 'auto'
+                end,
             })
         end,
     },
@@ -183,6 +184,8 @@ return {
     {
         'neovim/nvim-lspconfig',
         config = function()
+            local lspconfig = require('lspconfig')
+
             vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })
             vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'rounded' })
 
@@ -197,7 +200,7 @@ return {
 
             vim.opt['keywordprg'] = ':LspHover'
 
-            require('lspconfig')['clangd'].setup({
+            lspconfig['clangd'].setup({
                 cmd = {
                     'clangd',
                     '--clang-tidy',
@@ -208,8 +211,16 @@ return {
                 handlers = vim.lsp.handlers,
             })
 
-            require('lspconfig')['rust_analyzer'].setup({
+            lspconfig['rust_analyzer'].setup({
                 handlers = vim.lsp.handlers,
+            })
+
+            lspconfig['denols'].setup({
+                root_dir = lspconfig.util.root_pattern('deno.json', 'deno.jsonc'),
+            })
+
+            lspconfig['tsserver'].setup({
+                root_dir = lspconfig.util.root_pattern('package.json'),
             })
         end,
     },
@@ -245,7 +256,7 @@ return {
 
     {
         'nvim-treesitter/nvim-treesitter-context',
-    }
+    },
 
     {
         'nvim-treesitter/playground',
