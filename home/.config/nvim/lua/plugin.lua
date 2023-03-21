@@ -4,7 +4,76 @@ return {
     },
 
     {
-        'easymotion/vim-easymotion',
+        'phaazon/hop.nvim',
+        config = function()
+            local hop = require('hop')
+            local directions = require('hop.hint').HintDirection
+
+            hop.setup({})
+
+            vim.keymap.set(
+                'n',
+                '<leader><leader>w',
+                function()
+                    hop.hint_words({ direction = directions.AFTER_CURSOR, current_line_only = true })
+                end,
+                { }
+            )
+
+            vim.keymap.set(
+                'n',
+                '<leader><leader>b',
+                function()
+                    hop.hint_words({ direction = directions.BEFORE_CURSOR, current_line_only = true })
+                end,
+                { }
+            )
+
+            vim.keymap.set(
+                'n',
+                '<leader><leader>j',
+                function()
+                    hop.hint_lines_skip_whitespace({ direction = directions.AFTER_CURSOR })
+                end,
+                { }
+            )
+
+            vim.keymap.set(
+                'n',
+                '<leader><leader>k',
+                function()
+                    hop.hint_lines_skip_whitespace({ direction = directions.BEFORE_CURSOR })
+                end,
+                { }
+            )
+
+            vim.keymap.set(
+                'n',
+                '<leader><leader>f',
+                function()
+                    hop.hint_char1({ direction = directions.AFTER_CURSOR })
+                end,
+                { }
+            )
+
+            vim.keymap.set(
+                'n',
+                '<leader><leader>F',
+                function()
+                    hop.hint_char1({ direction = directions.BEFORE_CURSOR })
+                end,
+                { }
+            )
+
+            vim.keymap.set(
+                'n',
+                '<leader><leader>/',
+                function()
+                    hop.hint_patterns({ })
+                end,
+                { }
+            )
+        end,
     },
 
     {
@@ -12,6 +81,7 @@ return {
         dependencies = {
             'MunifTanjim/nui.nvim'
         },
+        cond = true,
         opts = {
             message = {
                 enabled = false,
@@ -39,9 +109,21 @@ return {
     },
 
     {
+        'hrsh7th/cmp-cmdline',
+    },
+
+    {
         'hrsh7th/nvim-cmp',
         config = function()
             local cmp = require('cmp')
+
+            cmp.setup.cmdline(':', {
+                mapping = cmp.mapping.preset.cmdline(),
+                sources = cmp.config.sources({
+                    { name = 'cmdline' },
+                }),
+            })
+
             cmp.setup({
                 snippet = {
                     expand = function(args)
@@ -65,8 +147,6 @@ return {
                         side_padding = 1,
                         winhighlight = 'Normal:Normal,FloatBorder:Normal,CursorLine:CursorLine,Search:None',
                     },
-                    --completion = cmp.config.window.bordered(),
-                    --documentation = cmp.config.window.bordered(),
                 },
                 mapping = cmp.mapping.preset.insert({
                     ['<Tab>'] = cmp.mapping(function(fallback)
@@ -127,7 +207,7 @@ return {
         'itchyny/lightline.vim',
         config = function()
             vim.g['lightline'] = {
-                colorscheme = 'tokyonight',
+                colorscheme = 'one',
 
                 separator            = { left = '\u{E0B4}', right = '\u{E0B6}' },
                 subseparator         = { left = '\u{E0B5}', right = '\u{E0B7}' },
@@ -217,10 +297,12 @@ return {
 
             lspconfig['denols'].setup({
                 root_dir = lspconfig.util.root_pattern('deno.json', 'deno.jsonc'),
+                handlers = vim.lsp.handlers,
             })
 
             lspconfig['tsserver'].setup({
                 root_dir = lspconfig.util.root_pattern('package.json'),
+                handlers = vim.lsp.handlers,
             })
         end,
     },
@@ -244,6 +326,7 @@ return {
                     'python',
                     'regex',
                     'rust',
+                    'typescript',
                     'vim',
                 },
                 sync_intall = true,
@@ -291,12 +374,6 @@ return {
 
     {
         'hashitaku/chester.nvim',
-    },
-
-    {
-        'akinsho/toggleterm.nvim',
-        config = function()
-            require('toggleterm').setup({})
-        end,
+        branch = 'develop',
     },
 }

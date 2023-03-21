@@ -37,6 +37,14 @@ for k, v in pairs(options) do
 end
 
 vim.g.mapleader = ' '
+vim.keymap.set(
+    'n',
+    '<Esc><Esc>',
+    function()
+        vim.api.nvim_command('nohlsearch')
+    end,
+    { }
+)
 
 vim.g['loaded_gzip'] = 1
 vim.g['loaded_netrw'] = 1
@@ -71,5 +79,5 @@ require('lazy').setup('plugin', {
     },
 })
 
---vim.api.nvim_command('colorscheme chester')
-vim.api.nvim_command('colorscheme tokyonight')
+vim.api.nvim_command('colorscheme chester')
+--vim.api.nvim_command('colorscheme tokyonight')
