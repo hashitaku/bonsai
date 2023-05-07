@@ -295,6 +295,24 @@ return {
                 handlers = vim.lsp.handlers,
             })
 
+            lspconfig['lua_ls'].setup({
+                handlers = vim.lsp.handlers,
+                settings = {
+                    Lua = {
+                        runtime = {
+                            version = 'LuaJIT',
+                        },
+                        diagnostics = {
+                            globals = { 'vim' },
+                        },
+                        workspace = {
+                            library = vim.api.nvim_get_runtime_file("", true),
+                            checkThirdParty = false,
+                        },
+                    },
+                },
+            })
+
             lspconfig['denols'].setup({
                 root_dir = lspconfig.util.root_pattern('deno.json', 'deno.jsonc'),
                 handlers = vim.lsp.handlers,
