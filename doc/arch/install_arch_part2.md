@@ -221,9 +221,9 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
 - その他インストール
 
     ```sh
-    curl -sS https://download.spotify.com/debian/pubkey_5E3C45D7B312C643.gpg | gpg --import -
+    curl -sS https://download.spotify.com/debian/pubkey_7A3A762FAFD4A51F.gpg  | gpg --import -
     paru -S --noconfirm gnome-keyring seahorse discord visual-studio-code-bin brave-bin gimp vlc thunderbird thunderbird-i18n-ja firefox firefox-i18n-ja spotify gnome-screenshot peek libreoffice-fresh libreoffice-fresh-ja
-    paru -S --noconfirm glow btop pipes.sh cava bat neofetch
+    paru -S --noconfirm glow btop pipes.sh cava bat ripgrep neofetch aria2
     ```
 
 - 言語処理系
@@ -256,10 +256,16 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
         paru -S --noconfirm python python-black flake8
         ```
 
-    - JavaScript
+    - JavaScript/TypeScript
 
         ```sh
-        paru -S --noconfirm nodejs npm typescript typescript-language-server
+        paru -S --noconfirm nodejs npm deno typescript typescript-language-server
+        ```
+
+    - Lua
+
+        ```sh
+        paru -S lua-language-server
         ```
 
 # その他設定
