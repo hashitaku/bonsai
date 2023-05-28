@@ -79,7 +79,7 @@ return {
     {
         'folke/noice.nvim',
         dependencies = {
-            'MunifTanjim/nui.nvim'
+            'MunifTanjim/nui.nvim',
         },
         cond = true,
         opts = {
@@ -205,9 +205,15 @@ return {
 
     {
         'itchyny/lightline.vim',
+        cond = false,
         config = function()
             vim.g['lightline'] = {
                 colorscheme = 'one',
+
+                active = {
+                    left = {{'mode', 'paste'}, {'readonly', 'filename', 'modified'}},
+                    right = {{'lineinfo'}, {'percent'}, {'fileformat', 'fileencoding', 'filetype'}}
+                },
 
                 separator            = { left = '\u{E0B4}', right = '\u{E0B6}' },
                 subseparator         = { left = '\u{E0B5}', right = '\u{E0B7}' },
@@ -215,6 +221,62 @@ return {
                 tabline_subseparator = { left = '\u{E0B5}', right = '\u{E0B7}' },
             }
         end,
+    },
+
+    {
+        'nvim-lualine/lualine.nvim',
+        cond = true,
+        opts = {
+            options = {
+                theme = 'material',
+                component_separators = { left = '\u{E0B5}', right = '\u{E0B7}' },
+                section_separators  = { left = '\u{E0B4}', right = '\u{E0B6}' },
+                sections = {
+                    lualine_a = {'mode'},
+                },
+                tabline = {
+                    lualine_a = {'branch'},
+                },
+            },
+            sections = {
+                lualine_a = {
+                    {
+                        'mode',
+                        separator = {
+                            left = '\u{E0B6}',
+                            right = '\u{E0B4}',
+                        },
+                        right_padding = 2,
+                    },
+                },
+                lualine_b = {'branch', 'diff', 'diagnostics'},
+                lualine_c = {},
+                lualine_x = {'encoding', 'fileformat', 'filetype'},
+                lualine_y = {'progress'},
+                lualine_z = {
+                    {
+                        'location',
+                        separator = {
+                            left = '\u{E0B6}',
+                            right = '\u{E0B4}',
+                        }
+                    }
+                },
+            },
+            winbar = {
+                lualine_a = {
+                    {
+                        'filename',
+                        separator = {
+                            left = '\u{E0B6}',
+                            right = '\u{E0B4}',
+                            --left = '',
+                            --right = '',
+                        },
+                    },
+                },
+            },
+        },
     },
 
     {
@@ -334,7 +396,7 @@ return {
                     'c',
                     'cmake',
                     'cpp',
-                    'help',
+                    'vimdoc',
                     'json',
                     'lua',
                     'make',
@@ -357,10 +419,16 @@ return {
 
     {
         'nvim-treesitter/nvim-treesitter-context',
+        dependencies = {
+            'nvim-treesitter/nvim-treesitter',
+        },
     },
 
     {
         'nvim-treesitter/playground',
+        dependencies = {
+            'nvim-treesitter/nvim-treesitter',
+        },
     },
 
     {
@@ -380,14 +448,33 @@ return {
 
     {
         'lukas-reineke/indent-blankline.nvim',
+        opts = {
+            char = '',
+            show_current_context = true,
+            --use_treesitter = true,
+            --show_current_context_start = true,
+        },
+    },
+
+    {
+        'nvim-lua/plenary.nvim',
+    },
+
+    {
+        'nvim-telescope/telescope.nvim',
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+        },
         config = function()
-            require('indent_blankline').setup({
-                char = '',
-                show_current_context = true,
-                --use_treesitter = true,
-                --show_current_context_start = true,
-            })
+            require('telescope').setup({})
         end,
+        opts = {
+
+        },
+    },
+
+    {
+        'nvim-tree/nvim-web-devicons',
     },
 
     {
