@@ -265,7 +265,7 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
     - Lua
 
         ```sh
-        paru -S lua-language-server
+        paru -S lua-language-server stylua
         ```
 
 # その他設定
