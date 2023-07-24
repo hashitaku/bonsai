@@ -237,7 +237,7 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
     - QMK firmware
 
         ```sh
-        paru -S --noconfirm avr-gcc avr-libc dfu-programmer
+        paru -S --noconfirm avr-gcc avr-libc arm-none-eabi-binutils arm-none-eabi-gcc arm-none-eabi-newlib dfu-programmer
         ```
 
     - Rust
