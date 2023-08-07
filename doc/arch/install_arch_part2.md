@@ -221,8 +221,7 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
 - その他インストール
 
     ```sh
-    curl -sS https://download.spotify.com/debian/pubkey_7A3A762FAFD4A51F.gpg  | gpg --import -
-    paru -S --noconfirm gnome-keyring seahorse discord visual-studio-code-bin brave-bin gimp vlc thunderbird thunderbird-i18n-ja firefox firefox-i18n-ja spotify gnome-screenshot peek libreoffice-fresh libreoffice-fresh-ja
+    paru -S --noconfirm gnome-keyring seahorse discord visual-studio-code-bin brave-bin gimp vlc thunderbird thunderbird-i18n-ja firefox firefox-i18n-ja gnome-screenshot peek libreoffice-fresh libreoffice-fresh-ja
     paru -S --noconfirm glow btop pipes.sh cava bat ripgrep neofetch aria2
     ```
 
