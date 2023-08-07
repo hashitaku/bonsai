@@ -252,7 +252,7 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
     - Python
 
         ```sh
-        paru -S --noconfirm python python-black flake8
+        paru -S --noconfirm python python-lsp-server python-black flake8
         ```
 
     - JavaScript/TypeScript
