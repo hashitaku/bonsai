@@ -46,6 +46,8 @@ return {
         { family = 'Noto Sans Mono CJK JP', weight = 'Bold' },
     },
     font_size = 14.0,
+    bold_brightens_ansi_colors = true,
+    cell_width = 0.9,
 
     colors = {
         foreground = '#f8f8f2',
