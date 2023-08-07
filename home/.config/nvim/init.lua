@@ -26,11 +26,16 @@ local options = {
     splitright = true,
     tabstop = 4,
     termguicolors = true,
+    virtualedit = "block,onemore",
     wildmenu = true,
     wildmode = "longest,full",
     wildoptions = "pum",
-    winblend = 5,
 }
+
+-- https://github.com/vscode-neovim/vscode-neovim/issues/1369
+if not vim.g.vscode then
+    options.winblend = 10
+end
 
 for k, v in pairs(options) do
     vim.opt[k] = v

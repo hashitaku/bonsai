@@ -1,14 +1,65 @@
 return {
     {
         "MunifTanjim/nui.nvim",
+        enabled = not vim.g.vscode,
+    },
+
+    {
+        "folke/flash.nvim",
+        layz = true,
+        keys = {
+            {
+                "<Leader>f",
+                mode = {
+                    "n",
+                },
+                function()
+                    require("flash").jump({
+                        search = {
+                            multi_window = false,
+                            forward = true,
+                            wrap = false,
+                        },
+                    })
+                end,
+            },
+
+            {
+                "<Leader>F",
+                mode = {
+                    "n",
+                },
+                function()
+                    require("flash").jump({
+                        search = {
+                            multi_window = false,
+                            forward = false,
+                            wrap = false,
+                        },
+                    })
+                end,
+            }
+        },
+        opts = {
+            modes = {
+                search = {
+                    enabled = false,
+                },
+
+                char = {
+                    enabled = false,
+                    jump_labels = true,
+                },
+            },
+        },
     },
 
     {
         "folke/noice.nvim",
+        enabled = not vim.g.vscode,
         dependencies = {
             "MunifTanjim/nui.nvim",
         },
-        cond = true,
         opts = {
             message = {
                 enabled = false,
@@ -25,22 +76,27 @@ return {
 
     {
         "hrsh7th/cmp-nvim-lsp",
+        enabled = not vim.g.vscode,
     },
 
     {
         "hrsh7th/cmp-path",
+        enabled = not vim.g.vscode,
     },
 
     {
         "hrsh7th/cmp-vsnip",
+        enabled = not vim.g.vscode,
     },
 
     {
         "hrsh7th/cmp-cmdline",
+        enabled = not vim.g.vscode,
     },
 
     {
         "hrsh7th/nvim-cmp",
+        enabled = not vim.g.vscode,
         config = function()
             local cmp = require("cmp")
 
@@ -133,6 +189,7 @@ return {
 
     {
         "hrsh7th/vim-vsnip",
+        enabled = not vim.g.vscode,
         config = function()
             vim.g["vsnip_snippet_dir"] = vim.fn.stdpath("config") .. "/snippets"
         end,
@@ -140,10 +197,10 @@ return {
 
     {
         "itchyny/lightline.vim",
-        cond = false,
+        enabled = not vim.g.vscode,
         config = function()
             vim.g["lightline"] = {
-                colorscheme = "one",
+                colorscheme = "tokyonight",
 
                 active = {
                     left = { { "mode", "paste" }, { "readonly", "filename", "modified" } },
@@ -160,7 +217,7 @@ return {
 
     {
         "nvim-lualine/lualine.nvim",
-        cond = true,
+        enabled = not vim.g.vscode and false,
         opts = {
             options = {
                 theme = "tokyonight",
@@ -192,18 +249,12 @@ return {
                     },
                 },
             },
-            --tabline = {
-            --    lualine_a = {
-            --        'navic',
-            --        color_correction = nil,
-            --        navic_opts = nil,
-            --    },
-            --},
         },
     },
 
     {
         "lambdalisue/fern-git-status.vim",
+        enabled = not vim.g.vscode,
         dependencies = {
             "lambdalisue/fern.vim",
         },
@@ -211,6 +262,7 @@ return {
 
     {
         "lambdalisue/fern-hijack.vim",
+        enabled = not vim.g.vscode,
         dependencies = {
             "lambdalisue/fern.vim",
         },
@@ -218,13 +270,16 @@ return {
 
     {
         "lambdalisue/fern-renderer-nerdfont.vim",
+        enabled = not vim.g.vscode,
         dependencies = {
             "lambdalisue/fern.vim",
+            "lambdalisue/nerdfont.vim",
         },
     },
 
     {
         "lambdalisue/fern.vim",
+        enabled = not vim.g.vscode,
         config = function()
             vim.g["fern#default_hidden"] = true
             vim.g["fern#drawer_keep"] = true
@@ -244,10 +299,12 @@ return {
 
     {
         "lambdalisue/nerdfont.vim",
+        enabled = not vim.g.vscode,
     },
 
     {
         "neovim/nvim-lspconfig",
+        enabled = not vim.g.vscode,
         dependencies = {
             "SmiteshP/nvim-navic",
         },
@@ -304,6 +361,23 @@ return {
                 },
             })
 
+            lspconfig["pylsp"].setup({
+                settings = {
+                    pylsp = {
+                        pycodestyle = {
+                            ignore = { "W391" },
+                            maxLineLength = 100,
+                        },
+                    },
+                },
+                handlers = vim.lsp.handlers,
+            })
+
+            lspconfig["omnisharp"].setup({
+                cmd = { "omnisharp", "--languageserver", "--hostPID", tostring(vim.fn.getpid()) },
+                handlers = vim.lsp.handlers,
+            })
+
             lspconfig["denols"].setup({
                 root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
                 handlers = vim.lsp.handlers,
@@ -318,6 +392,7 @@ return {
 
     {
         "nvim-treesitter/nvim-treesitter",
+        enabled = not vim.g.vscode,
         main = "nvim-treesitter.configs",
         opts = {
             ensure_installed = {
@@ -347,6 +422,7 @@ return {
 
     {
         "nvim-treesitter/nvim-treesitter-context",
+        enabled = not vim.g.vscode,
         dependencies = {
             "nvim-treesitter/nvim-treesitter",
         },
@@ -354,6 +430,7 @@ return {
 
     {
         "nvim-treesitter/playground",
+        enabled = not vim.g.vscode,
         dependencies = {
             "nvim-treesitter/nvim-treesitter",
         },
@@ -361,6 +438,7 @@ return {
 
     {
         "rust-lang/rust.vim",
+        enabled = not vim.g.vscode,
         ft = "rust",
         config = function()
             vim.g["rustfmt_autosave"] = true
@@ -369,11 +447,13 @@ return {
 
     {
         "windwp/nvim-autopairs",
+        enabled = not vim.g.vscode,
         opts = {},
     },
 
     {
         "lukas-reineke/indent-blankline.nvim",
+        enabled = not vim.g.vscode,
         opts = {
             char = "",
             show_current_context = true,
@@ -388,6 +468,7 @@ return {
 
     {
         "nvim-telescope/telescope.nvim",
+        enabled = not vim.g.vscode,
         dependencies = {
             "nvim-lua/plenary.nvim",
         },
@@ -396,20 +477,18 @@ return {
 
     {
         "nvim-tree/nvim-web-devicons",
-    },
-
-    {
-        "ggandor/leap.nvim",
-        opts = {},
+        enabled = not vim.g.vscode,
     },
 
     {
         "SmiteshP/nvim-navic",
+        enabled = not vim.g.vscode,
         opts = {},
     },
 
     {
         "utilyre/barbecue.nvim",
+        enabled = not vim.g.vscode,
         dependencies = {
             "SmiteshP/nvim-navic",
             "nvim-tree/nvim-web-devicons",
