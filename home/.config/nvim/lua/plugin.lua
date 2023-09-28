@@ -216,43 +216,6 @@ return {
     },
 
     {
-        "nvim-lualine/lualine.nvim",
-        enabled = not vim.g.vscode and false,
-        opts = {
-            options = {
-                theme = "tokyonight",
-                component_separators = { left = "\u{E0B5}", right = "\u{E0B7}" },
-                section_separators = { left = "\u{E0B4}", right = "\u{E0B6}" },
-            },
-            sections = {
-                lualine_a = {
-                    {
-                        "mode",
-                        separator = {
-                            left = "\u{E0B6}",
-                            right = "\u{E0B4}",
-                        },
-                        right_padding = 2,
-                    },
-                },
-                lualine_b = { "branch", "diff", "diagnostics" },
-                lualine_c = {},
-                lualine_x = { "encoding", "fileformat", "filetype" },
-                lualine_y = { "progress" },
-                lualine_z = {
-                    {
-                        "location",
-                        separator = {
-                            left = "\u{E0B6}",
-                            right = "\u{E0B4}",
-                        },
-                    },
-                },
-            },
-        },
-    },
-
-    {
         "lambdalisue/fern-git-status.vim",
         enabled = not vim.g.vscode,
         dependencies = {
@@ -450,17 +413,6 @@ return {
         "windwp/nvim-autopairs",
         enabled = not vim.g.vscode,
         opts = {},
-    },
-
-    {
-        "lukas-reineke/indent-blankline.nvim",
-        enabled = not vim.g.vscode,
-        opts = {
-            char = "",
-            show_current_context = true,
-            --use_treesitter = true,
-            --show_current_context_start = true,
-        },
     },
 
     {
