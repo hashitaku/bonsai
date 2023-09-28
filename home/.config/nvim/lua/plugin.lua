@@ -398,9 +398,9 @@ return {
             ensure_installed = {
                 "bash",
                 "c",
+                "c_sharp",
                 "cmake",
                 "cpp",
-                "vimdoc",
                 "json",
                 "lua",
                 "make",
@@ -412,6 +412,7 @@ return {
                 "rust",
                 "typescript",
                 "vim",
+                "vimdoc",
             },
             sync_intall = true,
             highlight = {
