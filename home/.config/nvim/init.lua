@@ -17,6 +17,7 @@ local options = {
     number = true,
     pumblend = 5,
     pumheight = 10,
+    relativenumber = true,
     shiftwidth = 4,
     signcolumn = "number",
     smartcase = true,
@@ -44,6 +45,9 @@ end
 vim.g.mapleader = " "
 vim.keymap.set("n", "<Esc><Esc>", function()
     vim.api.nvim_command("nohlsearch")
+end, {})
+vim.keymap.set("n", "<Leader>n", function()
+    vim.api.nvim_command("setlocal relativenumber!")
 end, {})
 
 vim.g["loaded_gzip"] = 1
