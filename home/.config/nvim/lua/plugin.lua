@@ -38,7 +38,7 @@ return {
                         },
                     })
                 end,
-            }
+            },
         },
         opts = {
             modes = {
@@ -52,6 +52,10 @@ return {
                 },
             },
         },
+    },
+
+    {
+        "folke/neodev.nvim",
     },
 
     {
@@ -197,7 +201,7 @@ return {
 
     {
         "itchyny/lightline.vim",
-        enabled = not vim.g.vscode,
+        enabled = not vim.g.vscode and true,
         config = function()
             vim.g["lightline"] = {
                 colorscheme = "tokyonight",
@@ -280,6 +284,22 @@ return {
             vim.lsp.handlers["textDocument/signatureHelp"] =
                 vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
 
+            local user_lsp_augid = vim.api.nvim_create_augroup("user_lsp", {})
+            vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+                buffer = 0,
+                group = user_lsp_augid,
+                callback = function(ev)
+                    vim.lsp.buf.document_highlight()
+                end,
+            })
+            vim.api.nvim_create_autocmd("CursorMoved", {
+                buffer = 0,
+                group = user_lsp_augid,
+                callback = function(ev)
+                    vim.lsp.buf.clear_references()
+                end,
+            })
+
             vim.api.nvim_create_user_command("LspHover", function(args)
                 vim.lsp.buf.hover()
             end, {
@@ -293,7 +313,6 @@ return {
                     "clangd",
                     "--clang-tidy",
                     "--header-insertion=never",
-                    "--malloc-trim",
                     "-j=2",
                 },
                 handlers = vim.lsp.handlers,
@@ -301,6 +320,9 @@ return {
 
             lspconfig["rust_analyzer"].setup({
                 handlers = vim.lsp.handlers,
+                cmd = {
+                    "rust-analyzer",
+                },
             })
 
             lspconfig["lua_ls"].setup({
@@ -310,6 +332,9 @@ return {
                 handlers = vim.lsp.handlers,
                 settings = {
                     Lua = {
+                        completion = {
+                            callSnippet = "Replace",
+                        },
                         runtime = {
                             version = "LuaJIT",
                         },
@@ -449,6 +474,10 @@ return {
         config = function()
             require("barbecue").setup()
         end,
+    },
+
+    {
+        "nvim-orgmode/orgmode",
     },
 
     {

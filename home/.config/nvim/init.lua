@@ -27,6 +27,7 @@ local options = {
     splitright = true,
     tabstop = 4,
     termguicolors = true,
+    updatetime = 500,
     virtualedit = "block,onemore",
     wildmenu = true,
     wildmode = "longest,full",
@@ -48,6 +49,9 @@ vim.keymap.set("n", "<Esc><Esc>", function()
 end, {})
 vim.keymap.set("n", "<Leader>n", function()
     vim.api.nvim_command("setlocal relativenumber!")
+end, {})
+vim.keymap.set("n", "<C-k>", function()
+    vim.api.nvim_command("echo &updatetime")
 end, {})
 
 vim.g["loaded_gzip"] = 1
