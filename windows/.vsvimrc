@@ -1,0 +1,15 @@
+set smartcase
+set hlsearch
+set ignorecase
+set incsearch
+set clipboard=unnamed
+
+nnoremap <Esc><Esc> :nohlsearch<CR>
+
+nnoremap <C-]> :vsc 編集.定義をここに表示<CR>
+nnoremap K :vsc 編集.クイックヒント<CR>
+nnoremap <C-n> :vsc 表示.ソリューションエクスプローラー<CR>
+
+nnoremap <Space><Space>j :vsc Tools.InvokePeasyMotionJumpToLineBegining<CR>
+nnoremap <Space><Space>k :vsc Tools.InvokePeasyMotionJumpToLineBegining<CR>
+nnoremap <Space><Space>f :vsc Tools.InvokePeasyMotionTwoCharJump<CR>
