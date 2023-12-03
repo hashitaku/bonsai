@@ -97,7 +97,7 @@ echo 'change root passwd'
 passwd
 
 echo '%sudo ALL=(ALL:ALL) ALL' > /etc/sudoers.d/sudo
-chomod 440 /etc/sudoers.d/sudo
+chmod 440 /etc/sudoers.d/sudo
 visudo -csf /etc/sudoers.d/sudo
 
 pwck -s
