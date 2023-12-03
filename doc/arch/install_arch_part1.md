@@ -56,8 +56,8 @@ umount "/dev/${efi_part}" || true
 umount "/dev/${home_part}" || true
 umount "/dev/${root_part}" || true
 mkfs.fat -F 32 "/dev/${efi_part}"
-mkfs.ext4 -f "/dev/${root_part}"
-mkfs.ext4 -f "/dev/${home_part}"
+mkfs.ext4 "/dev/${root_part}"
+mkfs.ext4 "/dev/${home_part}"
 ```
 
 # ファイルシステムのマウント
@@ -96,9 +96,9 @@ arch-chroot /mnt /bin/bash -euc "
 echo 'change root passwd'
 passwd
 
-echo '%sudo ALL=(ALL:ALL) ALL' > /etc/sudoers.d/sudo
-chmod 440 /etc/sudoers.d/sudo
-visudo -csf /etc/sudoers.d/sudo
+echo '%wheel ALL=(ALL:ALL) ALL' > /etc/sudoers.d/wheel
+chmod 440 /etc/sudoers.d/wheel
+visudo -csf /etc/sudoers.d/wheel
 
 pwck -s
 grpck -s
