@@ -6,10 +6,19 @@
 ip l
 lsblk
 
-read -rp 'wireless? [Y/n] ' is_wireless
+if [ "${USER}" -eq "root" ]; then
+    echo \
+'rootで実行しないでください
+ユーザーを作成していない場合は
+# homectl create --member-of=wheel,video --disk-size=100G --storage=luks [USERNAME]
+でユーザーを作成してからログイン
+'
+fi
+
+read -rp 'wireless? [y/N] ' is_wireless
 
 case $is_wireless in
-    "" | [Y/y]* )
+    [Yy]* )
         read -rp 'ssid: ' ssid
         read -rp 'passphrase: ' passphrase; echo
         ;;
@@ -52,7 +61,7 @@ sudo hostnamectl hostname "${hostname}"
 
 ```sh
 case $is_wireless in
-    "" | [Y/y]* )
+    [Yy]* )
         wpa_passphrase "${ssid}" "${passphrase}" | sudo tee "/etc/wpa_supplicant/wpa_supplicant-${nif_name}.conf"
         sudo systemctl start "wpa_supplicant@${nif_name}.service"
         sudo systemctl enable "wpa_supplicant@${nif_name}.service"
@@ -69,10 +78,8 @@ Name = ${nif_name}
 DHCP = yes
 MulticastDNS = yes" | sudo tee "/etc/systemd/network/50-${nif_name}.network"
 
-sudo systemctl start systemd-networkd.service
-sudo systemctl enable systemd-networkd.service
-sudo systemctl start systemd-resolved.service
-sudo systemctl enable systemd-resolved.service
+sudo systemctl enable --now systemd-networkd.service
+sudo systemctl enable --now systemd-resolved.service
 
 set +e
 while ! ping -c 1 -W 1 archlinux.jp; do
@@ -194,16 +201,18 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
 
 # パッケージインストール
 
-- nvidiaドライバインストール
+- Radeonドライバインストール
+
+- ミドルウェアのインストール
 
     ```sh
-    paru -S --noconfirm nvidia
+    paru -S --noconfirm openssh polkit gnome-keyring man-db man-pages man-pages-ja arch-install-scripts reflector usbutils nftables
     ```
 
-- ユーティリティのインストール
+- CLIアプリのインストール
 
     ```sh
-    paru -S --noconfirm bash-completion vim neovim gdb zip unzip tree wget openssh jq polkit man-db man-pages man-pages-ja arch-install-scripts reflector usbutils nftables
+    paru -S --noconfirm bash-completion vim neovim zip unzip tree wget aria2 jq btop pipes.sh cava bat ripgrep fd delta neofetch
     ```
 
 - デスクトップ環境のインストール
@@ -212,17 +221,16 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
     paru -S --noconfirm xorg-server xorg-xinit i3-wm kitty xclip picom polybar rofi feh dunst libnotify light playerctl pipewire pipewire-pulse pipewire-jack wireplumber alsa-utils fcitx5-mozc fcitx5-configtool fcitx5-qt fcitx5-gtk
     ```
 
+- GUIアプリのインストール
+
+    ```sh
+    paru -S --noconfirm seahorse discord visual-studio-code-bin brave-bin gimp vlc thunderbird thunderbird-i18n-ja firefox firefox-i18n-ja gnome-screenshot peek libreoffice-fresh libreoffice-fresh-ja
+    ```
+
 - フォントのインストール
 
     ```sh
     paru -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji ttf-ubuntu-font-family ttf-ubuntumono-nerd
-    ```
-
-- その他インストール
-
-    ```sh
-    paru -S --noconfirm gnome-keyring seahorse discord visual-studio-code-bin brave-bin gimp vlc thunderbird thunderbird-i18n-ja firefox firefox-i18n-ja gnome-screenshot peek libreoffice-fresh libreoffice-fresh-ja
-    paru -S --noconfirm glow btop pipes.sh cava bat ripgrep neofetch aria2
     ```
 
 - 言語処理系
@@ -230,7 +238,7 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
     - C/C++
 
         ```sh
-        paru -S --noconfirm clang lldb libc++ libc++abi
+        paru -S --noconfirm gdb clang lldb libc++ libc++abi
         ```
 
     - QMK firmware
@@ -242,17 +250,13 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
     - Rust
 
         ```sh
-        cd ~
-        wget https://sh.rustup.rs -O rs.sh
-        bash rs.sh -y --no-modify-path
-        ~/.cargo/bin/rustup default nightly
-        rm -r ~/rs.sh
+        paru -S --noconfirm rustup rust-analyzer
         ```
 
     - Python
 
         ```sh
-        paru -S --noconfirm python python-lsp-server python-black flake8
+        paru -S --noconfirm python pyright rye python-black flake8
         ```
 
     - JavaScript/TypeScript
@@ -298,7 +302,7 @@ table inet filter {
 ```
 
 ```sh
-sudo systemctl enable nftables.service
+sudo systemctl enable --now nftables.service
 ```
 
 ## gnome-keyringの設定
@@ -317,7 +321,7 @@ sudo tee /etc/pam.d/login
 ```sh
 read -rp 'mouse or touchpad [m/t]: ' ans
 case $ans in
-    [M/m]* )
+    [Mm]* )
         echo \
 'Section "InputClass"
     Identifier "libinput mouse"
@@ -327,7 +331,7 @@ case $ans in
     Option "AccelProfile" "flat"
 EndSection' | sudo tee /etc/X11/xorg.conf.d/20-mouse.conf
         ;;
-    [T/t]* )
+    [Tt]* )
         echo \
 'Section "InputClass"
     Identifier "libinput touchpad"
@@ -354,16 +358,5 @@ echo \
 --latest 5
 --sort score' | sudo tee /etc/xdg/reflector/reflector.conf
 
-sudo systemctl enable reflector.timer
-sudo systemctl start reflector.service
-```
-
-# dotfileのコピー
-
-```sh
-cd ~
-git clone https://github.com/hashitaku/dotfile
-cp -r ~/dotfile/home/{.bashrc,.config,.gitconfig,.inputrc,.profile,.vim,.xinitrc} ~/
-rm -rf ~/dotfile
-chmod 700 ~/.local/share/gnupg
+sudo systemctl enable --now reflector.timer
 ```
