@@ -6,7 +6,7 @@
 ip l
 lsblk
 
-if [ "${USER}" -eq "root" ]; then
+if [ "${USER}" = "root" ]; then
     echo \
 'rootで実行しないでください
 ユーザーを作成していない場合は
