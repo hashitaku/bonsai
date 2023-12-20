@@ -13,6 +13,8 @@ if [ "${USER}" = "root" ]; then
 # homectl create --member-of=wheel,video --disk-size=100G --storage=luks [USERNAME]
 でユーザーを作成してからログイン
 '
+
+    exit
 fi
 
 read -rp 'wireless? [y/N] ' is_wireless
@@ -27,7 +29,8 @@ case $is_wireless in
 esac
 
 read -rp 'nif name: ' nif_name
-read -rp 'esp: ' esp
+read -rp 'efi disk: ' efi_disk
+read -rp 'efi part: ' efi_part
 read -rp 'hostname: ' hostname
 read -rp 'keymap: ' keymap
 ```
@@ -138,7 +141,7 @@ for i in "${arr[@]}"; do
     sudo efibootmgr -B -b "${i}"
 done
 
-sudo efibootmgr -c -d "/dev/${esp:0:3}" -p "${esp:3}" -l '\EFI\BOOT\shimx64.efi' -L 'Linux shim'
+sudo efibootmgr -c -d "/dev/${efi_disk}" -p "${efi_part}" -l '\EFI\BOOT\shimx64.efi' -L 'Linux shim'
 
 read -rp 'boot order num: ' -a arr
 printf -v arr '%s,' "${arr[@]}"
@@ -206,13 +209,13 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
 - ミドルウェアのインストール
 
     ```sh
-    paru -S --noconfirm openssh polkit gnome-keyring man-db man-pages man-pages-ja arch-install-scripts reflector usbutils nftables
+    paru -S --noconfirm openssh polkit gnome-keyring man-db man-pages arch-install-scripts reflector usbutils nftables
     ```
 
 - CLIアプリのインストール
 
     ```sh
-    paru -S --noconfirm bash-completion vim neovim zip unzip tree wget aria2 jq btop pipes.sh cava bat ripgrep fd delta neofetch
+    paru -S --noconfirm bash-completion vim neovim zip unzip tree wget aria2 jq btop pipes.sh bat ripgrep fd git-delta neofetch
     ```
 
 - デスクトップ環境のインストール
@@ -230,7 +233,7 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
 - フォントのインストール
 
     ```sh
-    paru -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji ttf-ubuntu-font-family ttf-ubuntumono-nerd
+    paru -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji ttf-ubuntu-font-family ttf-ubuntu-mono-nerd
     ```
 
 - 言語処理系
