@@ -56,8 +56,8 @@ umount "/dev/${efi_part}" || true
 umount "/dev/${home_part}" || true
 umount "/dev/${root_part}" || true
 mkfs.fat -F 32 "/dev/${efi_part}"
-mkfs.ext4 "/dev/${root_part}"
-mkfs.ext4 "/dev/${home_part}"
+mkfs.btrfs -f "/dev/${root_part}"
+mkfs.btrfs -f "/dev/${home_part}"
 ```
 
 # ファイルシステムのマウント
@@ -73,7 +73,7 @@ mount "/dev/${home_part}" /mnt/home
 # パッケージのインストール
 
 ```sh
-pacstrap /mnt base linux linux-firmware amd-ucode base-devel git
+pacstrap /mnt base linux linux-firmware amd-ucode btrfs-progs base-devel git
 case $is_wireless in
     [Yy]* )
         pacstrap /mnt wpa_supplicant
