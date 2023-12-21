@@ -206,6 +206,10 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
 
 - Radeonドライバインストール
 
+    ```sh
+    paru -S mesa libva-mesa-driver xf86-video-amdgpu vulkan-radeon rocm-opencl-sdk rocm-hip-sdk rocm-ml-sdk rocm-smi-lib
+    ```
+
 - ミドルウェアのインストール
 
     ```sh
@@ -221,7 +225,7 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
 - デスクトップ環境のインストール
 
     ```sh
-    paru -S --noconfirm xorg-server xorg-xinit i3-wm kitty xclip picom polybar rofi feh dunst libnotify light playerctl pipewire pipewire-pulse pipewire-jack wireplumber alsa-utils fcitx5-mozc fcitx5-configtool fcitx5-qt fcitx5-gtk
+    paru -S --noconfirm xorg-server xorg-xinit xorg-xrandr i3-wm kitty xclip picom polybar rofi feh dunst libnotify light playerctl pipewire pipewire-pulse pipewire-jack wireplumber alsa-utils fcitx5-mozc fcitx5-configtool fcitx5-qt fcitx5-gtk
     ```
 
 - GUIアプリのインストール
@@ -241,7 +245,13 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
     - C/C++
 
         ```sh
-        paru -S --noconfirm gdb clang lldb libc++ libc++abi
+        paru -S --noconfirm gdb clang lldb libc++ libc++abi cmake
+        ```
+
+    - Vulkan
+
+        ```sh
+        paru -S --noconfirm vulkan-devel
         ```
 
     - QMK firmware
