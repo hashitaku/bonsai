@@ -22,8 +22,8 @@ return {
     front_end = "WebGpu",
     default_prog = shell,
 
-    initial_cols = 150,
-    initial_rows = 40,
+    initial_cols = 130,
+    initial_rows = 30,
 
     hide_tab_bar_if_only_one_tab = hide_tab_bar_if_only_one_tab,
     window_background_opacity = 0.95,
@@ -34,6 +34,13 @@ return {
         top = 0,
         bottom = 0,
     },
+    window_frame = {
+        font = wezterm.font({
+            family = "Noto Sans Mono CJK JP",
+            weight = "Bold"
+        }),
+        font_size = 8,
+    },
 
     default_cursor_style = "BlinkingUnderline",
     cursor_blink_rate = 500,
@@ -42,12 +49,12 @@ return {
     animation_fps = 1,
 
     font = wezterm.font_with_fallback({
-        { family = "UbuntuMono Nerd Font", weight = "Bold" },
-        { family = "Consolas", weight = "Bold" },
+        { family = "InconsolataGo Nerd Font Mono", weight = "Bold" },
+        --{ family = "UbuntuMono Nerd Font", weight = "Bold" },
 
         { family = "Noto Sans Mono CJK JP", weight = "Bold" },
     }),
-    font_size = 16.0,
+    font_size = 14,
     bold_brightens_ansi_colors = true,
 
     colors = {
