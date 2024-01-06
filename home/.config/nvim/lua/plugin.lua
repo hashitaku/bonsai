@@ -1,5 +1,15 @@
 return {
     {
+        "rcarriga/nvim-notify",
+        enabled = not vim.g.vscode,
+        opts = {
+            fps = 120,
+            render = "simple",
+            stages = "slide",
+        },
+    },
+
+    {
         "MunifTanjim/nui.nvim",
         enabled = not vim.g.vscode,
     },
@@ -56,6 +66,7 @@ return {
 
     {
         "folke/neodev.nvim",
+        enabled = not vim.g.vscode,
     },
 
     {
@@ -65,10 +76,11 @@ return {
             "MunifTanjim/nui.nvim",
         },
         opts = {
-            message = {
-                enabled = false,
+            messages = {
+                enabled = true,
+                view = "notify",
             },
-            preests = {
+            presets = {
                 command_palette = false,
             },
         },
@@ -76,10 +88,21 @@ return {
 
     {
         "folke/tokyonight.nvim",
+        enabled = not vim.g.vscode,
+    },
+
+    {
+        "hrsh7th/cmp-omni",
+        enabled = not vim.g.vscode,
     },
 
     {
         "hrsh7th/cmp-nvim-lsp",
+        enabled = not vim.g.vscode,
+    },
+
+    {
+        "hrsh7th/cmp-nvim-lsp-signature-help",
         enabled = not vim.g.vscode,
     },
 
@@ -166,19 +189,25 @@ return {
 
                     ["<CR>"] = function(fallback)
                         if cmp.visible() then
-                            cmp.confirm()
+                            if cmp.get_selected_entry() then
+                                cmp.confirm()
+                            else
+                                fallback()
+                            end
                         else
                             fallback()
                         end
                     end,
                 }),
-                sources = cmp.config.sources({
+                sources = {
+                    { name = "cmp-omni" },
                     { name = "nvim_lsp" },
+                    { name = "nvim_lsp_signature_help" },
                     { name = "path" },
                     { name = "vsnip" },
-                }),
+                },
                 formatting = {
-                    format = function(entry, vim_item)
+                    format = function(_, vim_item)
                         local max_width = 50
 
                         if vim_item.abbr:len() > max_width then
@@ -195,20 +224,30 @@ return {
         "hrsh7th/vim-vsnip",
         enabled = not vim.g.vscode,
         config = function()
-            vim.g["vsnip_snippet_dir"] = vim.fn.stdpath("config") .. "/snippets"
+            vim.g.vsnip_snippet_dir = vim.fn.stdpath("config") .. "/snippets"
         end,
     },
 
     {
         "itchyny/lightline.vim",
-        enabled = not vim.g.vscode and true,
+        enabled = not vim.g.vscode,
         config = function()
-            vim.g["lightline"] = {
+            vim.cmd([[
+            function! FileTypeIcon()
+                return nerdfont#find() .. " " .. &filetype
+            endfunction
+            ]])
+
+            vim.g.lightline = {
                 colorscheme = "tokyonight",
 
                 active = {
                     left = { { "mode", "paste" }, { "readonly", "filename", "modified" } },
                     right = { { "lineinfo" }, { "percent" }, { "fileformat", "fileencoding", "filetype" } },
+                },
+
+                component_function = {
+                    filetype = "FileTypeIcon",
                 },
 
                 separator = { left = "\u{E0B4}", right = "\u{E0B6}" },
@@ -251,14 +290,16 @@ return {
             vim.g["fern#default_hidden"] = true
             vim.g["fern#drawer_keep"] = true
             vim.g["fern#renderer#nerdfont#indent_markers"] = true
+            vim.g["fern#renderer#nerdfont#padding"] = " "
             vim.g["fern#renderer"] = "nerdfont"
-            vim.api.nvim_set_keymap("n", "<C-n>", "<cmd>Fern . -reveal=% -drawer -toggle<cr>", { noremap = true })
+            vim.keymap.set("n", "<C-n>", "<cmd>Fern . -reveal=% -drawer -toggle<cr>", {})
 
             vim.api.nvim_create_autocmd("FileType", {
                 pattern = { "fern" },
                 callback = function()
-                    vim.opt_local["number"] = false
-                    vim.opt_local["signcolumn"] = "auto"
+                    vim.opt_local.number = false
+                    vim.opt_local.relativenumber = false
+                    vim.opt_local.signcolumn = "auto"
                 end,
             })
         end,
@@ -267,46 +308,49 @@ return {
     {
         "lambdalisue/nerdfont.vim",
         enabled = not vim.g.vscode,
+        config = function()
+            vim.g["nerdfont#autofix_cellwidths"] = false
+        end,
     },
 
     {
         "neovim/nvim-lspconfig",
         enabled = not vim.g.vscode,
-        dependencies = {
-            "SmiteshP/nvim-navic",
-        },
         config = function()
             local lspconfig = require("lspconfig")
-            local navic = require("nvim-navic")
             require("lspconfig.ui.windows").default_options.border = "rounded"
 
             vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
             vim.lsp.handlers["textDocument/signatureHelp"] =
                 vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
 
-            local user_lsp_augid = vim.api.nvim_create_augroup("user_lsp", {})
-            vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-                buffer = 0,
-                group = user_lsp_augid,
-                callback = function(ev)
-                    vim.lsp.buf.document_highlight()
-                end,
-            })
-            vim.api.nvim_create_autocmd("CursorMoved", {
-                buffer = 0,
-                group = user_lsp_augid,
-                callback = function(ev)
-                    vim.lsp.buf.clear_references()
-                end,
-            })
-
-            vim.api.nvim_create_user_command("LspHover", function(args)
+            vim.api.nvim_create_user_command("LspHover", function()
                 vim.lsp.buf.hover()
             end, {
                 nargs = "?",
             })
 
-            vim.opt["keywordprg"] = ":LspHover"
+            local user_lsp_augid = vim.api.nvim_create_augroup("user_lsp", {})
+            local on_attach_handler = function(client, bufnr)
+                if client.supports_method("textDocument/documentHighlight") then
+                    vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+                        buffer = bufnr,
+                        group = user_lsp_augid,
+                        callback = function()
+                            vim.lsp.buf.document_highlight()
+                        end,
+                    })
+
+                    vim.api.nvim_create_autocmd("CursorMoved", {
+                        buffer = bufnr,
+                        group = user_lsp_augid,
+                        callback = function()
+                            vim.lsp.buf.clear_references()
+                        end,
+                    })
+                end
+                vim.opt_local.keywordprg = ":LspHover"
+            end
 
             lspconfig["clangd"].setup({
                 cmd = {
@@ -316,20 +360,25 @@ return {
                     "-j=2",
                 },
                 handlers = vim.lsp.handlers,
+                on_attach = on_attach_handler,
             })
 
             lspconfig["rust_analyzer"].setup({
-                handlers = vim.lsp.handlers,
                 cmd = {
                     "rust-analyzer",
                 },
+                handlers = vim.lsp.handlers,
+                on_attach = on_attach_handler,
+            })
+
+            lspconfig["slint_lsp"].setup({
+                handlers = vim.lsp.handlers,
+                on_attach = on_attach_handler,
             })
 
             lspconfig["lua_ls"].setup({
-                on_attach = function(client, bufnr)
-                    navic.attach(client, bufnr)
-                end,
                 handlers = vim.lsp.handlers,
+                on_attach = on_attach_handler,
                 settings = {
                     Lua = {
                         completion = {
@@ -349,31 +398,40 @@ return {
                 },
             })
 
-            lspconfig["pylsp"].setup({
-                settings = {
-                    pylsp = {
-                        pycodestyle = {
-                            ignore = { "W391" },
-                            maxLineLength = 100,
-                        },
+            lspconfig["ruff_lsp"].setup({
+                handlers = vim.lsp.handlers,
+                on_attach = function(client, bufnr)
+                    client.server_capabilities.hoverProvider = false
+                    on_attach_handler(client, bufnr)
+                end,
+                init_options = {
+                    settings = {
+                        args = {},
                     },
                 },
+            })
+
+            lspconfig["pyright"].setup({
                 handlers = vim.lsp.handlers,
+                on_attach = on_attach_handler,
             })
 
             lspconfig["omnisharp"].setup({
                 cmd = { "omnisharp", "--languageserver", "--hostPID", tostring(vim.fn.getpid()) },
                 handlers = vim.lsp.handlers,
+                on_attach = on_attach_handler,
             })
 
             lspconfig["denols"].setup({
-                root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
                 handlers = vim.lsp.handlers,
+                on_attach = on_attach_handler,
+                root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
             })
 
             lspconfig["tsserver"].setup({
-                root_dir = lspconfig.util.root_pattern("package.json"),
                 handlers = vim.lsp.handlers,
+                on_attach = on_attach_handler,
+                root_dir = lspconfig.util.root_pattern("package.json"),
             })
         end,
     },
@@ -398,6 +456,7 @@ return {
                 "python",
                 "regex",
                 "rust",
+                "slint",
                 "typescript",
                 "vim",
                 "vimdoc",
@@ -406,14 +465,6 @@ return {
             highlight = {
                 enable = true,
             },
-        },
-    },
-
-    {
-        "nvim-treesitter/nvim-treesitter-context",
-        enabled = not vim.g.vscode,
-        dependencies = {
-            "nvim-treesitter/nvim-treesitter",
         },
     },
 
@@ -430,8 +481,13 @@ return {
         enabled = not vim.g.vscode,
         ft = "rust",
         config = function()
-            vim.g["rustfmt_autosave"] = true
+            vim.g.rustfmt_autosave = true
         end,
+    },
+
+    {
+        "slint-ui/vim-slint",
+        enabled = not vim.g.vscode,
     },
 
     {
@@ -441,47 +497,8 @@ return {
     },
 
     {
-        "nvim-lua/plenary.nvim",
-    },
-
-    {
-        "nvim-telescope/telescope.nvim",
-        enabled = not vim.g.vscode,
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-        },
-        opts = {},
-    },
-
-    {
-        "nvim-tree/nvim-web-devicons",
-        enabled = not vim.g.vscode,
-    },
-
-    {
-        "SmiteshP/nvim-navic",
-        enabled = not vim.g.vscode,
-        opts = {},
-    },
-
-    {
-        "utilyre/barbecue.nvim",
-        enabled = not vim.g.vscode,
-        dependencies = {
-            "SmiteshP/nvim-navic",
-            "nvim-tree/nvim-web-devicons",
-        },
-        config = function()
-            require("barbecue").setup()
-        end,
-    },
-
-    {
-        "nvim-orgmode/orgmode",
-    },
-
-    {
         "hashitaku/chester.nvim",
         branch = "develop",
+        enabled = not vim.g.vscode,
     },
 }
