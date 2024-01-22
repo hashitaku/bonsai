@@ -440,38 +440,38 @@ return {
     {
         "nvim-treesitter/nvim-treesitter",
         enabled = not vim.g.vscode,
-        main = "nvim-treesitter.configs",
-        opts = {
-            ensure_installed = {
-                "bash",
-                "c",
-                "c_sharp",
-                "cmake",
-                "cpp",
-                "json",
-                "lua",
-                "make",
-                "markdown",
-                "markdown_inline",
-                "meson",
-                "python",
-                "regex",
-                "rust",
-                "slint",
-                "typescript",
-                "vim",
-                "vimdoc",
-            },
-            sync_intall = true,
-            highlight = {
-                enable = true,
-            },
-        },
         config = function ()
             vim.opt.foldlevelstart = 1
             vim.opt.foldmethod = "expr"
             vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
             vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"
+
+            require("nvim-treesitter.configs").setup({
+                ensure_installed = {
+                    "bash",
+                    "c",
+                    "c_sharp",
+                    "cmake",
+                    "cpp",
+                    "json",
+                    "lua",
+                    "make",
+                    "markdown",
+                    "markdown_inline",
+                    "meson",
+                    "python",
+                    "regex",
+                    "rust",
+                    "slint",
+                    "typescript",
+                    "vim",
+                    "vimdoc",
+                },
+                sync_intall = true,
+                highlight = {
+                    enable = true,
+                },
+            })
         end,
     },
 
