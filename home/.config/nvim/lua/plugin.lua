@@ -522,7 +522,7 @@ return {
                 enable = false,
             }
         }
-    }
+    },
 
     {
         "hashitaku/chester.nvim",
