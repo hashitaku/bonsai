@@ -6,7 +6,7 @@ local options = {
     fileencodings = "utf-8,sjis",
     fileformat = "unix",
     fileformats = "unix,dos",
-    fillchars = "vert:\u{2502},fold:-,eob:\u{20}",
+    fillchars = "vert:\u{2502},fold:\u{ff65},eob:\u{20}",
     helplang = "ja,en",
     hidden = true,
     hlsearch = true,
@@ -118,4 +118,5 @@ require("lazy").setup("plugin", {
 if not vim.g.vscode then
     --vim.cmd.colorscheme("chester")
     vim.cmd.colorscheme("tokyonight")
+    vim.cmd.highlight("Folded None")
 end

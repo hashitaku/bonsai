@@ -318,6 +318,7 @@ return {
         enabled = not vim.g.vscode,
         config = function()
             local lspconfig = require("lspconfig")
+
             require("lspconfig.ui.windows").default_options.border = "rounded"
 
             vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
@@ -466,6 +467,12 @@ return {
                 enable = true,
             },
         },
+        config = function ()
+            vim.opt.foldlevelstart = 1
+            vim.opt.foldmethod = "expr"
+            vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+            vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"
+        end,
     },
 
     {
@@ -495,6 +502,27 @@ return {
         enabled = not vim.g.vscode,
         opts = {},
     },
+
+    {
+        "shellRaining/hlchunk.nvim",
+        opts = {
+            chunk = {
+                enable = true,
+            },
+            indent = {
+                enable = true,
+            },
+            line_num = {
+                enable = true,
+            },
+            blank = {
+                enable = false,
+            },
+            context = {
+                enable = false,
+            }
+        }
+    }
 
     {
         "hashitaku/chester.nvim",
