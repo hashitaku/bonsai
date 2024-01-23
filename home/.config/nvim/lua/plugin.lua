@@ -16,7 +16,6 @@ return {
 
     {
         "folke/flash.nvim",
-        layz = true,
         keys = {
             {
                 "<Leader>f",
