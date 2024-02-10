@@ -324,12 +324,6 @@ return {
             vim.lsp.handlers["textDocument/signatureHelp"] =
                 vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
 
-            vim.api.nvim_create_user_command("LspHover", function()
-                vim.lsp.buf.hover()
-            end, {
-                nargs = "?",
-            })
-
             local user_lsp_augid = vim.api.nvim_create_augroup("user_lsp", {})
             local on_attach_handler = function(client, bufnr)
                 if client.supports_method("textDocument/documentHighlight") then
@@ -349,7 +343,6 @@ return {
                         end,
                     })
                 end
-                vim.opt_local.keywordprg = ":LspHover"
             end
 
             lspconfig["clangd"].setup({
