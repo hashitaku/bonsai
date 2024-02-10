@@ -415,6 +415,25 @@ return {
                 on_attach = on_attach_handler,
             })
 
+            local html_css_capabilities = vim.lsp.protocol.make_client_capabilities()
+            html_css_capabilities.textDocument.completion.completionItem.snippetSupport = true
+            lspconfig["html"].setup({
+                cmd = {
+                    "npx",
+                    "vscode-html-language-server",
+                    "--stdio",
+                },
+                handlers = vim.lsp.handlers,
+                on_attach = on_attach_handler,
+                capabilities = html_css_capabilities,
+            })
+
+            lspconfig["cssls"].setup({
+                handlers = vim.lsp.handlers,
+                on_attach = on_attach_handler,
+                capabilities = html_css_capabilities,
+            })
+
             lspconfig["denols"].setup({
                 handlers = vim.lsp.handlers,
                 on_attach = on_attach_handler,
@@ -422,9 +441,32 @@ return {
             })
 
             lspconfig["tsserver"].setup({
+                cmd = {
+                    "npx",
+                    "typescript-language-server",
+                    "--stdio",
+                },
                 handlers = vim.lsp.handlers,
                 on_attach = on_attach_handler,
                 root_dir = lspconfig.util.root_pattern("package.json"),
+            })
+
+            local angularls_cmd = {
+                "npx",
+                "ngserver",
+                "--stdio",
+                "--tsProbeLocations",
+                " ",
+                "--ngProbeLocations",
+                " ",
+            }
+            lspconfig["angularls"].setup({
+                cmd = angularls_cmd,
+                handlers = vim.lsp.handlers,
+                on_attach = on_attach_handler,
+                on_new_config = function(new_config, new_root_dir)
+                    new_config.cmd = angularls_cmd
+                end,
             })
         end,
     },
@@ -432,7 +474,7 @@ return {
     {
         "nvim-treesitter/nvim-treesitter",
         enabled = not vim.g.vscode,
-        config = function ()
+        config = function()
             vim.opt.foldlevelstart = 1
             vim.opt.foldmethod = "expr"
             vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
@@ -445,6 +487,8 @@ return {
                     "c_sharp",
                     "cmake",
                     "cpp",
+                    "css",
+                    "html",
                     "json",
                     "lua",
                     "make",
@@ -497,6 +541,7 @@ return {
 
     {
         "shellRaining/hlchunk.nvim",
+        enabled = not vim.g.vscode,
         opts = {
             chunk = {
                 enable = true,
@@ -512,8 +557,8 @@ return {
             },
             context = {
                 enable = false,
-            }
-        }
+            },
+        },
     },
 
     {
