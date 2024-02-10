@@ -429,6 +429,11 @@ return {
             })
 
             lspconfig["cssls"].setup({
+                cmd = {
+                    "npx",
+                    "vscode-css-language-server",
+                    "--stdio",
+                },
                 handlers = vim.lsp.handlers,
                 on_attach = on_attach_handler,
                 capabilities = html_css_capabilities,
