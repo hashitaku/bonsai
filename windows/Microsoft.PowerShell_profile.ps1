@@ -31,6 +31,7 @@ if (Get-Command -ErrorAction SilentlyContinue rustup) {
 }
 
 if (Get-Command -ErrorAction SilentlyContinue oh-my-posh) {
+    $ENV:VIRTUAL_ENV_DISABLE_PROMPT=1
     oh-my-posh --config "${ENV:HOMEDRIVE}${ENV:HOMEPATH}\.config\oh-my-posh\config.toml" init pwsh | Invoke-Expression
 }
 
