@@ -1,0 +1,103 @@
+"$schema" = "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json"
+final_space = true
+version = 2.0
+
+[palette]
+foreground = "#e0e0e0"
+background = "#2c3643"
+black = "#666666"
+blue = "#288ad6"
+green = "#16c98d"
+magenta = "#b267e6"
+red = "#fa5e5b"
+white = "#f8f8f2"
+yellow = "#ffc83f"
+
+[[blocks]]
+type = "prompt"
+alignment = "left"
+
+[[blocks.segments]]
+type = "session"
+style = "diamond"
+leading_diamond = "\ue0b6"
+trailing_diamond = "\ue0b4"
+foreground = "p:background"
+background = "p:magenta"
+templates = [
+    "{{ .UserName }}",
+]
+
+[[blocks.segments]]
+type = "path"
+style = "diamond"
+leading_diamon = "\ue0b5"
+trailing_diamond = "\ue0b4"
+foreground = "p:background"
+background = "p:green"
+templates = [
+    "\u2800",
+    "{{ path .Path .Location }}"
+]
+[blocks.segments.properties]
+style = "mixed"
+mixed_threshold = 10
+folder_separator_icon = "/"
+home_icon = "~"
+
+[[blocks.segments]]
+type = "git"
+style = "diamond"
+leading_diamon = "\ue0b5"
+trailing_diamond = "\ue0b4"
+foreground = "p:background"
+background = "p:blue"
+templates = [
+    "\u2800",
+    "{{ if .Ref }}{{ url .Ref .UpstreamURL }}{{ end }}",
+
+    "{{ if or (ne .Ahead 0) (ne .Behind 0)}} [\uf062{{ .Ahead }} \uf063{{ .Behind }}]{{ end }}",
+
+    "{{ if .Staging.String }} [<p:green>\uf067{{ .Staging.Added }} \uf068{{ .Staging.Deleted }} \uf069{{ .Staging.Modified }}</>]{{ end }}",
+
+    "{{ if .Working.String }} [<p:red>\uf067{{ .Working.Untracked }} \uf068{{ .Working.Deleted }} \uf069{{ .Working.Modified }}</>]{{ end }}",
+]
+[blocks.segments.properties]
+branch_max_length = 0.0
+fetch_status = true
+fetch_upstream_icon = true
+
+[[blocks.segments]]
+type = "python"
+style = "diamond"
+leading_diamon = "\ue0b5"
+trailing_diamond = "\ue0b4"
+foreground = "p:background"
+background = "p:yellow"
+templates = [
+    "\u2800",
+    "\U000f0320",
+    "{{ .Full }}",
+]
+
+[[blocks.segments]]
+type = "node"
+style = "diamond"
+leading_diamon = "\ue0b5"
+trailing_diamond = "\ue0b4"
+foreground = "p:background"
+background = "p:yellow"
+templates = [
+    "\u2800",
+    "\U000f0399",
+    "{{ .Full }}",
+]
+
+[[blocks.segments]]
+type = "root"
+style = "diamond"
+leading_diamon = "\ue0b5"
+trailing_diamond = "\ue0b4"
+foreground = "p:background"
+background = "p:yellow"
+template = " \uf0e7 "
