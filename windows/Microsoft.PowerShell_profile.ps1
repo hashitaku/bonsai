@@ -48,8 +48,25 @@ if (Get-Command -ErrorAction SilentlyContinue uutils) {
     )
 
     function ls_impl { ls.exe --color=auto $Args }
+    function ll_impl { ls.exe --color=auto -l $Args }
+    function la_impl { ls.exe --color=auto -Al $Args }
     Set-Alias -Name "ls" -Value "ls_impl"
+    Set-Alias -Name "ll" -Value "ll_impl"
+    Set-Alias -Name "la" -Value "la_impl"
 
     # mkdirはPowershellでは組み込みの関数なのでエイリアスで上書き
     Set-Alias -Name "mkdir" -Value "mkdir.exe"
+}
+
+if (Get-Command -ErrorAction SilentlyContinue eza) {
+    Remove-Alias -Name @(
+        "ls"
+    )
+
+    function ls_impl { eza.exe --color=auto $Args }
+    function ll_impl { eza.exe --color=auto -l $Args }
+    function la_impl { eza.exe --color=auto -Al $Args }
+    Set-Alias -Name "ls" -Value "ls_impl"
+    Set-Alias -Name "ll" -Value "ll_impl"
+    Set-Alias -Name "la" -Value "la_impl"
 }
