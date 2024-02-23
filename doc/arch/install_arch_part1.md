@@ -72,6 +72,7 @@ sed -i '/Parallel/c ParallelDownloads = 5' /etc/pacman.conf
 # パーティションのフォーマット
 
 ```sh
+# パーティション番号とディスクパスからファイルパスを得る方法が不明なのでnvme向けにのみ対応
 umount -R "/mnt" || true
 mkfs.fat -F 32 "${install_block_device_path}p1"
 mkfs.btrfs -f "/dev/${volume_group_name}/${root_lv_name}"
@@ -125,7 +126,7 @@ echo 'title Arch Linux
 linux /vmlinuz-linux
 initrd /amd-ucode.img
 initrd /initramfs-linux.img
-options root=UUID=$(blkid -o value -s UUID /dev/"${root_part}") rw' > /boot/loader/entries/arch.conf
+options root=UUID=$(blkid -o value -s UUID /dev/"${install_block_device_path}p1") rw' > /boot/loader/entries/arch.conf
 "
 ```
 
