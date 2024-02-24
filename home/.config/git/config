@@ -1,6 +1,8 @@
 [user]
     name =
     email =
+[core]
+    editor = nvim
 [color]
     ui = auto
 [merge]
