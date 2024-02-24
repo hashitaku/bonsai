@@ -29,10 +29,13 @@ case $is_wireless in
 esac
 
 read -rp 'nif name: ' nif_name
-read -rp 'efi disk: ' efi_disk
-read -rp 'efi part: ' efi_part
+read -rp 'efi disk(ex: /dev/sda, /dev/nvme0n1): ' efi_disk
+read -rp 'efi part(default: 1): ' efi_part
 read -rp 'hostname: ' hostname
-read -rp 'keymap: ' keymap
+read -rp 'keymap(default: en): ' keymap
+
+efi_part="${efi_part:-1}"
+keymap="${keymap:-en}"
 ```
 
 # 初期設定
@@ -63,16 +66,6 @@ sudo hostnamectl hostname "${hostname}"
 ## ネットワーク設定
 
 ```sh
-case $is_wireless in
-    [Yy]* )
-        wpa_passphrase "${ssid}" "${passphrase}" | sudo tee "/etc/wpa_supplicant/wpa_supplicant-${nif_name}.conf"
-        sudo systemctl start "wpa_supplicant@${nif_name}.service"
-        sudo systemctl enable "wpa_supplicant@${nif_name}.service"
-        ;;
-    * )
-        ;;
-esac
-
 echo \
 "[Match]
 Name = ${nif_name}
@@ -116,19 +109,26 @@ paru -Syyu
 ## 必要パッケージのインストール
 
 ```sh
-paru -S --noconfirm shim-signed sbsigntools mokutil efibootmgr
+paru -S --noconfirm efibootmgr sbctl
 ```
 
-## ブートローダーの名前を変更
+## 鍵の生成
 
 ```sh
-sudo cp /boot/EFI/BOOT/BOOTX64.EFI /boot/EFI/BOOT/grubx64.efi
+sudo sbctl create-key
 ```
 
-## shimをコピー
+## 鍵の登録
 
 ```sh
-sudo cp /usr/share/shim-signed/{shimx64.efi,mmx64.efi} /boot/EFI/BOOT/
+sudo sbctl enroll-keys -m
+```
+
+## ブートローダー、カーネルの署名
+
+```sh
+sudo sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI
+sudo sbctl sign -s /boot/vmlinuz-linux
 ```
 
 ## ブートエントリを変更
@@ -141,65 +141,11 @@ for i in "${arr[@]}"; do
     sudo efibootmgr -B -b "${i}"
 done
 
-sudo efibootmgr -c -d "/dev/${efi_disk}" -p "${efi_part}" -l '\EFI\BOOT\shimx64.efi' -L 'Linux shim'
+sudo efibootmgr -c -d "/dev/${efi_disk}" -p "${efi_part}" -l '\EFI\BOOT\BOOTX64.EFI' -L 'Systemd Boot'
 
 read -rp 'boot order num: ' -a arr
 printf -v arr '%s,' "${arr[@]}"
 sudo efibootmgr -o "${arr%,}"
-```
-
-## 秘密鍵と証明書の生成
-
-- サブコマンドreqの引数-nodesがopenssl3では非推奨
-
-```sh
-sudo openssl req -x509 -newkey rsa:4096 -keyout '/root/mok.priv' -out '/root/mok.pem' -days 36500 -nodes -subj '/CN=Arch Linux Secure Boot/'
-sudo openssl x509 -inform PEM -outform DER -in '/root/mok.pem' -out '/root/mok.der'
-```
-
-## カーネルとブートローダーに署名
-
-```sh
-sudo sbsign --key /root/mok.priv --cert /root/mok.pem --output /boot/vmlinuz-linux /boot/vmlinuz-linux
-sudo sbsign --key /root/mok.priv --cert /root/mok.pem --output /boot/EFI/BOOT/grubx64.efi /boot/EFI/BOOT/grubx64.efi
-```
-
-## moklistに証明書を登録
-
-```sh
-sudo mokutil --import /root/mok.der
-```
-
-## pacman hookの設定
-
-```sh
-sudo mkdir /etc/pacman.d/hooks
-
-echo \
-'[Trigger]
-Operation = Install
-Operation = Upgrade
-Type = Package
-Target = linux
-
-[Action]
-Description = Signing Kernel for SecureBoot
-When = PostTransaction
-Exec = /usr/bin/sbsign --key /root/mok.priv --cert /root/mok.pem --output /boot/vmlinuz-linux /boot/vmlinuz-linux
-Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-kernel.hook
-
-echo \
-'[Trigger]
-Operation = Install
-Operation = Upgrade
-Type = Package
-Target = systemd
-
-[Action]
-Description = Signing BootLoader for SecureBoot
-When = PostTransaction
-Exec = /usr/bin/bash -c "/usr/bin/bootctl --no-variables --path=/boot update; /usr/bin/sbsign --key /root/mok.priv --cert /root/mok.pem --output /boot/EFI/BOOT/grubx64.efi /boot/EFI/BOOT/BOOTX64.EFI"
-Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloader.hook
 ```
 
 # パッケージインストール
@@ -225,7 +171,7 @@ Depends = sbsigntools' | sudo tee -a /etc/pacman.d/hooks/99-secureboot-bootloade
 - デスクトップ環境のインストール
 
     ```sh
-    paru -S --noconfirm xorg-server xorg-xinit xorg-xrandr i3-wm kitty xclip picom polybar rofi feh dunst libnotify light playerctl pipewire pipewire-pulse pipewire-jack wireplumber alsa-utils fcitx5-mozc fcitx5-configtool fcitx5-qt fcitx5-gtk
+    paru -S --noconfirm xorg-server xorg-xinit xorg-xrandr i3-wm kitty xclip picom polybar rofi feh dunst libnotify playerctl pipewire pipewire-pulse pipewire-jack wireplumber alsa-utils fcitx5-mozc fcitx5-configtool fcitx5-qt fcitx5-gtk
     ```
 
 - GUIアプリのインストール
@@ -332,10 +278,7 @@ sudo tee /etc/pam.d/login
 ## マウス、タッチパッド設定
 
 ```sh
-read -rp 'mouse or touchpad [m/t]: ' ans
-case $ans in
-    [Mm]* )
-        echo \
+echo \
 'Section "InputClass"
     Identifier "libinput mouse"
     Driver "libinput"
@@ -343,33 +286,4 @@ case $ans in
     MatchDevicePath "/dev/input/event*"
     Option "AccelProfile" "flat"
 EndSection' | sudo tee /etc/X11/xorg.conf.d/20-mouse.conf
-        ;;
-    [Tt]* )
-        echo \
-'Section "InputClass"
-    Identifier "libinput touchpad"
-    Driver "libinput"
-    MatchIsTouchpad "true"
-    MatchDevicePath "/dev/input/event*"
-    Option "Tapping" "true"
-    Option "NaturalScrolling" "true"
-    Option "DisableWhileTyping" "false"
-EndSection' | sudo tee /etc/X11/xorg.conf.d/20-touchpad.conf
-        ;;
-    * )
-        ;;
-esac
-```
-
-## reflectorの設定
-
-```sh
-echo \
-'--save /etc/pacman.d/mirrorlist
---country Japan
---protocol http,https,ftp
---latest 5
---sort score' | sudo tee /etc/xdg/reflector/reflector.conf
-
-sudo systemctl enable --now reflector.timer
 ```
