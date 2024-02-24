@@ -8,25 +8,13 @@ lsblk
 
 if [ "${USER}" = "root" ]; then
     echo \
-'rootで実行しないでください
-ユーザーを作成していない場合は
-# homectl create --member-of=wheel,video --disk-size=100G --storage=luks [USERNAME]
-でユーザーを作成してからログイン
+'Do not run this script as root
+# systemctl enable --now systemd-homed.service
+# homectl create --member-of=wheel,video --disk-size=256G --storage=luks [USERNAME]
 '
 
     exit
 fi
-
-read -rp 'wireless? [y/N] ' is_wireless
-
-case $is_wireless in
-    [Yy]* )
-        read -rp 'ssid: ' ssid
-        read -rp 'passphrase: ' passphrase; echo
-        ;;
-    * )
-        ;;
-esac
 
 read -rp 'nif name: ' nif_name
 read -rp 'efi disk(ex: /dev/sda, /dev/nvme0n1): ' efi_disk
@@ -98,7 +86,7 @@ sudo sed -i '/Color/c Color' /etc/pacman.conf
 cd ~
 git clone https://aur.archlinux.org/paru-bin.git
 cd paru-bin
-makepkg -si
+makepkg -si --noconfirm
 cd ~
 rm -rf paru-bin
 paru -Syyu
@@ -115,7 +103,7 @@ paru -S --noconfirm efibootmgr sbctl
 ## 鍵の生成
 
 ```sh
-sudo sbctl create-key
+sudo sbctl create-keys
 ```
 
 ## 鍵の登録
@@ -141,7 +129,7 @@ for i in "${arr[@]}"; do
     sudo efibootmgr -B -b "${i}"
 done
 
-sudo efibootmgr -c -d "/dev/${efi_disk}" -p "${efi_part}" -l '\EFI\BOOT\BOOTX64.EFI' -L 'Systemd Boot'
+sudo efibootmgr -c -d "${efi_disk}" -p "${efi_part}" -l '\EFI\BOOT\BOOTX64.EFI' -L 'Systemd Boot'
 
 read -rp 'boot order num: ' -a arr
 printf -v arr '%s,' "${arr[@]}"
@@ -258,9 +246,7 @@ table inet filter {
         log prefix "[nft] "
     }
 }' | sudo tee /etc/nftables.conf
-```
 
-```sh
 sudo systemctl enable --now nftables.service
 ```
 

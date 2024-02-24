@@ -18,7 +18,7 @@ done
 
 read -rp 'EFI System Partition Size(default: 1G): ' esp_size
 read -rp 'Root Partition Size(default: 256G): ' root_size
-read -rp 'Home Partition Size(default: 256G): ' home_size
+read -rp 'Home Partition Size(default: 512G): ' home_size
 read -rp 'Volume Group Name(default: ArchLinux-VG): ' volume_group_name
 read -rp 'Root Logical Volume Name(default: root-LV): ' root_lv_name
 read -rp 'Home Logical Volume Name(default: home-LV): ' home_lv_name
@@ -44,6 +44,7 @@ sgdisk --typecode '2:8E00' "${install_block_device_path}"
 # パーティション番号とディスクパスからファイルパスを得る方法が不明なのでnvme向けにのみ対応
 pvcreate "${install_block_device_path}p2"
 
+# パーティション番号とディスクパスからファイルパスを得る方法が不明なのでnvme向けにのみ対応
 vgcreate "${volume_group_name}" "${install_block_device_path}p2"
 
 lvcreate -L "${root_size}" -n root-LV "${volume_group_name}"
@@ -72,8 +73,8 @@ sed -i '/Parallel/c ParallelDownloads = 5' /etc/pacman.conf
 # パーティションのフォーマット
 
 ```sh
-# パーティション番号とディスクパスからファイルパスを得る方法が不明なのでnvme向けにのみ対応
 umount -R "/mnt" || true
+# パーティション番号とディスクパスからファイルパスを得る方法が不明なのでnvme向けにのみ対応
 mkfs.fat -F 32 "${install_block_device_path}p1"
 mkfs.btrfs -f "/dev/${volume_group_name}/${root_lv_name}"
 mkfs.btrfs -f "/dev/${volume_group_name}/${home_lv_name}"
@@ -84,6 +85,7 @@ mkfs.btrfs -f "/dev/${volume_group_name}/${home_lv_name}"
 ```sh
 mount "/dev/${volume_group_name}/${root_lv_name}" /mnt
 mkdir -m 700 /mnt/boot
+# パーティション番号とディスクパスからファイルパスを得る方法が不明なのでnvme向けにのみ対応
 mount -o dmask=077,fmask=077 "${install_block_device_path}p1" /mnt/boot
 mkdir /mnt/home
 mount "/dev/${volume_group_name}/${home_lv_name}" /mnt/home
@@ -108,6 +110,9 @@ arch-chroot /mnt /bin/bash -euc "
 echo 'change root passwd'
 passwd
 
+sed -i '/^HOOKS/c HOOKS=(base udev autodetect modconf kms keyboard keymap consolefont block lvm2 filesystems fsck)' /etc/mkinitcpio.conf
+mkinitcpio -p linux
+
 echo '%wheel ALL=(ALL:ALL) ALL' > /etc/sudoers.d/wheel
 chmod 440 /etc/sudoers.d/wheel
 visudo -csf /etc/sudoers.d/wheel
@@ -126,7 +131,7 @@ echo 'title Arch Linux
 linux /vmlinuz-linux
 initrd /amd-ucode.img
 initrd /initramfs-linux.img
-options root=UUID=$(blkid -o value -s UUID /dev/"${install_block_device_path}p1") rw' > /boot/loader/entries/arch.conf
+options root=UUID=$(blkid -o value -s UUID "/dev/${volume_group_name}/${root_lv_name}") rw' > /boot/loader/entries/arch.conf
 "
 ```
 
