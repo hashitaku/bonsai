@@ -38,8 +38,8 @@ sgdisk --clear "${install_block_device_path}"
 sgdisk --new "1::+${esp_size}" "${install_block_device_path}"
 # ESP以外の範囲をすべてLVM用のパーティションにする
 sgdisk --new '2::' "${install_block_device_path}"
-sgdisk --typecode '1:EF00' "${install_block_device_path}p1"
-sgdisk --typecode '2:8E00' "${install_block_device_path}p2"
+sgdisk --typecode '1:EF00' "${install_block_device_path}"
+sgdisk --typecode '2:8E00' "${install_block_device_path}"
 
 # パーティション番号とディスクパスからファイルパスを得る方法が不明なのでnvme向けにのみ対応
 pvcreate "${install_block_device_path}p2"
