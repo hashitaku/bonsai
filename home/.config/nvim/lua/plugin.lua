@@ -483,7 +483,7 @@ return {
             vim.opt.foldlevelstart = 1
             vim.opt.foldmethod = "expr"
             vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-            vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"
+            vim.opt.foldtext = ""
 
             require("nvim-treesitter.configs").setup({
                 ensure_installed = {
@@ -504,6 +504,7 @@ return {
                     "regex",
                     "rust",
                     "slint",
+                    "toml",
                     "typescript",
                     "vim",
                     "vimdoc",
@@ -545,25 +546,10 @@ return {
     },
 
     {
-        "shellRaining/hlchunk.nvim",
+        "lukas-reineke/indent-blankline.nvim",
         enabled = not vim.g.vscode,
-        opts = {
-            chunk = {
-                enable = true,
-            },
-            indent = {
-                enable = true,
-            },
-            line_num = {
-                enable = true,
-            },
-            blank = {
-                enable = false,
-            },
-            context = {
-                enable = false,
-            },
-        },
+        main = "ibl",
+        opts = {},
     },
 
     {
