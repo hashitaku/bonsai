@@ -44,6 +44,7 @@ alias pbpaste='xclip -selection c -o'
 # 補完
 type rustup >/dev/null 2>&1 && eval "$(rustup completions bash cargo)"
 type rustup >/dev/null 2>&1 && eval "$(rustup completions bash rustup)"
+type oh-my-posh >/dev/null 2>&1 && eval "$(oh-my-posh completion bash)"
 test -f /usr/share/git/git-prompt.sh && source /usr/share/git/git-prompt.sh
 
 # プロンプト設定
@@ -68,3 +69,5 @@ case "${TERM}" in
         ;;
 esac
 unset title prompt
+
+type oh-my-posh >/dev/null 2>&1 && eval "$(oh-my-posh init bash --config ${XDG_CONFIG_HOME}/oh-my-posh/config.toml)"
