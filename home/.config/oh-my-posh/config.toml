@@ -1,6 +1,6 @@
 "$schema" = "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json"
 final_space = true
-version = 2.0
+version = 2
 
 [palette]
 foreground = "#e0e0e0"
