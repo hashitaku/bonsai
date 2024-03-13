@@ -11,6 +11,9 @@ RUSTUP_HOME="${XDG_DATA_HOME}/rustup"
 export CARGO_HOME RUSTUP_HOME
 [ -f "${XDG_DATA_HOME}/cargo/env" ] && . ${XDG_DATA_HOME}/cargo/env
 
+# Dotnet
+PATH="${PATH}:${HOME}/.dotnet/tools"
+
 # node.js
 NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME}/npm/npmrc"
 export NPM_CONFIG_USERCONFIG
@@ -23,15 +26,14 @@ LIBRARY_PATH="${LIBRARY_PATH}:${HOME}/local/lib:${HOME}/local/lib64"
 export PATH CPATH LIBRARY_PATH LD_RUN_PATH
 
 # その他、環境変数
-CUDA_CACHE_PATH="${XDG_CACHE_HOME}/nv"
 INPUTRC="${XDG_CONFIG_HOME}/readline/inputrc"
 GNUPGHOME="${XDG_DATA_HOME}/gnupg"
 XAUTHORITY="${XDG_RUNTIME_DIR}/Xauthority"
-export CUDA_CACHE_PATH INPUTRC GNUPGHOME XAUTHORITY
+export INPUTRC GNUPGHOME XAUTHORITY
 
 # bashrc
 if [ -n "$BASH_VERSION" ]; then
-	if [ -f "${HOME}/.bashrc" ]; then
-		. "${HOME}/.bashrc"
-	fi
+    if [ -f "${HOME}/.bashrc" ]; then
+        . "${HOME}/.bashrc"
+    fi
 fi
