@@ -30,6 +30,10 @@ if (Get-Command -ErrorAction SilentlyContinue rustup) {
     rustup completions powershell rustup | Out-String | Invoke-Expression
 }
 
+if (Get-Command -ErrorAction SilentlyContinue rye) {
+    rye self completion --shell powershell | Out-String | Invoke-Expression
+}
+
 if (Get-Command -ErrorAction SilentlyContinue oh-my-posh) {
     $ENV:VIRTUAL_ENV_DISABLE_PROMPT=1
     oh-my-posh --config "${ENV:HOMEDRIVE}${ENV:HOMEPATH}\.config\oh-my-posh\config.toml" init pwsh | Invoke-Expression
