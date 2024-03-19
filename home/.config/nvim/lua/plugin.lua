@@ -508,6 +508,7 @@ return {
                     "typescript",
                     "vim",
                     "vimdoc",
+                    "yaml",
                 },
                 sync_intall = true,
                 highlight = {
