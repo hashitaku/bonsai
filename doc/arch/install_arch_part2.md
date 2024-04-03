@@ -59,8 +59,10 @@ echo \
 Name = ${nif_name}
 
 [Network]
-DHCP = yes
-MulticastDNS = yes" | sudo tee "/etc/systemd/network/50-${nif_name}.network"
+DHCP = true
+MulticastDNS = true
+LLMNR = true
+IPv6PrivacyExtensions = true" | sudo tee "/etc/systemd/network/50-${nif_name}.network"
 
 sudo systemctl enable --now systemd-networkd.service
 sudo systemctl enable --now systemd-resolved.service
@@ -230,7 +232,14 @@ echo 'ntfs3' | sudo tee /etc/modules-load.d/ntfs3.conf
 
 ```sh
 echo \
-'#!/bin/nft
+'# add table inet filter
+# create chain inet filter input { type filter hook input priority 0; policy drop; }
+# add rule inet filter input meta iifname "lo" accept
+# add rule inet filter input ct state { established, related } accept
+# add rule inet filter input icmp type { echo-reply, echo-request } accept
+# add rule inet filter input icmpv6 type { echo-request, echo-reply, mld-listener-query, nd-router-solicit, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert  } accept
+# add rule inet filetr input udp dport { mdns, llmnr } accept
+# add rule inet filter input log prefix "[nft] "
 
 flush ruleset
 
@@ -240,7 +249,10 @@ table inet filter {
 
         meta iif "lo" accept
         ct state { established, related } accept
+
         icmp type { echo-reply, echo-request } accept
+        icmpv6 type { echo-request, echo-reply, mld-listener-query, nd-router-solicit, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept
+
         udp dport { mdns, llmnr } accept
 
         log prefix "[nft] "
