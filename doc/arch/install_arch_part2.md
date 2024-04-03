@@ -173,7 +173,7 @@ sudo efibootmgr -o "${arr%,}"
 - フォントのインストール
 
     ```sh
-    paru -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji ttf-ubuntu-font-family ttf-ubuntu-mono-nerd
+    paru -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji ttf-ubuntu-mono-nerd ttf-inconsolata-nerd
     ```
 
 - 言語処理系
