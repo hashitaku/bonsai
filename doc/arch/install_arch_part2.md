@@ -155,7 +155,7 @@ sudo efibootmgr -o "${arr%,}"
 - CLIアプリのインストール
 
     ```sh
-    paru -S --noconfirm bash-completion vim neovim zip unzip tree wget aria2 jq btop pipes.sh bat ripgrep fd git-delta neofetch
+    paru -S --noconfirm bash-completion neovim-nightly-bin oh-my-posh-bin zip unzip tree wget aria2 jq btop pipes.sh bat ripgrep fd git-delta neofetch
     ```
 
 - デスクトップ環境のインストール

@@ -28,7 +28,7 @@ if ! shopt -oq posix; then
     fi
 fi
 
-export EDITOR='vim'
+export EDITOR='nvim'
 
 # エイリアス
 alias cl='clang -Wall -Wextra -std=c11 -pedantic'
