@@ -11,9 +11,6 @@ RUSTUP_HOME="${XDG_DATA_HOME}/rustup"
 export CARGO_HOME RUSTUP_HOME
 [ -f "${XDG_DATA_HOME}/cargo/env" ] && . ${XDG_DATA_HOME}/cargo/env
 
-# Dotnet
-PATH="${PATH}:${HOME}/.dotnet/tools"
-
 # node.js
 NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME}/npm/npmrc"
 export NPM_CONFIG_USERCONFIG
