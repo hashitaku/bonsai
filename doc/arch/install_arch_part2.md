@@ -149,7 +149,7 @@ sudo efibootmgr -o "${arr%,}"
 - ミドルウェアのインストール
 
     ```sh
-    paru -S --noconfirm openssh polkit gnome-keyring man-db man-pages arch-install-scripts reflector usbutils nftables
+    paru -S --noconfirm openssh polkit gnome-keyring man-db man-pages arch-install-scripts reflector usbutils nftables bluez bluez-utils
     ```
 
 - CLIアプリのインストール
@@ -260,6 +260,12 @@ table inet filter {
 }' | sudo tee /etc/nftables.conf
 
 sudo systemctl enable --now nftables.service
+```
+
+## Bluezの有効化
+
+```sh
+sudo systemctl enable --now bluetooth.service
 ```
 
 ## gnome-keyringの設定
