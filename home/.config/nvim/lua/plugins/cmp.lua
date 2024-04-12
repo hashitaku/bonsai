@@ -35,7 +35,7 @@ return {
         config = function()
             local cmp = require("cmp")
 
-            cmp.setup.cmdline(":", {
+            cmp.setup.cmdline({ ":" }, {
                 mapping = cmp.mapping.preset.cmdline(),
                 sources = cmp.config.sources({
                     { name = "cmdline" },
@@ -43,6 +43,12 @@ return {
             })
 
             cmp.setup({
+                -- 初めの項目を選択した状態でpopupが開く
+                -- cmdlineの補完が正しく動作していない？
+                -- https://github.com/hrsh7th/nvim-cmp/issues/1621
+                -- completion = {
+                --     completeopt = "menu,preview",
+                -- },
                 snippet = {
                     expand = function(args)
                         vim.fn["vsnip#anonymous"](args.body)
@@ -55,7 +61,8 @@ return {
                         scrollbar = false,
                         scrolloff = 0,
                         side_padding = 1,
-                        winhighlight = "Normal:Normal,FloatBorder:FloatBorder,CursorLine:CursorLine,Search:None",
+                        winblend = 0,
+                        winhighlight = "Normal:Normal,FloatBorder:FloatBorder,CursorLine:LspReferenceText,Search:None",
                     },
                     documentation = {
                         border = "rounded",
@@ -63,13 +70,15 @@ return {
                         scrollbar = false,
                         scrolloff = 0,
                         side_padding = 1,
-                        winhighlight = "Normal:Normal,FloatBorder:Normal,CursorLine:CursorLine,Search:None",
+                        winblend = 0,
+                        winhighlight = "Normal:Normal,FloatBorder:Normal,CursorLine:LspReferenceText,Search:None",
                     },
                 },
                 mapping = cmp.mapping.preset.insert({
                     ["<Tab>"] = cmp.mapping(function(fallback)
                         if cmp.visible() then
-                            cmp.select_next_item()
+                            -- 選択されている項目を自動で入力しない
+                            cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
                         elseif vim.fn["vsnip#jumpable"](1) == 1 then
                             vim.api.nvim_feedkeys(
                                 vim.api.nvim_replace_termcodes("<Plug>(vsnip-jump-next)", true, true, true),
@@ -83,7 +92,7 @@ return {
 
                     ["<S-Tab>"] = cmp.mapping(function(fallback)
                         if cmp.visible() then
-                            cmp.select_prev_item()
+                            cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
                         elseif vim.fn["vsnip#jumpable"](-1) == 1 then
                             vim.api.nvim_feedkeys(
                                 vim.api.nvim_replace_termcodes("<Plug>(vsnip-jump-prev)", true, true, true),
@@ -95,7 +104,7 @@ return {
                         end
                     end, { "i", "s" }),
 
-                    ["<CR>"] = function(fallback)
+                    ["<CR>"] = cmp.mapping(function(fallback)
                         if cmp.visible() then
                             if cmp.get_selected_entry() then
                                 cmp.confirm()
@@ -105,7 +114,7 @@ return {
                         else
                             fallback()
                         end
-                    end,
+                    end, { "i", "s" }),
                 }),
                 sources = {
                     { name = "cmp-omni" },
