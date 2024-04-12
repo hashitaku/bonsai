@@ -36,7 +36,21 @@ return {
                 end
 
                 if client.supports_method("textDocument/inlayHint") then
-                    vim.lsp.inlay_hint.enable(bufnr)
+                    vim.api.nvim_create_autocmd({ "InsertEnter" }, {
+                        buffer = bufnr,
+                        group = user_lsp_augid,
+                        callback = function()
+                            vim.lsp.inlay_hint.enable(bufnr, false);
+                        end,
+                    })
+
+                    vim.api.nvim_create_autocmd({ "InsertLeave" }, {
+                        buffer = bufnr,
+                        group = user_lsp_augid,
+                        callback = function()
+                            vim.lsp.inlay_hint.enable(bufnr, true);
+                        end,
+                    })
                 end
             end
 
