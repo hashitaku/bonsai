@@ -34,6 +34,10 @@ return {
                 if client.supports_method("textDocument/references") then
                     vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = bufnr })
                 end
+
+                if client.supports_method("textDocument/inlayHint") then
+                    vim.lsp.inlay_hint.enable(bufnr)
+                end
             end
 
             lspconfig["clangd"].setup({
