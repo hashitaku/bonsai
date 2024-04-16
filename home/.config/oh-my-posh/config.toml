@@ -24,9 +24,7 @@ leading_diamond = "\ue0b6"
 trailing_diamond = "\ue0b4"
 foreground = "p:background"
 background = "p:magenta"
-templates = [
-    "{{ .UserName }}",
-]
+templates = ["{{ .UserName }}"]
 
 [[blocks.segments]]
 type = "path"
@@ -35,10 +33,8 @@ leading_diamon = "\ue0b5"
 trailing_diamond = "\ue0b4"
 foreground = "p:background"
 background = "p:green"
-templates = [
-    "\u2800",
-    "{{ path .Path .Location }}"
-]
+templates = ["\u2800", "{{ path .Path .Location }}"]
+
 [blocks.segments.properties]
 style = "mixed"
 mixed_threshold = 10
@@ -53,15 +49,16 @@ trailing_diamond = "\ue0b4"
 foreground = "p:background"
 background = "p:blue"
 templates = [
-    "\u2800",
-    "{{ if .Ref }}{{ url .Ref .UpstreamURL }}{{ end }}",
+  "\u2800",
+  "{{ if .Ref }}{{ url .Ref .UpstreamURL }}{{ end }}",
 
-    "{{ if or (ne .Ahead 0) (ne .Behind 0)}} [\uf062{{ .Ahead }} \uf063{{ .Behind }}]{{ end }}",
+  "{{ if or (ne .Ahead 0) (ne .Behind 0)}} [\uf062{{ .Ahead }} \uf063{{ .Behind }}]{{ end }}",
 
-    "{{ if .Staging.String }} [<p:green>\uf067{{ .Staging.Added }} \uf068{{ .Staging.Deleted }} \uf069{{ .Staging.Modified }}</>]{{ end }}",
+  "{{ if .Staging.String }} [<p:green>\uf067{{ .Staging.Added }} \uf068{{ .Staging.Deleted }} \uf069{{ .Staging.Modified }}</>]{{ end }}",
 
-    "{{ if .Working.String }} [<p:red>\uf067{{ .Working.Untracked }} \uf068{{ .Working.Deleted }} \uf069{{ .Working.Modified }}</>]{{ end }}",
+  "{{ if .Working.String }} [<p:red>\uf067{{ .Working.Untracked }} \uf068{{ .Working.Deleted }} \uf069{{ .Working.Modified }}</>]{{ end }}",
 ]
+
 [blocks.segments.properties]
 branch_max_length = 0.0
 fetch_status = true
@@ -74,11 +71,7 @@ leading_diamon = "\ue0b5"
 trailing_diamond = "\ue0b4"
 foreground = "p:background"
 background = "p:yellow"
-templates = [
-    "\u2800",
-    "\U000f0320",
-    "{{ .Full }}",
-]
+templates = ["\u2800", "\U000f0320", "{{ .Full }}"]
 
 [[blocks.segments]]
 type = "node"
@@ -87,11 +80,22 @@ leading_diamon = "\ue0b5"
 trailing_diamond = "\ue0b4"
 foreground = "p:background"
 background = "p:yellow"
-templates = [
-    "\u2800",
-    "\U000f0399",
-    "{{ .Full }}",
-]
+templates = ["\u2800", "\U000f0399", "{{ .Full }}"]
+
+[blocks.segments.properties]
+extensions = ["package.json"]
+
+[[blocks.segments]]
+type = "deno"
+style = "diamond"
+leading_diamon = "\ue0b5"
+trailing_diamond = "\ue0b4"
+foreground = "p:background"
+background = "p:yellow"
+templates = ["\u2800", "\U000f0399", "{{ .Full }}"]
+
+[blocks.segments.properties]
+display_mode = "always"
 
 [[blocks.segments]]
 type = "root"
