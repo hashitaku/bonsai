@@ -41,11 +41,16 @@ alias l='ls -CF'
 alias pbcopy='xclip -selection c'
 alias pbpaste='xclip -selection c -o'
 
+# セットアップ
+type fnm >/dev/null 2>&1 && eval "$(fnm env)"
+test -f /usr/share/git/git-prompt.sh && source /usr/share/git/git-prompt.sh
+
 # 補完
 type rustup >/dev/null 2>&1 && eval "$(rustup completions bash cargo)"
 type rustup >/dev/null 2>&1 && eval "$(rustup completions bash rustup)"
 type oh-my-posh >/dev/null 2>&1 && eval "$(oh-my-posh completion bash)"
-test -f /usr/share/git/git-prompt.sh && source /usr/share/git/git-prompt.sh
+type fnm >/dev/null 2>&1 && eval "$(fnm completions --shell bash)"
+type rye >/dev/null 2>&1 && eval "$(rye self completion --shell bash)"
 
 # プロンプト設定
 if [[ "$(type -t __git_ps1)" == 'function' ]]; then
@@ -56,7 +61,7 @@ if [[ "$(type -t __git_ps1)" == 'function' ]]; then
     title='\[\e]0;\w$(__git_ps1)\a\]'
     prompt='\[\e[31m\]\u\[\e[0m\] at\[\e[33m\] \h\[\e[0m\] in\[\e[32m\] \w\[\e[36m\]$(__git_ps1)\[\e[0m\]\$ '
 else
-    title='\[\e]0;\w\a\a]'
+    title='\[\e]0;\w\a\]'
     prompt='\[\e[31m\]\u\[\e[0m\] at\[\e[33m\] \h\[\e[0m\] in\[\e[32m\] \w\[\e[0m\]\$ '
 fi
 
