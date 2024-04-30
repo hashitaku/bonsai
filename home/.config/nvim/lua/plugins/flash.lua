@@ -3,7 +3,7 @@ return {
         "folke/flash.nvim",
         keys = {
             {
-                "<Leader>f",
+                "<Leader>j",
                 mode = {
                     "n",
                 },
@@ -19,7 +19,7 @@ return {
             },
 
             {
-                "<Leader>F",
+                "<Leader>k",
                 mode = {
                     "n",
                 },
