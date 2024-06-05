@@ -22,7 +22,7 @@ Set-PSReadLineKeyHandler -Key Tab -Function Complete
 Set-PSReadLineKeyHandler -Chord 'Ctrl+Oem4' -ViMode Insert -Function ViCommandMode
 
 if (Get-Command -ErrorAction SilentlyContinue fnm) {
-    fnm env --use-on-cd | Out-String | Invoke-Expression
+    fnm env --use-on-cd --shell power-shell | Out-String | Invoke-Expression
     fnm completions --shell power-shell | Out-String | Invoke-Expression
 }
 
@@ -31,7 +31,7 @@ if (Get-Command -ErrorAction SilentlyContinue rustup) {
 }
 
 if (Get-Command -ErrorAction SilentlyContinue rye) {
-    rye self completion --shell powershell | Out-String | Invoke-Expression
+    rye self completion --shell power-shell | Out-String | Invoke-Expression
 }
 
 if (Get-Command -ErrorAction SilentlyContinue oh-my-posh) {
