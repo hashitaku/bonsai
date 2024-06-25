@@ -31,7 +31,7 @@ if (Get-Command -ErrorAction SilentlyContinue rustup) {
 }
 
 if (Get-Command -ErrorAction SilentlyContinue rye) {
-    rye self completion --shell power-shell | Out-String | Invoke-Expression
+    rye self completion --shell powershell | Out-String | Invoke-Expression
 }
 
 if (Get-Command -ErrorAction SilentlyContinue oh-my-posh) {
