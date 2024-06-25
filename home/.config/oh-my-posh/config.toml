@@ -94,6 +94,9 @@ foreground = "p:background"
 background = "p:yellow"
 templates = ["\u2800", "\U000f0399", "{{ .Full }}"]
 
+[blocks.segments.properties]
+extensions = ["deno.json"]
+
 [[blocks.segments]]
 type = "root"
 style = "diamond"
