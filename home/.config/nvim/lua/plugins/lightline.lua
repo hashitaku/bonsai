@@ -5,7 +5,37 @@ return {
         config = function()
             vim.cmd([[
             function! FileTypeIcon()
+                if &buftype ==# "terminal"
+                    return nerdfont#find() .. " " .. "terminal"
+                endif
+
+                if empty(&filetype)
+                    return "[No FileType]"
+                endif
+
                 return nerdfont#find() .. " " .. &filetype
+            endfunction
+            ]])
+
+            vim.cmd([[
+            function! FileName()
+                if &buftype ==# "terminal"
+                    return "terminal"
+                endif
+
+                if &buftype ==# "help"
+                    return expand("%:t")
+                endif
+
+                if &filetype ==# "fern"
+                    return "fern"
+                endif
+
+                if empty(bufname())
+                    return "[No Name]"
+                endif
+
+                return bufname()
             endfunction
             ]])
 
@@ -17,7 +47,13 @@ return {
                     right = { { "lineinfo" }, { "percent" }, { "fileformat", "fileencoding", "filetype" } },
                 },
 
+                tabline = {
+                    left = { { "tabs" } },
+                    right = { { "close" } },
+                },
+
                 component_function = {
+                    filename = "FileName",
                     filetype = "FileTypeIcon",
                 },
 
