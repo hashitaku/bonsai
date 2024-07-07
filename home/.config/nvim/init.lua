@@ -74,7 +74,7 @@ vim.keymap.set("n", "<Leader>n", function()
 end, {})
 vim.keymap.set("n", "<C-k>", "<cmd>new +term<cr><cmd>resize 10<cr>", {})
 vim.keymap.set("n", "<C-S-k>", "<cmd>tabnew +term<cr>", {})
-vim.keymap.set("n", "<Leader>e", vim.diagnostic.open_float, {});
+vim.keymap.set("n", "<Leader>e", vim.diagnostic.open_float, {})
 
 -- autocmd
 vim.api.nvim_create_autocmd("QuickFixCmdPost", {
