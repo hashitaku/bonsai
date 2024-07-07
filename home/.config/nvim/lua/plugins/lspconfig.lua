@@ -40,7 +40,7 @@ return {
                         buffer = bufnr,
                         group = user_lsp_augid,
                         callback = function()
-                            vim.lsp.inlay_hint.enable(bufnr, false)
+                            vim.lsp.inlay_hint.enable(false, { bufnr = bufnr });
                         end,
                     })
 
@@ -48,7 +48,7 @@ return {
                         buffer = bufnr,
                         group = user_lsp_augid,
                         callback = function()
-                            vim.lsp.inlay_hint.enable(bufnr, true)
+                            vim.lsp.inlay_hint.enable(true, { bufnr = bufnr });
                         end,
                     })
                 end
