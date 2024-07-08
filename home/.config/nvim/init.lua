@@ -156,6 +156,6 @@ require("lazy").setup("plugins", {
 
 if not vim.g.vscode then
     -- vim.cmd.colorscheme("chester")
-    vim.cmd.colorscheme("tokyonight")
+    vim.cmd.colorscheme("tokyonight-storm")
     vim.cmd.highlight("Folded None")
 end
