@@ -93,7 +93,7 @@ vim.api.nvim_create_autocmd("TermClose", {
     end,
 })
 
--- cmd
+-- command
 vim.api.nvim_create_user_command("ToSnakeFromCamel", function(_)
     local cword = vim.fn.expand("<cword>")
 
