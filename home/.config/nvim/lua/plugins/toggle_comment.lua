@@ -1,7 +1,7 @@
 return {
     {
         "toggle_comment.nvim",
-        dir = "lua/toggle_comment.nvim",
+        dir = vim.fs.joinpath(vim.fn.stdpath("config"), "lua", "toggle_comment.nvim"),
         dev = true,
         opts = {},
         keys = {
