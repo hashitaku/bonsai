@@ -149,19 +149,19 @@ sudo efibootmgr -o "${arr%,}"
 - ミドルウェアのインストール
 
     ```sh
-    paru -S --noconfirm openssh polkit gnome-keyring man-db man-pages arch-install-scripts reflector usbutils nftables bluez bluez-utils
+    paru -S --noconfirm openssh polkit gnome-keyring man-db man-pages arch-install-scripts usbutils nftables bluez bluez-utils libappimage
     ```
 
 - CLIアプリのインストール
 
     ```sh
-    paru -S --noconfirm bash-completion neovim-nightly-bin oh-my-posh-bin zip unzip tree wget aria2 jq btop pipes.sh bat ripgrep fd git-delta neofetch
+    paru -S --noconfirm bash-completion neovim oh-my-posh-bin zip unzip tree wget aria2 jq btop pipes.sh bat ripgrep fd git-delta neofetch
     ```
 
 - デスクトップ環境のインストール
 
     ```sh
-    paru -S --noconfirm xorg-server xorg-xinit xorg-xrandr i3-wm kitty xclip picom polybar rofi feh dunst libnotify playerctl pipewire pipewire-pulse pipewire-jack wireplumber alsa-utils fcitx5-mozc fcitx5-configtool fcitx5-qt fcitx5-gtk
+    paru -S --noconfirm xorg-server xorg-xinit xorg-xrandr i3-wm kitty wezterm xclip picom polybar rofi feh dunst libnotify playerctl pipewire pipewire-pulse pipewire-jack wireplumber alsa-utils fcitx5-mozc fcitx5-configtool fcitx5-qt fcitx5-gtk
     ```
 
 - GUIアプリのインストール
@@ -199,19 +199,20 @@ sudo efibootmgr -o "${arr%,}"
     - Rust
 
         ```sh
-        paru -S --noconfirm rustup rust-analyzer
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --no-modify-path -y
         ```
 
     - Python
 
         ```sh
-        paru -S --noconfirm python pyright rye python-black flake8
+        paru -S --noconfirm python ruff ruff-lsp pyright rye uv
         ```
 
     - JavaScript/TypeScript
 
         ```sh
         paru -S --noconfirm nodejs npm deno typescript typescript-language-server
+        test -z "${XDG_DATA_HOME}" && mkdir -p "${XDG_DATA_HOME}/npm/lib"
         ```
 
     - Lua
@@ -291,3 +292,8 @@ echo \
     Option "AccelProfile" "flat"
 EndSection' | sudo tee /etc/X11/xorg.conf.d/20-mouse.conf
 ```
+
+## その他
+
+firefoxのハードウェアアクセラレーション対応状況を`about:support`で確認
+ハードウェアアクセラレーションが有効になっていない場合は`about:config`で`media.ffmpeg.vaapi.enabled`をtrueにする
