@@ -1,68 +1,55 @@
-local options = {
-    clipboard = "unnamed,unnamedplus",
-    cmdheight = 0,
-    cursorline = true,
-    encoding = "utf-8",
-    expandtab = true,
-    fileencoding = "utf-8",
-    fileencodings = "utf-8,sjis",
-    fileformat = "unix",
-    fileformats = "unix,dos",
-    fillchars = "vert:\u{2502},fold:\u{ff65},eob:\u{20}",
-    grepprg = "rg --vimgrep --no-heading",
-    helplang = "ja,en",
-    hidden = true,
-    hlsearch = true,
-    ignorecase = true,
-    incsearch = true,
-    laststatus = 3,
-    list = true,
-    number = true,
-    pumblend = 5,
-    pumheight = 10,
-    relativenumber = false,
-    scrolloff = 5,
-    shiftwidth = 4,
-    signcolumn = "number",
-    smartcase = true,
-    smartindent = true,
-    smarttab = true,
-    splitbelow = true,
-    splitright = true,
-    tabstop = 4,
-    termguicolors = true,
-    updatetime = 500,
-    virtualedit = "block,onemore",
-    wildmenu = true,
-    wildmode = "longest,full",
-    wildoptions = "pum",
-}
+-- options
+vim.g.mapleader = " "
+vim.api.nvim_set_option_value("clipboard", "unnamed,unnamedplus", {})
+vim.api.nvim_set_option_value("cmdheight", 0, {})
+vim.api.nvim_set_option_value("cursorline", true, {})
+vim.api.nvim_set_option_value("encoding", "utf-8", {})
+vim.api.nvim_set_option_value("expandtab", true, {})
+vim.api.nvim_set_option_value("fileencoding", "utf-8", {})
+vim.api.nvim_set_option_value("fileencodings", "utf-8,sjis", {})
+vim.api.nvim_set_option_value("fileformat", "unix", {})
+vim.api.nvim_set_option_value("fileformats", "unix,dos", {})
+vim.api.nvim_set_option_value("fillchars", "vert:\u{2502},fold:\u{ff65},eob:\u{20}", {})
+vim.api.nvim_set_option_value("grepprg", "rg --vimgrep --no-heading", {})
+vim.api.nvim_set_option_value("helplang", "ja,en", {})
+vim.api.nvim_set_option_value("hidden", true, {})
+vim.api.nvim_set_option_value("hlsearch", true, {})
+vim.api.nvim_set_option_value("ignorecase", true, {})
+vim.api.nvim_set_option_value("incsearch", true, {})
+vim.api.nvim_set_option_value("laststatus", 3, {})
+vim.api.nvim_set_option_value("list", true, {})
+vim.api.nvim_set_option_value("number", true, {})
+vim.api.nvim_set_option_value("pumblend", 5, {})
+vim.api.nvim_set_option_value("pumheight", 10, {})
+vim.api.nvim_set_option_value("relativenumber", false, {})
+vim.api.nvim_set_option_value("scrolloff", 5, {})
+vim.api.nvim_set_option_value("shiftwidth", 4, {})
+vim.api.nvim_set_option_value("signcolumn", "number", {})
+vim.api.nvim_set_option_value("smartcase", true, {})
+vim.api.nvim_set_option_value("smartindent", true, {})
+vim.api.nvim_set_option_value("smarttab", true, {})
+vim.api.nvim_set_option_value("splitbelow", true, {})
+vim.api.nvim_set_option_value("splitright", true, {})
+vim.api.nvim_set_option_value("tabstop", 4, {})
+vim.api.nvim_set_option_value("termguicolors", true, {})
+vim.api.nvim_set_option_value("updatetime", 500, {})
+vim.api.nvim_set_option_value("virtualedit", "block,onemore", {})
+vim.api.nvim_set_option_value("wildmenu", true, {})
+vim.api.nvim_set_option_value("wildmode", "longest,full", {})
+vim.api.nvim_set_option_value("wildoptions", "pum", {})
+vim.api.nvim_set_option_value("winblend", 10, {})
 
 if vim.loop.os_uname().sysname == "Windows_NT" then
-    options.shell = vim.fn.executable("pwsh") and "pwsh" or "powershell"
-    options.shellcmdflag =
-        "-NoLogo -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;$PSDefaultParameterValues['*:Encoding']='utf8';"
-    options.shellredir = '2>&1 | %%{ "$_" } | Out-File %s; exit $LastExitCode'
-    options.shellpipe = '2>&1 | %%{ "$_" } | Tee-Object %s; exit $LastExitCode'
-    options.shellquote = ""
-    options.shellxquote = ""
-end
-
-vim.diagnostic.config({
-    float = {
-        border = "rounded",
-    },
-})
-
--- https://github.com/vscode-neovim/vscode-neovim/issues/1369
-if not vim.vscode then
-    options.winblend = 10
-end
-
-vim.g.mapleader = " "
-
-for k, v in pairs(options) do
-    vim.opt[k] = v
+    vim.api.nvim_set_option_value("shell", vim.fn.executable("pwsh") and "pwsh" or "powershell", {})
+    vim.api.nvim_set_option_value(
+        "shellcmdflag",
+        "-NoLogo -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;$PSDefaultParameterValues['*:Encoding']='utf8';",
+        {}
+    )
+    vim.api.nvim_set_option_value("shellpipe", '2>&1 | %%{ "$_" } | Tee-Object %s; exit $LastExitCode', {})
+    vim.api.nvim_set_option_value("shellquote", "", {})
+    vim.api.nvim_set_option_value("shellredir", '2>&1 | %%{ "$_" } | Out-File %s; exit $LastExitCode', {})
+    vim.api.nvim_set_option_value("shellxquote", "", {})
 end
 
 -- keymap
@@ -81,10 +68,10 @@ vim.api.nvim_create_autocmd("QuickFixCmdPost", {
     command = "cwindow",
 })
 vim.api.nvim_create_autocmd("TermOpen", {
-    callback = function(_)
+    callback = function(opts)
         vim.cmd("startinsert")
-        vim.opt_local.number = false
-        vim.opt_local.relativenumber = false
+        vim.api.nvim_set_option_value("number", false, { scope = "local", buf = opts.buf })
+        vim.api.nvim_set_option_value("relativenumber", false, { scope = "local", buf = opts.buf })
     end,
 })
 vim.api.nvim_create_autocmd("TermClose", {
@@ -115,6 +102,14 @@ vim.api.nvim_create_user_command("ToCamelFromSnake", function(_)
     vim.cmd.normal("b")
 end, {})
 
+-- other
+vim.diagnostic.config({
+    float = {
+        border = "rounded",
+    },
+})
+
+-- package
 vim.cmd.packadd("termdebug")
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -154,6 +149,8 @@ require("lazy").setup("plugins", {
     },
 })
 
+-- colorscheme
+-- vim.api.nvim_get_option_value("vscode", { scope = "global" })ではオプションが存在しない時にエラーになる
 if not vim.g.vscode then
     -- vim.cmd.colorscheme("chester")
     vim.cmd.colorscheme("tokyonight-storm")

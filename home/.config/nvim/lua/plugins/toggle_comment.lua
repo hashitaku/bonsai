@@ -9,10 +9,10 @@ return {
                 "<C-_>",
                 mode = {
                     "n",
-                    "x"
+                    "x",
                 },
                 "<CMD>ToggleComment<CR>",
-            }
-        }
-    }
+            },
+        },
+    },
 }

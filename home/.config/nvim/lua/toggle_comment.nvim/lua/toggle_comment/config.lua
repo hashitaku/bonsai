@@ -11,8 +11,8 @@ M.default = {
         python = "#",
         rust = "//",
         typescript = "//",
-        vim = "\""
-    }
+        vim = '"',
+    },
 }
 
 ---@param opts toggle_comment.Config

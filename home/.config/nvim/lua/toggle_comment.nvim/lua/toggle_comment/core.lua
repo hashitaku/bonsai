@@ -21,7 +21,7 @@ function M.get_visual_pos_range()
     local visual_start_line = vim.fn.line("v")
     local current_cursor_line = vim.fn.line(".")
 
-    if (visual_start_line < current_cursor_line) then
+    if visual_start_line < current_cursor_line then
         return { 0, visual_start_line, 1, 0 }, { 0, current_cursor_line, vim.v.maxcol, 0 }
     else
         return { 0, current_cursor_line, 1, 0 }, { 0, visual_start_line, vim.v.maxcol, 0 }

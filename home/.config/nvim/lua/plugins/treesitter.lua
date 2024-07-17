@@ -3,10 +3,10 @@ return {
         "nvim-treesitter/nvim-treesitter",
         enabled = not vim.g.vscode,
         config = function()
-            vim.opt.foldlevelstart = 1
-            vim.opt.foldmethod = "expr"
-            vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-            vim.opt.foldtext = ""
+            vim.api.nvim_set_option_value("foldlevelstart", 1, {})
+            vim.api.nvim_set_option_value("foldmethod", "expr", {})
+            vim.api.nvim_set_option_value("foldexpr", "v:lua.vim.treesitter.foldexpr()", {})
+            vim.api.nvim_set_option_value("foldtext", "", {})
 
             require("nvim-treesitter.configs").setup({
                 ensure_installed = {
