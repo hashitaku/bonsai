@@ -68,10 +68,10 @@ vim.api.nvim_create_autocmd("QuickFixCmdPost", {
     command = "cwindow",
 })
 vim.api.nvim_create_autocmd("TermOpen", {
-    callback = function(opts)
+    callback = function(_)
         vim.cmd("startinsert")
-        vim.api.nvim_set_option_value("number", false, { scope = "local", buf = opts.buf })
-        vim.api.nvim_set_option_value("relativenumber", false, { scope = "local", buf = opts.buf })
+        vim.api.nvim_set_option_value("number", false, { scope = "local" })
+        vim.api.nvim_set_option_value("relativenumber", false, { scope = "local" })
     end,
 })
 vim.api.nvim_create_autocmd("TermClose", {
