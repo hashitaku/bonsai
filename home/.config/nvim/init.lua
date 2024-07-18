@@ -69,9 +69,10 @@ vim.api.nvim_create_autocmd("QuickFixCmdPost", {
 })
 vim.api.nvim_create_autocmd("TermOpen", {
     callback = function(_)
+        local win_id = vim.api.nvim_get_current_win()
+        vim.api.nvim_set_option_value("number", false, { scope = "local", win = win_id })
+        vim.api.nvim_set_option_value("relativenumber", false, { scope = "local", win = win_id })
         vim.cmd("startinsert")
-        vim.api.nvim_set_option_value("number", false, { scope = "local" })
-        vim.api.nvim_set_option_value("relativenumber", false, { scope = "local" })
     end,
 })
 vim.api.nvim_create_autocmd("TermClose", {
@@ -150,7 +151,6 @@ require("lazy").setup("plugins", {
 })
 
 -- colorscheme
--- vim.api.nvim_get_option_value("vscode", { scope = "global" })ではオプションが存在しない時にエラーになる
 if not vim.g.vscode then
     -- vim.cmd.colorscheme("chester")
     vim.cmd.colorscheme("tokyonight-storm")
