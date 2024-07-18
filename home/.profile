@@ -12,7 +12,7 @@ export CARGO_HOME RUSTUP_HOME
 [ -f "${XDG_DATA_HOME}/cargo/env" ] && . ${XDG_DATA_HOME}/cargo/env
 
 # Python
-RYE_HOME="${XDG_DATA_HONE}/rye"
+RYE_HOME="${XDG_DATA_HOME}/rye"
 export RYE_HOME
 
 # node.js
