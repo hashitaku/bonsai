@@ -11,7 +11,9 @@ return {
                     "n",
                     "x",
                 },
-                "<CMD>ToggleComment<CR>",
+                function ()
+                    require("toggle_comment.core").toggle_comment()
+                end,
             },
         },
     },
