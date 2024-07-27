@@ -40,12 +40,4 @@ return {
             })
         end,
     },
-
-    {
-        "nvim-treesitter/playground",
-        enabled = not vim.g.vscode,
-        dependencies = {
-            "nvim-treesitter/nvim-treesitter",
-        },
-    },
 }
