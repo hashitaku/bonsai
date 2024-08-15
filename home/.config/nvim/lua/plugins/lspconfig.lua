@@ -65,6 +65,11 @@ return {
                 on_attach = on_attach_handler,
             })
 
+            lspconfig["mesonlsp"].setup({
+                handlers = vim.lsp.handlers,
+                on_attach = on_attach_handler,
+            })
+
             lspconfig["rust_analyzer"].setup({
                 cmd = {
                     "rust-analyzer",
