@@ -181,7 +181,7 @@ sudo efibootmgr -o "${arr%,}"
     - C/C++
 
         ```sh
-        paru -S --noconfirm gdb clang lldb libc++ libc++abi cmake
+        paru -S --noconfirm gdb clang lldb libc++ libc++abi cmake meson mesonlsp ninja
         ```
 
     - Vulkan
