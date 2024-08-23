@@ -105,17 +105,12 @@ return {
                 },
             })
 
-            lspconfig["ruff_lsp"].setup({
+            lspconfig["ruff"].setup({
                 handlers = vim.lsp.handlers,
                 on_attach = function(client, bufnr)
                     client.server_capabilities.hoverProvider = false
                     on_attach_handler(client, bufnr)
                 end,
-                init_options = {
-                    settings = {
-                        args = {},
-                    },
-                },
             })
 
             lspconfig["pyright"].setup({

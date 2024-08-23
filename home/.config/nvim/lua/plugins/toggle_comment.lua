@@ -11,7 +11,7 @@ return {
                     "n",
                     "x",
                 },
-                function ()
+                function()
                     require("toggle_comment.core").toggle_comment()
                 end,
             },

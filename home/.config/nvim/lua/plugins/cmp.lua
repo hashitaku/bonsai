@@ -10,11 +10,6 @@ return {
     },
 
     {
-        "hrsh7th/cmp-nvim-lsp-signature-help",
-        enabled = not vim.g.vscode,
-    },
-
-    {
         "hrsh7th/cmp-path",
         enabled = not vim.g.vscode,
     },
@@ -43,37 +38,7 @@ return {
             })
 
             cmp.setup({
-                -- 初めの項目を選択した状態でpopupが開く
-                -- cmdlineの補完が正しく動作していない？
-                -- https://github.com/hrsh7th/nvim-cmp/issues/1621
-                -- completion = {
-                --     completeopt = "menu,preview",
-                -- },
-                snippet = {
-                    expand = function(args)
-                        vim.fn["vsnip#anonymous"](args.body)
-                    end,
-                },
-                window = {
-                    completion = {
-                        border = "rounded",
-                        col_offset = 0,
-                        scrollbar = false,
-                        scrolloff = 0,
-                        side_padding = 1,
-                        winblend = 0,
-                        winhighlight = "Normal:Normal,FloatBorder:FloatBorder,CursorLine:LspReferenceText,Search:None",
-                    },
-                    documentation = {
-                        border = "rounded",
-                        col_offset = 0,
-                        scrollbar = false,
-                        scrolloff = 0,
-                        side_padding = 1,
-                        winblend = 0,
-                        winhighlight = "Normal:Normal,FloatBorder:Normal,CursorLine:LspReferenceText,Search:None",
-                    },
-                },
+                preselect = cmp.PreselectMode.None,
                 mapping = cmp.mapping.preset.insert({
                     ["<Tab>"] = cmp.mapping(function(fallback)
                         if cmp.visible() then
@@ -115,13 +80,15 @@ return {
                             fallback()
                         end
                     end, { "i", "s" }),
+
+                    ["<C-x><C-o>"] = cmp.mapping(function(_)
+                        cmp.complete()
+                    end, { "i" }),
                 }),
-                sources = {
-                    { name = "cmp-omni" },
-                    { name = "nvim_lsp" },
-                    { name = "nvim_lsp_signature_help" },
-                    { name = "path" },
-                    { name = "vsnip" },
+                snippet = {
+                    expand = function(args)
+                        vim.fn["vsnip#anonymous"](args.body)
+                    end,
                 },
                 formatting = {
                     format = function(_, vim_item)
@@ -132,6 +99,32 @@ return {
                         end
                         return vim_item
                     end,
+                },
+                sources = {
+                    { name = "cmp-omni" },
+                    { name = "nvim_lsp" },
+                    { name = "path" },
+                    { name = "vsnip" },
+                },
+                window = {
+                    completion = {
+                        border = "rounded",
+                        col_offset = 0,
+                        scrollbar = false,
+                        scrolloff = 0,
+                        side_padding = 1,
+                        winblend = 0,
+                        winhighlight = "Normal:Normal,FloatBorder:FloatBorder,CursorLine:LspReferenceText,Search:None",
+                    },
+                    documentation = {
+                        border = "rounded",
+                        col_offset = 0,
+                        scrollbar = false,
+                        scrolloff = 0,
+                        side_padding = 1,
+                        winblend = 0,
+                        winhighlight = "Normal:Normal,FloatBorder:Normal,CursorLine:LspReferenceText,Search:None",
+                    },
                 },
             })
         end,
