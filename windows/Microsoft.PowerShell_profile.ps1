@@ -30,8 +30,8 @@ if (Get-Command -ErrorAction SilentlyContinue rustup) {
     rustup completions powershell rustup | Out-String | Invoke-Expression
 }
 
-if (Get-Command -ErrorAction SilentlyContinue rye) {
-    rye self completion --shell powershell | Out-String | Invoke-Expression
+if (Get-Command -ErrorAction SilentlyContinue uv) {
+    uv generate-shell-completion powershell | Out-String | Invoke-Expression
 }
 
 if (Get-Command -ErrorAction SilentlyContinue oh-my-posh) {
