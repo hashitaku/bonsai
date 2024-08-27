@@ -205,7 +205,7 @@ sudo efibootmgr -o "${arr%,}"
     - Python
 
         ```sh
-        paru -S --noconfirm python ruff ruff-lsp pyright rye uv
+        paru -S --noconfirm python ruff ruff-lsp pyright uv
         ```
 
     - JavaScript/TypeScript
