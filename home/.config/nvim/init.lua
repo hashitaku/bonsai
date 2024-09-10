@@ -154,7 +154,11 @@ require("lazy").setup("plugins", {
 if not vim.g.vscode then
     -- vim.cmd.colorscheme("chester")
 
+    local lightline = vim.tbl_deep_extend("force", vim.api.nvim_get_var("lightline"), { colorscheme = "tokyonight" })
+    vim.api.nvim_set_var("lightline", lightline)
+
     vim.cmd.colorscheme("tokyonight-storm")
+
     local colors = require("tokyonight.colors.storm")
     vim.api.nvim_set_hl(0, "Folded", { fg = vim.api.nvim_get_hl(0, { name = "Folded" }).fg, bg = nil })
     vim.api.nvim_set_hl(0, "GitSignsAdd", { fg = colors.green })

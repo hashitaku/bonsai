@@ -40,8 +40,6 @@ return {
             ]])
 
             vim.g.lightline = {
-                colorscheme = "tokyonight",
-
                 active = {
                     left = { { "mode", "paste" }, { "readonly", "filename", "modified" } },
                     right = { { "lineinfo" }, { "percent" }, { "fileformat", "fileencoding", "filetype" } },
