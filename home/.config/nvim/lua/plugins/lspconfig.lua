@@ -182,6 +182,11 @@ return {
                     new_config.cmd = angularls_cmd
                 end,
             })
+
+            lspconfig["typst_lsp"].setup({
+                handlers = vim.lsp.handlers,
+                on_attach = on_attach_handler,
+            })
         end,
     },
 }
