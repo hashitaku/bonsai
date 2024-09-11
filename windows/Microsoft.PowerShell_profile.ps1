@@ -4,9 +4,9 @@ $PSDefaultParameterValues["*:Encoding"] = "utf8"
 
 $OnViModeChange = {
     if ($args[0] -eq "Command") {
-        Write-Host -NoNewLine "`e[1 q"
+        Write-Host -NoNewLine "`e[2 q"
     } else {
-        Write-Host -NoNewLine "`e[5 q"
+        Write-Host -NoNewLine "`e[0 q"
     }
 }
 
@@ -16,10 +16,13 @@ Set-PSReadLineOption -ViModeIndicator Script -ViModeChangeHandler $OnViModeChang
 
 Set-PSReadLineOption -Colors @{ "InlinePrediction"="`e[38;2;153;169;179m" }
 
+# Function List
+# https://learn.microsoft.com/en-us/powershell/module/psreadline/about/about_psreadline_functions?view=powershell-7.4
 Set-PSReadLineKeyHandler -Key Tab -Function Complete
 # [Console]::ReadKey()
 # https://github.com/PowerShell/PSReadLine/issues/906
 Set-PSReadLineKeyHandler -Chord 'Ctrl+Oem4' -ViMode Insert -Function ViCommandMode
+Set-PSReadLineKeyHandler -Chord 'Ctrl+Oem4' -ViMode Command -Function Abort
 
 if (Get-Command -ErrorAction SilentlyContinue fnm) {
     fnm env --use-on-cd --shell power-shell | Out-String | Invoke-Expression
