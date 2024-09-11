@@ -42,7 +42,16 @@ return {
         font_size = 8,
     },
 
-    default_cursor_style = "BlinkingUnderline",
+    keys = {
+        {
+            key = "K",
+            mods = "SHIFT|CTRL",
+            action = wezterm.action.DisableDefaultAssignment,
+        },
+    },
+    enable_kitty_keyboard = true,
+
+    default_cursor_style = "BlinkingBar",
     cursor_blink_rate = 500,
     cursor_blink_ease_in = "Constant",
     cursor_blink_ease_out = "Constant",
@@ -50,7 +59,6 @@ return {
 
     font = wezterm.font_with_fallback({
         { family = "Inconsolata Nerd Font Mono", weight = "Bold" },
-        --{ family = "UbuntuMono Nerd Font Mono", weight = "Bold" },
 
         { family = "Noto Sans Mono CJK JP", weight = "Bold" },
     }),
