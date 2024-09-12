@@ -26,7 +26,7 @@ return {
     initial_rows = 30,
 
     hide_tab_bar_if_only_one_tab = hide_tab_bar_if_only_one_tab,
-    window_background_opacity = 0.95,
+    window_background_opacity = 1.0,
     window_decorations = "RESIZE",
     window_padding = {
         left = 0,
