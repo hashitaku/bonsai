@@ -37,6 +37,10 @@ if (Get-Command -ErrorAction SilentlyContinue uv) {
     uv generate-shell-completion powershell | Out-String | Invoke-Expression
 }
 
+if (Get-Command -ErrorAction SilentlyContinue uvx) {
+    uvx --generate-shell-completion powershell | Out-String | Invoke-Expression
+}
+
 if (Get-Command -ErrorAction SilentlyContinue oh-my-posh) {
     $ENV:VIRTUAL_ENV_DISABLE_PROMPT=1
     oh-my-posh --config "${ENV:HOMEDRIVE}${ENV:HOMEPATH}\.config\oh-my-posh\config.toml" init pwsh | Invoke-Expression

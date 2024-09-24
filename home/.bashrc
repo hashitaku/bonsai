@@ -51,6 +51,7 @@ type rustup >/dev/null 2>&1 && eval "$(rustup completions bash rustup)"
 type oh-my-posh >/dev/null 2>&1 && eval "$(oh-my-posh completion bash)"
 type fnm >/dev/null 2>&1 && eval "$(fnm completions --shell bash)"
 type uv >/dev/null 2>&1 && eval "$(uv generate-shell-completion bash)"
+type uvx >/dev/null 2>&1 && eval "$(uvx --generate-shell-completion bash)"
 
 # プロンプト設定
 if [[ "$(type -t __git_ps1)" == 'function' ]]; then
