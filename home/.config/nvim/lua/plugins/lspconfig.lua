@@ -12,6 +12,8 @@ return {
                 vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
 
             local user_lsp_augid = vim.api.nvim_create_augroup("user_lsp", {})
+            ---@param client vim.lsp.Client
+            ---@param bufnr integer
             local on_attach_handler = function(client, bufnr)
                 if client.supports_method("textDocument/documentHighlight") then
                     vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
@@ -49,6 +51,21 @@ return {
                         group = user_lsp_augid,
                         callback = function()
                             vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+                        end,
+                    })
+                end
+
+                if client.supports_method("textDocument/formatting") then
+                    vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+                        buffer = bufnr,
+                        group = user_lsp_augid,
+                        callback = function()
+                            vim.lsp.buf.format({
+                                async = false,
+                                filter = function(_)
+                                    return vim.list_contains({ "rust_analyzer", "lua_ls" }, client.name)
+                                end,
+                            })
                         end,
                     })
                 end
