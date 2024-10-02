@@ -63,7 +63,7 @@ return {
                             vim.lsp.buf.format({
                                 async = false,
                                 filter = function(_)
-                                    return vim.list_contains({ "rust_analyzer", "lua_ls" }, client.name)
+                                    return vim.list_contains({ "rust_analyzer" }, client.name)
                                 end,
                             })
                         end,
