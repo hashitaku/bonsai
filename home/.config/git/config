@@ -7,6 +7,12 @@
     ui = auto
 [merge]
     ff = false
+    tool = "nvim"
+[mergetool]
+    keepBackup = false
+    prompt = false
+[mergetool "nvim"]
+    cmd = "nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'"
 [pull]
     ff = only
 [status]
