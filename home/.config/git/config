@@ -3,6 +3,7 @@
     email =
 [core]
     editor = nvim
+    quotePath = false
 [color]
     ui = auto
 [merge]
