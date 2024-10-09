@@ -9,6 +9,9 @@ return {
                 virtual_symbol_prefix = "",
                 virtual_symbol_suffix = "",
                 virtual_symbol_position = "eol",
+                exclude_filetypes = {
+                    "lazy",
+                },
             })
 
             vim.api.nvim_create_autocmd({ "InsertEnter" }, {
