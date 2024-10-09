@@ -27,6 +27,10 @@ config.initial_cols = 130
 config.initial_rows = 30
 
 config.show_new_tab_button_in_tab_bar = false
+-- nightly build
+-- config.show_close_tab_button_in_tabs = false
+config.use_fancy_tab_bar = false
+config.tab_max_width = 20
 config.hide_tab_bar_if_only_one_tab = hide_tab_bar_if_only_one_tab
 config.window_background_opacity = 1
 config.window_decorations = "RESIZE"
@@ -101,6 +105,7 @@ config.colors = {
     },
 
     tab_bar = {
+        background = "#1E2030",
         inactive_tab_edge = "none",
     },
 }
@@ -136,8 +141,99 @@ local function change_font_size(window, pane)
     window:set_config_overrides(overrides)
 end
 
+local function update_right_status(window, pane)
+    local datetime = wezterm.strftime("%Y-%m-%d %H:%M:%S")
+
+    local fmt = wezterm.format({
+        { Foreground = { Color = "#3B4261" } },
+        { Text = "" },
+        { Attribute = { Italic = true } },
+        { Foreground = { Color = "#82AAFF" } },
+        { Background = { Color = "#3B4261" } },
+        { Text = " " .. datetime .. " " },
+    })
+
+    window:set_right_status(fmt)
+end
+
 wezterm.on("window-resized", function(window, pane)
     change_font_size(window, pane)
+end)
+
+wezterm.on("update-status", function(window, pane)
+    update_right_status(window, pane)
+end)
+
+wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
+    local active_fg = "#82AAFF"
+    local active_bg = "#3B4261"
+    local inactive_fg = "#545C7E"
+    local inactive_bg = "#2F334D"
+    local tabbar_bg = "#1E2030"
+
+    local pane_title = tab.active_pane.title
+    if #pane_title > 14 then
+        pane_title = pane_title:sub(1, 12) .. ".."
+    end
+    local content = string.format("%d %s", tab.tab_index + 1, pane_title)
+    if content:sub(1, 1) ~= " " then
+        content = " " .. content
+    end
+
+    if content:sub(#content, #content) ~= " " then
+        content = content .. " "
+    end
+
+    local content_fg, content_bg
+    if tab.is_active then
+        content_fg = active_fg
+        content_bg = active_bg
+    else
+        content_fg = inactive_fg
+        content_bg = inactive_bg
+    end
+
+    local right_separator, right_separator_fg, right_separator_bg
+    if tab.is_active then
+        right_separator = ""
+        right_separator_fg = active_bg -- 色反転
+
+        -- アクティブタブが最後のタブであるときはタブバーの背景色にする
+        if tab.tab_index + 1 == #tabs then
+            right_separator_bg = tabbar_bg
+        else
+            right_separator_bg = inactive_bg
+        end
+    else
+        -- インアクティブタブが最後でなく次のタブがアクティブではない時
+        if (tab.tab_index + 1 ~= #tabs) and not tabs[tab.tab_index + 2].is_active then
+            right_separator = ""
+            right_separator_fg = inactive_fg
+            right_separator_bg = inactive_bg
+        else
+            right_separator = ""
+            right_separator_fg = inactive_bg -- 色反転
+            -- アクティブタブが最後のタブであるときはタブバーの背景色にする
+            if tab.tab_index + 1 == #tabs then
+                right_separator_bg = tabbar_bg
+            else
+                -- 次のタブがアクティブタブの時の背景色はアクティブタブの背景色
+                right_separator_bg = active_bg
+            end
+        end
+    end
+
+    return {
+        { Foreground = { Color = "none" } },
+        { Background = { Color = "none" } },
+        { Text = "" },
+        { Foreground = { Color = content_fg } },
+        { Background = { Color = content_bg } },
+        { Text = content },
+        { Foreground = { Color = right_separator_fg } },
+        { Background = { Color = right_separator_bg } },
+        { Text = right_separator },
+    }
 end)
 
 return config
