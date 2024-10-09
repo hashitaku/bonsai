@@ -29,6 +29,10 @@ if (Get-Command -ErrorAction SilentlyContinue fnm) {
     fnm completions --shell power-shell | Out-String | Invoke-Expression
 }
 
+if (Get-Command -ErrorAction SilentlyContinue deno) {
+    deno completions powershell | Out-String | Invoke-Expression
+}
+
 if (Get-Command -ErrorAction SilentlyContinue rustup) {
     rustup completions powershell rustup | Out-String | Invoke-Expression
 }
