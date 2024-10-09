@@ -46,7 +46,7 @@ config.window_frame = {
     font = wezterm.font_with_fallback({
         { family = "Inconsolata Nerd Font Mono", weight = "Regular" },
 
-        { family = "Noto Sans Mono CJK JP",      weight = "Regular" },
+        { family = "Noto Sans Mono CJK JP", weight = "Regular" },
     }),
     font_size = 10,
     active_titlebar_bg = "none",
@@ -71,12 +71,45 @@ config.animation_fps = 1
 config.font = wezterm.font_with_fallback({
     { family = "Inconsolata Nerd Font Mono", weight = "Bold" },
 
-    { family = "Noto Sans Mono CJK JP",      weight = "Bold" },
+    { family = "Noto Sans Mono CJK JP", weight = "Bold" },
 })
 config.font_size = 14
 config.bold_brightens_ansi_colors = true
 
 config.colors = {
+    foreground = "#c0caf5",
+    background = "#24283b",
+    cursor_bg = "#c0caf5",
+    cursor_border = "#c0caf5",
+    cursor_fg = "#24283b",
+    selection_bg = "#2e3c64",
+    selection_fg = "#c0caf5",
+    split = "#7aa2f7",
+    compose_cursor = "#ff9e64",
+    scrollbar_thumb = "#292e42",
+
+    ansi = {
+        "#1d202f",
+        "#f7768e",
+        "#9ece6a",
+        "#e0af68",
+        "#7aa2f7",
+        "#bb9af7",
+        "#7dcfff",
+        "#a9b1d6",
+    },
+    brights = {
+        "#414868",
+        "#f7768e",
+        "#9ece6a",
+        "#e0af68",
+        "#7aa2f7",
+        "#bb9af7",
+        "#7dcfff",
+        "#c0caf5",
+    },
+
+    --[[
     foreground = "#f8f8f2",
     background = "#2c3643",
     cursor_bg = "#f8f8f2",
@@ -103,6 +136,7 @@ config.colors = {
         "#b6cfe3",
         "#f8f8f0",
     },
+    ]]
 
     tab_bar = {
         background = "#1E2030",
