@@ -88,11 +88,15 @@ return {
             })
 
             lspconfig["rust_analyzer"].setup({
-                cmd = {
-                    "rust-analyzer",
-                },
                 handlers = vim.lsp.handlers,
                 on_attach = on_attach_handler,
+                settings = {
+                    ["rust-analyzer"] = {
+                        check = {
+                            command = "clippy",
+                        },
+                    },
+                },
             })
 
             lspconfig["slint_lsp"].setup({
