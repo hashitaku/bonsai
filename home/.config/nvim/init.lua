@@ -1,7 +1,7 @@
 -- options
 vim.g.mapleader = " "
 vim.api.nvim_set_option_value("clipboard", "unnamed,unnamedplus", {})
-vim.api.nvim_set_option_value("cmdheight", 0, {})
+vim.api.nvim_set_option_value("cmdheight", vim.g.vscode and 1 or 0, {})
 vim.api.nvim_set_option_value("cursorline", true, {})
 vim.api.nvim_set_option_value("encoding", "utf-8", {})
 vim.api.nvim_set_option_value("expandtab", true, {})
