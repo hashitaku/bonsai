@@ -53,6 +53,7 @@ type fnm >/dev/null 2>&1 && eval "$(fnm completions --shell bash)"
 type deno >/dev/null 2>&1 && eval "$(deno completions bash)"
 type uv >/dev/null 2>&1 && eval "$(uv generate-shell-completion bash)"
 type uvx >/dev/null 2>&1 && eval "$(uvx --generate-shell-completion bash)"
+type erd >/dev/null 2>&1 && eval "$(erd --completions bash)"
 
 # プロンプト設定
 if [[ "$(type -t __git_ps1)" == 'function' ]]; then
