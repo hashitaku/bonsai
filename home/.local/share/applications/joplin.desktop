@@ -5,4 +5,4 @@ Icon=joplin
 Categories=Office
 GenericName=Note Application
 GenericName[ja]=ノートアプリ
-Exec=/bin/bash -c "${HOME}/Appimage/joplin/Joplin.AppImage"
+Exec=Joplin.AppImage
