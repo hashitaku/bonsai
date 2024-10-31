@@ -15,10 +15,6 @@ export CARGO_HOME RUSTUP_HOME
 GOPATH="${XDG_DATA_HOME}/go"
 export GOPATH
 
-# Python
-RYE_HOME="${XDG_DATA_HOME}/rye"
-export RYE_HOME
-
 # node.js
 NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME}/npm/npmrc"
 export NPM_CONFIG_USERCONFIG
