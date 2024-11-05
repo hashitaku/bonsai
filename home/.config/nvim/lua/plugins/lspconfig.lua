@@ -5,8 +5,11 @@ return {
         config = function()
             local lspconfig = require("lspconfig")
 
+            -- neovim 0.11.0移行はvim.lsp.buf.hoverの引数で設定する
+            if vim.version.le(vim.version(), "0.10.0") then
+                vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
+            end
 
-            vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
             vim.lsp.handlers["textDocument/signatureHelp"] =
                 vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
 
@@ -14,6 +17,14 @@ return {
             ---@param client vim.lsp.Client
             ---@param bufnr integer
             local on_attach_handler = function(client, bufnr)
+                if vim.version.ge(vim.version(), "0.11.0-beta") then
+                    if client.supports_method("textDocument/hover") then
+                        vim.keymap.set("n", "K", function()
+                            vim.lsp.buf.hover({})
+                        end, { buffer = bufnr })
+                    end
+                end
+
                 if client.supports_method("textDocument/documentHighlight") then
                     vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
                         buffer = bufnr,
