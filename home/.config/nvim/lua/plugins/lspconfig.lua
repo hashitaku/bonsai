@@ -218,6 +218,11 @@ return {
                 handlers = vim.lsp.handlers,
                 on_attach = on_attach_handler,
             })
+
+            lspconfig["taplo"].setup({
+                handlers = vim.lsp.handlers,
+                on_attach = on_attach_handler,
+            })
         end,
     },
 }
