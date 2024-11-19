@@ -25,4 +25,5 @@ jobs:
       - name: release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.sha }}
           files: install_scripts.tar.gz
