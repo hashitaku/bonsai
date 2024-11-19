@@ -42,10 +42,10 @@ sgdisk --typecode '1:EF00' "${install_block_device_path}"
 sgdisk --typecode '2:8E00' "${install_block_device_path}"
 
 # パーティション番号とディスクパスからファイルパスを得る方法が不明なのでnvme向けにのみ対応
-pvcreate "${install_block_device_path}p2"
+pvcreate -y "${install_block_device_path}p2"
 
 # パーティション番号とディスクパスからファイルパスを得る方法が不明なのでnvme向けにのみ対応
-vgcreate "${volume_group_name}" "${install_block_device_path}p2"
+vgcreate -y "${volume_group_name}" "${install_block_device_path}p2"
 
 lvcreate -L "${root_size}" -n root-LV "${volume_group_name}"
 lvcreate -L "${home_size}" -n home-LV "${volume_group_name}"
