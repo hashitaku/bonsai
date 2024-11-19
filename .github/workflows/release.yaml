@@ -1,0 +1,37 @@
+name: Release
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - doc/arch/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: set env current datetime
+        env:
+          TZ: Asia/Tokyo
+        run: echo "CURRENT_DATETIME=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_ENV
+
+      - name: set env short commit hash
+        run: echo "SHORT_HASH=${GITHUB_SHA:0:8}" >> $GITHUB_ENV
+
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: build
+        run: |
+          python3 doc/scripts/md2src.py doc/arch/install_arch_part1.md install_arch_part1.sh
+          python3 doc/scripts/md2src.py doc/arch/install_arch_part2.md install_arch_part2.sh
+
+      - name: archive
+        run: tar cfz install_scripts.tar.gz install_arch_part1.sh install_arch_part2.sh
+
+      - name: release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.CURRENT_DATETIME }}-${{ env.SHORT_HASH }}
+          files: install_scripts.tar.gz
