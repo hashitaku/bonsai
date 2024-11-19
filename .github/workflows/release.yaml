@@ -2,9 +2,9 @@ name: Release
 
 on:
   push:
-    branches: ["develop"]
-
-  workflow_dispatch:
+    branches: ["main"]
+    paths:
+      - doc/arch/**
 
 jobs:
   build:
