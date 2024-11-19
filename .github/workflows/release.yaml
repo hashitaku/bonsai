@@ -11,6 +11,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: set current datetime
+        env:
+          TZ: Asia/Tokyo
+        run: echo "CURRENT_DATETIME=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+
       - name: checkout
         uses: actions/checkout@v4
 
@@ -25,5 +30,5 @@ jobs:
       - name: release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.sha }}
+          tag_name: ${{ env.CURRENT_DATETIME }}
           files: install_scripts.tar.gz
