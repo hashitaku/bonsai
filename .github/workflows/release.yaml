@@ -1,4 +1,4 @@
-name: build-install-scripts
+name: Release
 
 on:
   push:
@@ -14,11 +14,14 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
 
-      - name: check python version 1
-        run: python --version
+      - name: build
+        run: python3 doc/scripts/md2src.py doc/arch/install_arch_part1.md install_arch_part1.sh
+        run: python3 doc/scripts/md2src.py doc/arch/install_arch_part2.md install_arch_part2.sh
 
-      - name: setup python
-        uses: actions/setup-python@v5
+      - name: archive
+        run: tar cfz install_scripts.tar.gz install_arch_part1.sh install_arch_part2.sh
 
-      - name: check python version 2
-        run: python --version
+      - name: release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: install_scripts.tar.gz
