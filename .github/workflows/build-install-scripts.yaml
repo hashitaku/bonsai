@@ -18,7 +18,7 @@ jobs:
         run: python --version
 
       - name: setup python
-        uses: actions/setup-python@5
+        uses: actions/setup-python@v5
 
       - name: check python version 2
         run: python --version
