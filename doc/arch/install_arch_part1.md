@@ -3,13 +3,29 @@
 ```sh
 #!/bin/bash -eu
 
+function join_part () {
+    if [[ "$(lsblk -dn -o TYPE ${1})" != 'disk' ]]; then
+        false
+        return
+    fi
+
+    if [[ $(basename ${1}) == sd* ]]; then
+        echo "${1}${2}"
+    elif [[ $(basename ${1}) == nvme* ]]; then
+        echo "${1}p${2}"
+    else
+        false
+        return
+    fi
+}
+
 ip l
 lsblk
 
 while true; do
     read -rp 'install block device path(ex: /dev/sda, /dev/nvme0n1): ' install_block_device_path
 
-    if [[ "$(lsblk -dn -o TYPE ${install_block_device_path})" == 'disk' ]]; then
+    if [[ "$(lsblk -dn -o TYPE ${install_block_device_path})" = 'disk' ]]; then
         break
     else
         echo 'input block device path is not disk type'
@@ -17,18 +33,23 @@ while true; do
 done
 
 read -rp 'EFI System Partition Size(default: 1G): ' esp_size
-read -rp 'Root Partition Size(default: 256G): ' root_size
-read -rp 'Home Partition Size(default: 512G): ' home_size
+read -rp 'Root Logical Volume Percentage(default: 50): ' root_lv_percentage
+read -rp 'Home Logical Volume Percentage(default: 50): ' home_lv_percentage
 read -rp 'Volume Group Name(default: ArchLinux-VG): ' volume_group_name
 read -rp 'Root Logical Volume Name(default: root-LV): ' root_lv_name
 read -rp 'Home Logical Volume Name(default: home-LV): ' home_lv_name
 
 esp_size="${esp_size:-1G}"
-root_size="${root_size:-256G}"
-home_size="${home_size:-256G}"
+root_lv_percentage="${root_lv_percentage:-50}"
+home_lv_percentage="${home_lv_percentage:-50}"
 volume_group_name="${volume_group_name:-ArchLinux-VG}"
 root_lv_name="${root_lv_name:-root-LV}"
 home_lv_name="${home_lv_name:-home-LV}"
+
+if [[ $((root_lv_percentage + home_lv_percentage)) > 100 ]]; then
+    echo "root_lvとhome_lvの割合の合計が100を超えています"
+    false
+fi
 ```
 
 # パーティショニング、LVMの設定
@@ -41,14 +62,12 @@ sgdisk --new '2::' "${install_block_device_path}"
 sgdisk --typecode '1:EF00' "${install_block_device_path}"
 sgdisk --typecode '2:8E00' "${install_block_device_path}"
 
-# パーティション番号とディスクパスからファイルパスを得る方法が不明なのでnvme向けにのみ対応
-pvcreate -y "${install_block_device_path}p2"
+pvcreate -y "$(join_part ${install_block_device_path} 2)"
 
-# パーティション番号とディスクパスからファイルパスを得る方法が不明なのでnvme向けにのみ対応
-vgcreate -y "${volume_group_name}" "${install_block_device_path}p2"
+vgcreate -y "${volume_group_name}" "$(join_part ${install_block_device_path} 2)"
 
-lvcreate -L "${root_size}" -n root-LV "${volume_group_name}"
-lvcreate -L "${home_size}" -n home-LV "${volume_group_name}"
+lvcreate -l "${root_lv_percentage}%VG" -n root-LV "${volume_group_name}"
+lvcreate -l "${home_lv_percentage}%VG" -n home-LV "${volume_group_name}"
 ```
 
 # ライブ環境の設定
@@ -74,8 +93,7 @@ sed -i '/Parallel/c ParallelDownloads = 5' /etc/pacman.conf
 
 ```sh
 umount -R "/mnt" || true
-# パーティション番号とディスクパスからファイルパスを得る方法が不明なのでnvme向けにのみ対応
-mkfs.fat -F 32 "${install_block_device_path}p1"
+mkfs.fat -F 32 "$(part_join ${install_block_device_path} 1)"
 mkfs.btrfs -f "/dev/${volume_group_name}/${root_lv_name}"
 mkfs.btrfs -f "/dev/${volume_group_name}/${home_lv_name}"
 ```
@@ -85,8 +103,7 @@ mkfs.btrfs -f "/dev/${volume_group_name}/${home_lv_name}"
 ```sh
 mount "/dev/${volume_group_name}/${root_lv_name}" /mnt
 mkdir -m 700 /mnt/boot
-# パーティション番号とディスクパスからファイルパスを得る方法が不明なのでnvme向けにのみ対応
-mount -o dmask=077,fmask=077 "${install_block_device_path}p1" /mnt/boot
+mount -o dmask=077,fmask=077 "$(part_join ${install_block_device_path} 1)" /mnt/boot
 mkdir /mnt/home
 mount "/dev/${volume_group_name}/${home_lv_name}" /mnt/home
 ```
