@@ -127,7 +127,7 @@ arch-chroot /mnt /bin/bash -euc "
 echo 'change root passwd'
 passwd
 
-sed -i '/^HOOKS/c HOOKS=(base udev autodetect modconf kms keyboard keymap consolefont block lvm2 filesystems fsck)' /etc/mkinitcpio.conf
+sed -i '/^HOOKS/c HOOKS=(base udev autodetect microcode modconf kms keyboard keymap consolefont block lvm2 filesystems fsck)' /etc/mkinitcpio.conf
 mkinitcpio -p linux
 
 echo '%wheel ALL=(ALL:ALL) ALL' > /etc/sudoers.d/wheel
@@ -146,7 +146,6 @@ console-mode max' > /boot/loader/loader.conf
 
 echo 'title Arch Linux
 linux /vmlinuz-linux
-initrd /amd-ucode.img
 initrd /initramfs-linux.img
 options root=UUID=$(blkid -o value -s UUID "/dev/${volume_group_name}/${root_lv_name}") rw' > /boot/loader/entries/arch.conf
 "
