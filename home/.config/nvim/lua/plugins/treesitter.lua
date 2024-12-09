@@ -29,7 +29,7 @@ return {
                     "slint",
                     "toml",
                     "typescript",
-                    "typst",
+                    "tinymist",
                     "vim",
                     "vimdoc",
                     "yaml",
