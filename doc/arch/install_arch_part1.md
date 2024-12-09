@@ -38,6 +38,7 @@ read -rp 'Home Logical Volume Percentage(default: 50): ' home_lv_percentage
 read -rp 'Volume Group Name(default: ArchLinux-VG): ' volume_group_name
 read -rp 'Root Logical Volume Name(default: root-LV): ' root_lv_name
 read -rp 'Home Logical Volume Name(default: home-LV): ' home_lv_name
+read -rp 'Add User Name: ' user
 
 esp_size="${esp_size:-1G}"
 root_lv_percentage="${root_lv_percentage:-50}"
@@ -48,6 +49,11 @@ home_lv_name="${home_lv_name:-home-LV}"
 
 if [[ $((root_lv_percentage + home_lv_percentage)) > 100 ]]; then
     echo "root_lvとhome_lvの割合の合計が100を超えています"
+    false
+fi
+
+if [[ "${user}" == "" ]]; then
+    echo "ユーザー名が空です"
     false
 fi
 ```
@@ -126,6 +132,10 @@ genfstab -U /mnt > /mnt/etc/fstab
 arch-chroot /mnt /bin/bash -euc "
 echo 'change root passwd'
 passwd
+
+useradd ${user} -m -G wheel,video
+echo 'change ${user} passwd'
+passwd ${user}
 
 sed -i '/^HOOKS/c HOOKS=(base udev autodetect microcode modconf kms keyboard keymap consolefont block lvm2 filesystems fsck)' /etc/mkinitcpio.conf
 mkinitcpio -p linux
