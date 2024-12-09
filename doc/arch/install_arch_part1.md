@@ -93,7 +93,7 @@ sed -i '/Parallel/c ParallelDownloads = 5' /etc/pacman.conf
 
 ```sh
 umount -R "/mnt" || true
-mkfs.fat -F 32 "$(part_join ${install_block_device_path} 1)"
+mkfs.fat -F 32 "$(join_part ${install_block_device_path} 1)"
 mkfs.btrfs -f "/dev/${volume_group_name}/${root_lv_name}"
 mkfs.btrfs -f "/dev/${volume_group_name}/${home_lv_name}"
 ```
@@ -103,7 +103,7 @@ mkfs.btrfs -f "/dev/${volume_group_name}/${home_lv_name}"
 ```sh
 mount "/dev/${volume_group_name}/${root_lv_name}" /mnt
 mkdir -m 700 /mnt/boot
-mount -o dmask=077,fmask=077 "$(part_join ${install_block_device_path} 1)" /mnt/boot
+mount -o dmask=077,fmask=077 "$(join_part ${install_block_device_path} 1)" /mnt/boot
 mkdir /mnt/home
 mount "/dev/${volume_group_name}/${home_lv_name}" /mnt/home
 ```
