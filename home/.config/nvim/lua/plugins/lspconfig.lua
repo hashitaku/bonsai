@@ -214,9 +214,10 @@ return {
                 end,
             })
 
-            lspconfig["typst_lsp"].setup({
+            lspconfig["tinymist"].setup({
                 handlers = vim.lsp.handlers,
                 on_attach = on_attach_handler,
+                single_file_support = true,
             })
 
             lspconfig["taplo"].setup({
