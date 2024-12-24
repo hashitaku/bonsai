@@ -10,6 +10,11 @@ return {
     },
 
     {
+        "hrsh7th/cmp-nvim-lsp-signature-help",
+        enabled = not vim.g.vscode,
+    },
+
+    {
         "hrsh7th/cmp-path",
         enabled = not vim.g.vscode,
     },
@@ -103,6 +108,7 @@ return {
                 sources = {
                     { name = "cmp-omni" },
                     { name = "nvim_lsp" },
+                    { name = "nvim_lsp_signature_help" },
                     { name = "path" },
                     { name = "vsnip" },
                 },
