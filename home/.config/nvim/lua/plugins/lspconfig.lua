@@ -65,16 +65,16 @@ return {
                     })
                 end
 
-                if client.supports_method("textDocument/formatting") then
+                if
+                    client.supports_method("textDocument/formatting")
+                    and vim.list_contains({ "rust_analyzer", "ruff" }, client.name)
+                then
                     vim.api.nvim_create_autocmd({ "BufWritePre" }, {
                         buffer = bufnr,
                         group = user_lsp_augid,
                         callback = function()
                             vim.lsp.buf.format({
                                 async = false,
-                                filter = function(_)
-                                    return vim.list_contains({ "rust_analyzer" }, client.name)
-                                end,
                             })
                         end,
                     })
