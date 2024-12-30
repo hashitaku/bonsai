@@ -1,6 +1,6 @@
 return {
     {
-        "folke/neodev.nvim",
+        "folke/lazydev.nvim",
         enabled = not vim.g.vscode,
     },
 

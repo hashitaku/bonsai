@@ -10,6 +10,11 @@ return {
     },
 
     {
+        "hrsh7th/cmp-nvim-lsp-signature-help",
+        enabled = not vim.g.vscode,
+    },
+
+    {
         "hrsh7th/cmp-path",
         enabled = not vim.g.vscode,
     },
@@ -27,6 +32,9 @@ return {
     {
         "hrsh7th/nvim-cmp",
         enabled = not vim.g.vscode,
+        dependencies = {
+            "folke/lazydev.nvim",
+        },
         config = function()
             local cmp = require("cmp")
 
@@ -103,8 +111,10 @@ return {
                 sources = {
                     { name = "cmp-omni" },
                     { name = "nvim_lsp" },
+                    { name = "nvim_lsp_signature_help" },
                     { name = "path" },
                     { name = "vsnip" },
+                    { name = "lazydev", group_index = 0 },
                 },
                 window = {
                     completion = {

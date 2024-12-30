@@ -5,8 +5,8 @@ return {
         config = function()
             local lspconfig = require("lspconfig")
 
-            -- neovim 0.11.0移行はvim.lsp.buf.hoverの引数で設定する
-            if vim.version.le(vim.version(), "0.10.0") then
+            -- neovim 0.11.0以降はvim.lsp.buf.hoverの引数で設定する
+            if vim.version.lt(vim.version(), "0.11.0-beta") then
                 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
             end
 
@@ -65,16 +65,16 @@ return {
                     })
                 end
 
-                if client.supports_method("textDocument/formatting") then
+                if
+                    client.supports_method("textDocument/formatting")
+                    and vim.list_contains({ "rust_analyzer", "ruff" }, client.name)
+                then
                     vim.api.nvim_create_autocmd({ "BufWritePre" }, {
                         buffer = bufnr,
                         group = user_lsp_augid,
                         callback = function()
                             vim.lsp.buf.format({
                                 async = false,
-                                filter = function(_)
-                                    return vim.list_contains({ "rust_analyzer" }, client.name)
-                                end,
                             })
                         end,
                     })
@@ -214,9 +214,10 @@ return {
                 end,
             })
 
-            lspconfig["typst_lsp"].setup({
+            lspconfig["tinymist"].setup({
                 handlers = vim.lsp.handlers,
                 on_attach = on_attach_handler,
+                single_file_support = true,
             })
 
             lspconfig["taplo"].setup({

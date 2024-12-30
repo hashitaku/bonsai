@@ -6,24 +6,19 @@
 ip l
 lsblk
 
-if [ "${USER}" = "root" ]; then
-    echo \
-'Do not run this script as root
-# systemctl enable --now systemd-homed.service
-# homectl create --member-of=wheel,video --disk-size=256G --storage=luks [USERNAME]
-'
-
-    exit
-fi
+XDG_CONFIG_HOME="${HOME}/.config"
+XDG_CACHE_HOME="${HOME}/.cache"
+XDG_DATA_HOME="${HOME}/.local/share"
+XDG_STATE_HOME="${HOME}/.local/state"
 
 read -rp 'nif name: ' nif_name
 read -rp 'efi disk(ex: /dev/sda, /dev/nvme0n1): ' efi_disk
 read -rp 'efi part(default: 1): ' efi_part
 read -rp 'hostname: ' hostname
-read -rp 'keymap(default: en): ' keymap
+read -rp 'keymap(default: us): ' keymap
 
 efi_part="${efi_part:-1}"
-keymap="${keymap:-en}"
+keymap="${keymap:-us}"
 ```
 
 # 初期設定
@@ -155,7 +150,7 @@ sudo efibootmgr -o "${arr%,}"
 - CLIアプリのインストール
 
     ```sh
-    paru -S --noconfirm bash-completion neovim oh-my-posh-bin zip unzip tree wget aria2 jq btop pipes.sh bat ripgrep fd erd git-delta neofetch glow
+    paru -S --noconfirm bash-completion neovim oh-my-posh-bin zip unzip tree wget aria2 jq btop pipes.sh bat ripgrep fd erdtree git-delta neofetch glow
     ```
 
 - デスクトップ環境のインストール
