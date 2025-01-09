@@ -158,22 +158,12 @@ return {
             local html_css_capabilities = vim.lsp.protocol.make_client_capabilities()
             html_css_capabilities.textDocument.completion.completionItem.snippetSupport = true
             lspconfig["html"].setup({
-                cmd = {
-                    "npx",
-                    "vscode-html-language-server",
-                    "--stdio",
-                },
                 handlers = vim.lsp.handlers,
                 on_attach = on_attach_handler,
                 capabilities = html_css_capabilities,
             })
 
             lspconfig["cssls"].setup({
-                cmd = {
-                    "npx",
-                    "vscode-css-language-server",
-                    "--stdio",
-                },
                 handlers = vim.lsp.handlers,
                 on_attach = on_attach_handler,
                 capabilities = html_css_capabilities,
@@ -186,32 +176,14 @@ return {
             })
 
             lspconfig["ts_ls"].setup({
-                cmd = {
-                    "npx",
-                    "typescript-language-server",
-                    "--stdio",
-                },
                 handlers = vim.lsp.handlers,
                 on_attach = on_attach_handler,
                 root_dir = lspconfig.util.root_pattern("package.json"),
             })
 
-            local angularls_cmd = {
-                "npx",
-                "ngserver",
-                "--stdio",
-                "--tsProbeLocations",
-                " ",
-                "--ngProbeLocations",
-                " ",
-            }
             lspconfig["angularls"].setup({
-                cmd = angularls_cmd,
                 handlers = vim.lsp.handlers,
                 on_attach = on_attach_handler,
-                on_new_config = function(new_config, new_root_dir)
-                    new_config.cmd = angularls_cmd
-                end,
             })
 
             lspconfig["tinymist"].setup({
@@ -221,6 +193,12 @@ return {
             })
 
             lspconfig["taplo"].setup({
+                handlers = vim.lsp.handlers,
+                on_attach = on_attach_handler,
+            })
+
+            lspconfig["powershell_es"].setup({
+                bundle_path = vim.fs.joinpath(vim.fn.stdpath("data"), "mason/packages/powershell-editor-services"),
                 handlers = vim.lsp.handlers,
                 on_attach = on_attach_handler,
             })
