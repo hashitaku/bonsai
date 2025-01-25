@@ -138,7 +138,7 @@ sudo efibootmgr -o "${arr%,}"
 - Radeonドライバインストール
 
     ```sh
-    paru -S mesa mesa libva-utils xf86-video-amdgpu vulkan-radeon rocm-opencl-sdk rocm-hip-sdk rocm-ml-sdk rocm-smi-lib
+    paru -S mesa libva-utils xf86-video-amdgpu vulkan-radeon rocm-opencl-sdk rocm-hip-sdk rocm-ml-sdk rocm-smi-lib
     ```
 
 - ミドルウェアのインストール
