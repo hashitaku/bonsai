@@ -1,7 +1,7 @@
 return {
     {
         "lambdalisue/fern-git-status.vim",
-        enabled = not vim.g.vscode,
+        enabled = not vim.g.vscode and false,
         dependencies = {
             "lambdalisue/fern.vim",
         },
@@ -9,7 +9,7 @@ return {
 
     {
         "lambdalisue/fern-hijack.vim",
-        enabled = not vim.g.vscode,
+        enabled = not vim.g.vscode and false,
         dependencies = {
             "lambdalisue/fern.vim",
         },
@@ -17,7 +17,7 @@ return {
 
     {
         "lambdalisue/fern-renderer-nerdfont.vim",
-        enabled = not vim.g.vscode,
+        enabled = not vim.g.vscode and false,
         dependencies = {
             "lambdalisue/fern.vim",
             "lambdalisue/nerdfont.vim",
@@ -26,7 +26,7 @@ return {
 
     {
         "lambdalisue/fern.vim",
-        enabled = not vim.g.vscode,
+        enabled = not vim.g.vscode and false,
         config = function()
             vim.g["fern#default_hidden"] = true
             vim.g["fern#drawer_keep"] = true
