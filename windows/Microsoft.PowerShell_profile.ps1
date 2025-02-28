@@ -50,6 +50,10 @@ if (Get-Command -ErrorAction SilentlyContinue oh-my-posh) {
     oh-my-posh --config "${ENV:HOMEDRIVE}${ENV:HOMEPATH}\.config\oh-my-posh\config.toml" init pwsh | Invoke-Expression
 }
 
+if (Get-Command -ErrorAction SilentlyContinue himalaya) {
+    himalaya completion powershell | Out-String | Invoke-Expression
+}
+
 if (Get-Command -ErrorAction SilentlyContinue uutils) {
     Remove-Alias -Name @(
         "cat"
