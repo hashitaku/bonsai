@@ -62,6 +62,8 @@ IPv6PrivacyExtensions = true" | sudo tee "/etc/systemd/network/50-${nif_name}.ne
 sudo systemctl enable --now systemd-networkd.service
 sudo systemctl enable --now systemd-resolved.service
 
+sudo ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+
 set +e
 while ! ping -c 1 -W 1 archlinux.jp; do
     echo 'waiting for connect archlinux.jp'
