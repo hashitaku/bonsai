@@ -155,6 +155,11 @@ return {
                 on_attach = on_attach_handler,
             })
 
+            lspconfig["gopls"].setup({
+                handlers = vim.lsp.handlers,
+                on_attach = on_attach_handler,
+            })
+
             local html_css_capabilities = vim.lsp.protocol.make_client_capabilities()
             html_css_capabilities.textDocument.completion.completionItem.snippetSupport = true
             lspconfig["html"].setup({
