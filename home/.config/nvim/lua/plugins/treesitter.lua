@@ -16,6 +16,7 @@ return {
                     "cmake",
                     "cpp",
                     "css",
+                    "go",
                     "html",
                     "json",
                     "lua",
