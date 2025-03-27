@@ -2,11 +2,20 @@
 [Console]::InputEncoding = [System.Text.Encoding]::UTF8
 $PSDefaultParameterValues["*:Encoding"] = "utf8"
 
+# DECSCUSR
+# CSI Ps q
+# 0: default
+# 1: Blinking Block
+# 2: Steady Block
+# 3: Blinking Underline
+# 4: Steady Underline
+# 5: Blinking Bar
+# 6: Steady Bar
 $OnViModeChange = {
     if ($args[0] -eq "Command") {
         Write-Host -NoNewLine "`e[2 q"
     } else {
-        Write-Host -NoNewLine "`e[0 q"
+        Write-Host -NoNewLine "`e[6 q"
     }
 }
 
