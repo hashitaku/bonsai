@@ -70,9 +70,6 @@ vim.api.nvim_create_autocmd("QuickFixCmdPost", {
 })
 vim.api.nvim_create_autocmd("TermOpen", {
     callback = function(_)
-        local win_id = vim.api.nvim_get_current_win()
-        vim.api.nvim_set_option_value("number", false, { scope = "local", win = win_id })
-        vim.api.nvim_set_option_value("relativenumber", false, { scope = "local", win = win_id })
         vim.cmd.startinsert()
     end,
 })
