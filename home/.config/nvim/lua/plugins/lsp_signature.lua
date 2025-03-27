@@ -13,6 +13,9 @@ return {
                 current = "󰜱 ", -- f0731
                 below = "󱞾 ", -- f17be
             },
+            handler_opts = {
+                border = "rounded",
+            },
         },
     },
 }
