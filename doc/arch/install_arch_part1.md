@@ -48,12 +48,12 @@ root_lv_name="${root_lv_name:-root-LV}"
 home_lv_name="${home_lv_name:-home-LV}"
 
 if [[ $((root_lv_percentage + home_lv_percentage)) > 100 ]]; then
-    echo "root_lvとhome_lvの割合の合計が100を超えています"
+    echo "Sum of root_lv and home_lv percentages exceeds 100"
     false
 fi
 
 if [[ "${user}" == "" ]]; then
-    echo "ユーザー名が空です"
+    echo "User is empty"
     false
 fi
 ```
@@ -100,8 +100,8 @@ sed -i '/Parallel/c ParallelDownloads = 5' /etc/pacman.conf
 ```sh
 umount -R "/mnt" || true
 mkfs.fat -F 32 "$(join_part ${install_block_device_path} 1)"
-mkfs.btrfs -f "/dev/${volume_group_name}/${root_lv_name}"
-mkfs.btrfs -f "/dev/${volume_group_name}/${home_lv_name}"
+mkfs.ext4 -f "/dev/${volume_group_name}/${root_lv_name}"
+mkfs.ext4 -f "/dev/${volume_group_name}/${home_lv_name}"
 ```
 
 # ファイルシステムのマウント
@@ -117,7 +117,7 @@ mount "/dev/${volume_group_name}/${home_lv_name}" /mnt/home
 # パッケージのインストール
 
 ```sh
-pacstrap /mnt base base-devel linux linux-firmware amd-ucode lvm2 btrfs-progs git
+pacstrap /mnt base base-devel linux linux-firmware amd-ucode lvm2 git
 ```
 
 # fstab生成

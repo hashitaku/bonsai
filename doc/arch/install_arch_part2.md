@@ -96,7 +96,7 @@ paru -Syyu
 ## 必要パッケージのインストール
 
 ```sh
-paru -S --noconfirm efibootmgr sbctl
+paru -S --noconfirm --asexplicit efibootmgr sbctl
 ```
 
 ## 鍵の生成
@@ -140,37 +140,37 @@ sudo efibootmgr -o "${arr%,}"
 - Radeonドライバインストール
 
     ```sh
-    paru -S mesa libva-utils xf86-video-amdgpu vulkan-radeon rocm-opencl-sdk rocm-hip-sdk rocm-ml-sdk rocm-smi-lib
+    paru -S --noconfirm --asexplicit mesa libva-utils xf86-video-amdgpu vulkan-radeon rocm-opencl-sdk rocm-hip-sdk rocm-ml-sdk rocm-smi-lib
     ```
 
 - ミドルウェアのインストール
 
     ```sh
-    paru -S --noconfirm openssh polkit gnome-keyring man-db man-pages arch-install-scripts usbutils nftables bluez bluez-utils libappimage
+    paru -S --noconfirm --asexplicit openssh polkit gnome-keyring man-db man-pages arch-install-scripts usbutils nftables bluez bluez-utils libappimage
     ```
 
 - CLIアプリのインストール
 
     ```sh
-    paru -S --noconfirm bash-completion neovim oh-my-posh-bin zip unzip tree wget aria2 jq btop pipes.sh bat ripgrep fd erdtree git-delta neofetch glow
+    paru -S --noconfirm --asexplicit bash-completion neovim oh-my-posh-bin zip unzip tree wget aria2 jq btop pipes.sh bat ripgrep fd erdtree git-delta neofetch glow
     ```
 
 - デスクトップ環境のインストール
 
     ```sh
-    paru -S --noconfirm xorg-server xorg-xinit xorg-xrandr i3-wm kitty wezterm xclip picom polybar rofi feh dunst libnotify playerctl pipewire pipewire-pulse pipewire-jack wireplumber alsa-utils fcitx5-mozc fcitx5-configtool fcitx5-qt fcitx5-gtk
+    paru -S --noconfirm --asexplicit xorg-server xorg-xinit xorg-xrandr i3-wm wezterm xclip picom polybar rofi feh dunst libnotify playerctl pipewire pipewire-pulse pipewire-jack wireplumber alsa-utils fcitx5-mozc fcitx5-configtool fcitx5-qt fcitx5-gtk
     ```
 
 - GUIアプリのインストール
 
     ```sh
-    paru -S --noconfirm seahorse discord visual-studio-code-bin brave-bin gimp vlc thunderbird thunderbird-i18n-ja firefox firefox-i18n-ja gnome-screenshot peek libreoffice-fresh libreoffice-fresh-ja
+    paru -S --noconfirm --asexplicit seahorse discord visual-studio-code-bin brave-bin gimp vlc thunderbird thunderbird-i18n-ja firefox firefox-i18n-ja gnome-screenshot peek libreoffice-fresh libreoffice-fresh-ja
     ```
 
 - フォントのインストール
 
     ```sh
-    paru -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji ttf-ubuntu-mono-nerd ttf-inconsolata-nerd
+    paru -S --noconfirm --asexplicit noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji ttf-ubuntu-mono-nerd ttf-inconsolata-nerd
     ```
 
 - 言語処理系
@@ -178,19 +178,19 @@ sudo efibootmgr -o "${arr%,}"
     - C/C++
 
         ```sh
-        paru -S --noconfirm gdb clang lldb libc++ libc++abi cmake meson mesonlsp ninja
+        paru -S --noconfirm --asexplicit gdb clang lldb libc++ libc++abi cmake meson mesonlsp ninja
         ```
 
     - Vulkan
 
         ```sh
-        paru -S --noconfirm vulkan-devel
+        paru -S --noconfirm --asexplicit vulkan-devel
         ```
 
     - QMK firmware
 
         ```sh
-        paru -S --noconfirm avr-gcc avr-libc arm-none-eabi-binutils arm-none-eabi-gcc arm-none-eabi-newlib dfu-programmer
+        paru -S --noconfirm --asexplicit avr-gcc avr-libc arm-none-eabi-binutils arm-none-eabi-gcc arm-none-eabi-newlib dfu-programmer
         ```
 
     - Rust
@@ -202,20 +202,26 @@ sudo efibootmgr -o "${arr%,}"
     - Python
 
         ```sh
-        paru -S --noconfirm python ruff ruff-lsp pyright uv
+        paru -S --noconfirm --asexplicit python ruff pyright uv
         ```
 
     - JavaScript/TypeScript
 
         ```sh
-        paru -S --noconfirm nodejs npm deno typescript typescript-language-server
+        paru -S --noconfirm --asexplicit nodejs fnm-bin npm deno typescript typescript-language-server
         test -z "${XDG_DATA_HOME}" && mkdir -p "${XDG_DATA_HOME}/npm/lib"
         ```
 
     - Lua
 
         ```sh
-        paru -S --noconfirm lua-language-server stylua
+        paru -S --noconfirm --asexplicit lua-language-server stylua
+        ```
+
+    - Typst
+
+        ```sh
+        paru -S --noconfirm --asexplicit typst tinymist
         ```
 
 # その他設定
