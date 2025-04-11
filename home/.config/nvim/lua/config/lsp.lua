@@ -70,6 +70,8 @@ local on_attach_handler = function(client, bufnr)
     end
 end
 
+vim.api.nvim_create_user_command("LspInfo", "checkhealth vim.lsp", {})
+
 vim.lsp.config("*", {
     on_attach = on_attach_handler,
 })
