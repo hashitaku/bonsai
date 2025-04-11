@@ -54,15 +54,18 @@ alignment = "left"
 
     "{{ if or (ne .Ahead 0) (ne .Behind 0)}} [\uf062{{ .Ahead }} \uf063{{ .Behind }}]{{ end }}",
 
-    "{{ if .Staging.String }} [<p:green>\uf067{{ .Staging.Added }} \uf068{{ .Staging.Deleted }} \uf069{{ .Staging.Modified }}</>]{{ end }}",
+    "{{ if .Staging.Changed }} [<p:green>\uf067{{ .Staging.Added }} \uf068{{ .Staging.Deleted }} \uf069{{ .Staging.Modified }}</>]{{ end }}",
 
-    "{{ if .Working.String }} [<p:red>\uf067{{ .Working.Untracked }} \uf068{{ .Working.Deleted }} \uf069{{ .Working.Modified }}</>]{{ end }}",
+    "{{ if .Working.Changed }} [<p:red>\uf067{{ .Working.Untracked }} \uf068{{ .Working.Deleted }} \uf069{{ .Working.Modified }}</>]{{ end }}",
   ]
 
     [blocks.segments.properties]
     branch_max_length = 0.0
     fetch_status = true
     fetch_upstream_icon = true
+
+      [blocks.segments.properties.untracked_modes]
+      "*" = "all"
 
   [[blocks.segments]]
   type = "python"
