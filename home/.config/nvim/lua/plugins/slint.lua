@@ -1,6 +1,7 @@
 return {
     {
         "slint-ui/vim-slint",
-        enabled = not vim.g.vscode,
+        cond = not vim.g.vscode,
+        ft = "slint",
     },
 }

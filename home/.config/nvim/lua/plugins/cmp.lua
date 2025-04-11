@@ -1,37 +1,45 @@
 return {
     {
-        "hrsh7th/cmp-omni",
-        enabled = not vim.g.vscode,
+        "hrsh7th/cmp-cmdline",
+        cond = not vim.g.vscode,
     },
 
     {
         "hrsh7th/cmp-nvim-lsp",
-        enabled = not vim.g.vscode,
+        cond = not vim.g.vscode,
+    },
+
+    {
+        "hrsh7th/cmp-omni",
+        cond = not vim.g.vscode,
     },
 
     {
         "hrsh7th/cmp-path",
-        enabled = not vim.g.vscode,
+        cond = not vim.g.vscode,
     },
 
     {
         "hrsh7th/cmp-vsnip",
-        enabled = not vim.g.vscode,
-    },
-
-    {
-        "hrsh7th/cmp-cmdline",
-        enabled = not vim.g.vscode,
+        cond = not vim.g.vscode,
     },
 
     {
         "hrsh7th/nvim-cmp",
-        enabled = not vim.g.vscode,
+        cond = not vim.g.vscode,
         dependencies = {
             "folke/lazydev.nvim",
+            "hrsh7th/cmp-cmdline",
+            "hrsh7th/cmp-nvim-lsp",
+            "hrsh7th/cmp-omni",
+            "hrsh7th/cmp-path",
+            "hrsh7th/cmp-vsnip",
+            "windwp/nvim-autopairs",
         },
+        event = { "InsertEnter", "CmdLineEnter" },
         config = function()
             local cmp = require("cmp")
+            local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 
             cmp.setup.cmdline({ ":" }, {
                 mapping = cmp.mapping.preset.cmdline(),
@@ -39,6 +47,8 @@ return {
                     { name = "cmdline" },
                 }),
             })
+
+            cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
 
             cmp.setup({
                 preselect = cmp.PreselectMode.None,

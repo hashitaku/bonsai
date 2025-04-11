@@ -1,7 +1,8 @@
 return {
     {
         "OXY2DEV/markview.nvim",
-        enabled = not vim.g.vscode,
+        cond = not vim.g.vscode,
+        ft = "markdown",
         ---@type mkv.config
         opts = {
             preview = {

@@ -1,7 +1,7 @@
 return {
     {
         "folke/noice.nvim",
-        enabled = not vim.g.vscode,
+        cond = not vim.g.vscode,
         opts = {
             messages = {
                 enabled = true,

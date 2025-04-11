@@ -1,6 +1,6 @@
 return {
     {
         "folke/tokyonight.nvim",
-        enabled = not vim.g.vscode,
+        cond = not vim.g.vscode,
     },
 }

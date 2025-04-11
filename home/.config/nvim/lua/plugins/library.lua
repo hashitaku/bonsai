@@ -1,16 +1,17 @@
 return {
     {
         "folke/lazydev.nvim",
-        enabled = not vim.g.vscode,
+        cond = not vim.g.vscode,
+        ft = "lua",
     },
 
     {
         "MunifTanjim/nui.nvim",
-        enabled = not vim.g.vscode,
+        cond = not vim.g.vscode,
     },
 
     {
         "nvim-lua/plenary.nvim",
-        enabled = not vim.g.vscode,
+        cond = not vim.g.vscode,
     },
 }

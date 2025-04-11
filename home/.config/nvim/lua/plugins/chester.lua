@@ -2,6 +2,6 @@ return {
     {
         "hashitaku/chester.nvim",
         branch = "develop",
-        enabled = not vim.g.vscode,
+        cond = not vim.g.vscode,
     },
 }

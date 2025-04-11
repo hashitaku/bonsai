@@ -1,7 +1,7 @@
 return {
     {
         "nvim-telescope/telescope.nvim",
-        enabled = not vim.g.vscode,
+        cond = not vim.g.vscode,
         keys = {
             {
                 "<Leader>p",

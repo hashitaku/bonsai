@@ -1,7 +1,7 @@
 return {
     {
         "nvim-treesitter/nvim-treesitter",
-        enabled = not vim.g.vscode,
+        cond = not vim.g.vscode,
         config = function()
             vim.api.nvim_set_option_value("foldlevelstart", 1, {})
             vim.api.nvim_set_option_value("foldmethod", "expr", {})

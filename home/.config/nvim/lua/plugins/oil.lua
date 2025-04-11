@@ -1,7 +1,7 @@
 return {
     {
         "stevearc/oil.nvim",
-        enabled = not vim.g.vscode,
+        cond = not vim.g.vscode,
         opts = {
             win_options = {
                 number = false,
@@ -43,7 +43,7 @@ return {
 
     {
         "refractalize/oil-git-status.nvim",
-        enabled = not vim.g.vscode,
+        cond = not vim.g.vscode,
         opts = {},
         dependencies = {
             "stevearc/oil.nvim",

@@ -1,7 +1,7 @@
 return {
     {
         "nvim-tree/nvim-web-devicons",
-        enabled = not vim.g.vscode,
+        cond = not vim.g.vscode,
         opts = {},
     },
 }

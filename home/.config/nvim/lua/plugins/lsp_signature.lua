@@ -1,7 +1,7 @@
 return {
     {
         "ray-x/lsp_signature.nvim",
-        enabled = not vim.g.vscode,
+        cond = not vim.g.vscode,
         opts = {
             -- どれぐらいのsignature_helpの大きさになると困るのか不明なため大きな値にする
             max_width = 1000,
