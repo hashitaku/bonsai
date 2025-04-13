@@ -12,12 +12,9 @@ XDG_DATA_HOME="${HOME}/.local/share"
 XDG_STATE_HOME="${HOME}/.local/state"
 
 read -rp 'nif name: ' nif_name
-read -rp 'efi disk(ex: /dev/sda, /dev/nvme0n1): ' efi_disk
-read -rp 'efi part(default: 1): ' efi_part
 read -rp 'hostname: ' hostname
 read -rp 'keymap(default: us): ' keymap
 
-efi_part="${efi_part:-1}"
 keymap="${keymap:-us}"
 ```
 
@@ -89,50 +86,6 @@ makepkg -si --noconfirm
 cd ~
 rm -rf paru-bin
 paru -Syyu
-```
-
-# セキュアブート
-
-## 必要パッケージのインストール
-
-```sh
-paru -S --noconfirm --asexplicit efibootmgr sbctl
-```
-
-## 鍵の生成
-
-```sh
-sudo sbctl create-keys
-```
-
-## 鍵の登録
-
-```sh
-sudo sbctl enroll-keys -m
-```
-
-## ブートローダー、カーネルの署名
-
-```sh
-sudo sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI
-sudo sbctl sign -s /boot/vmlinuz-linux
-```
-
-## ブートエントリを変更
-
-```sh
-sudo efibootmgr -v
-
-read -rp 'delete boot entry num: ' -a arr
-for i in "${arr[@]}"; do
-    sudo efibootmgr -B -b "${i}"
-done
-
-sudo efibootmgr -c -d "${efi_disk}" -p "${efi_part}" -l '\EFI\BOOT\BOOTX64.EFI' -L 'Systemd Boot'
-
-read -rp 'boot order num: ' -a arr
-printf -v arr '%s,' "${arr[@]}"
-sudo efibootmgr -o "${arr%,}"
 ```
 
 # パッケージインストール

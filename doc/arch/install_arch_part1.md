@@ -32,6 +32,7 @@ while true; do
     fi
 done
 
+read -rp 'LUKS Mapping Name(default: cryptlvm): ' mapping_name
 read -rp 'EFI System Partition Size(default: 1G): ' esp_size
 read -rp 'Root Logical Volume Percentage(default: 50): ' root_lv_percentage
 read -rp 'Home Logical Volume Percentage(default: 50): ' home_lv_percentage
@@ -40,6 +41,7 @@ read -rp 'Root Logical Volume Name(default: root-LV): ' root_lv_name
 read -rp 'Home Logical Volume Name(default: home-LV): ' home_lv_name
 read -rp 'Add User Name: ' user
 
+mapping_name="${mapping_name:-cryptlvm}"
 esp_size="${esp_size:-1G}"
 root_lv_percentage="${root_lv_percentage:-50}"
 home_lv_percentage="${home_lv_percentage:-50}"
@@ -58,24 +60,6 @@ if [[ "${user}" == "" ]]; then
 fi
 ```
 
-# パーティショニング、LVMの設定
-
-```sh
-sgdisk --clear "${install_block_device_path}"
-sgdisk --new "1::+${esp_size}" "${install_block_device_path}"
-# ESP以外の範囲をすべてLVM用のパーティションにする
-sgdisk --new '2::' "${install_block_device_path}"
-sgdisk --typecode '1:EF00' "${install_block_device_path}"
-sgdisk --typecode '2:8E00' "${install_block_device_path}"
-
-pvcreate -y "$(join_part ${install_block_device_path} 2)"
-
-vgcreate -y "${volume_group_name}" "$(join_part ${install_block_device_path} 2)"
-
-lvcreate -l "${root_lv_percentage}%VG" -n root-LV "${volume_group_name}"
-lvcreate -l "${home_lv_percentage}%VG" -n home-LV "${volume_group_name}"
-```
-
 # ライブ環境の設定
 
 ```sh
@@ -89,22 +73,53 @@ done
 set -e
 
 timedatectl set-ntp true
-echo 'Server = http://ftp.tsukuba.wide.ad.jp/Linux/archlinux/$repo/os/$arch
-Server = https://ftp.jaist.ac.jp/pub/Linux/ArchLinux/$repo/os/$arch
-Server = http://ftp.jaist.ac.jp/pub/Linux/ArchLinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
+echo 'Server = https://ftp.jaist.ac.jp/pub/Linux/ArchLinux/$repo/os/$arch
+Server = http://ftp.jaist.ac.jp/pub/Linux/ArchLinux/$repo/os/$arch
+Server = http://ftp.tsukuba.wide.ad.jp/Linux/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
 sed -i '/Parallel/c ParallelDownloads = 5' /etc/pacman.conf
 ```
 
-# パーティションのフォーマット
+# ファイルシステム周りの設定
+
+## パーティショニング
+
+```sh
+sgdisk --clear "${install_block_device_path}"
+sgdisk --new "1::+${esp_size}" "${install_block_device_path}"
+# ESP以外の範囲をすべてLVM用のパーティションにする
+sgdisk --new '2::' "${install_block_device_path}"
+sgdisk --typecode '1:EF00' "${install_block_device_path}"
+sgdisk --typecode '2:8309' "${install_block_device_path}"
+```
+
+## LUKSの設定
+
+```sh
+cryptsetup luksFormat "$(join_part ${install_block_device_path} 2)"
+cryptsetup open "$(join_part ${install_block_device_path} 2)" "${mapping_name}"
+```
+
+## LVMの設定
+
+```sh
+pvcreate -y "/dev/mapper/${mapping_name}"
+
+vgcreate -y "${volume_group_name}" "/dev/mapper/${mapping_name}"
+
+lvcreate -y -l "${root_lv_percentage}%VG" -n "${root_lv_name}" "${volume_group_name}"
+lvcreate -y -l "${home_lv_percentage}%VG" -n "${home_lv_name}" "${volume_group_name}"
+```
+
+## パーティションのフォーマット
 
 ```sh
 umount -R "/mnt" || true
 mkfs.fat -F 32 "$(join_part ${install_block_device_path} 1)"
-mkfs.ext4 -f "/dev/${volume_group_name}/${root_lv_name}"
-mkfs.ext4 -f "/dev/${volume_group_name}/${home_lv_name}"
+mkfs.btrfs -f "/dev/${volume_group_name}/${root_lv_name}"
+mkfs.btrfs -f "/dev/${volume_group_name}/${home_lv_name}"
 ```
 
-# ファイルシステムのマウント
+## ファイルシステムのマウント
 
 ```sh
 mount "/dev/${volume_group_name}/${root_lv_name}" /mnt
@@ -117,7 +132,7 @@ mount "/dev/${volume_group_name}/${home_lv_name}" /mnt/home
 # パッケージのインストール
 
 ```sh
-pacstrap /mnt base base-devel linux linux-firmware amd-ucode lvm2 git
+pacstrap /mnt base base-devel linux linux-firmware amd-ucode cryptsetup tpm2-tss lvm2 btrfs-progs efibootmgr sbctl git
 ```
 
 # fstab生成
@@ -126,27 +141,52 @@ pacstrap /mnt base base-devel linux linux-firmware amd-ucode lvm2 git
 genfstab -U /mnt > /mnt/etc/fstab
 ```
 
-# chroot
+# arch-chroot
+
+## rootパスワードの設定
 
 ```sh
 arch-chroot /mnt /bin/bash -euc "
 echo 'change root passwd'
 passwd
+```
 
+## ユーザーの追加
+
+```sh
+arch-chroot /mnt /bin/bash -euc "
 useradd ${user} -m -G wheel,video
 echo 'change ${user} passwd'
 passwd ${user}
 
-sed -i '/^HOOKS/c HOOKS=(base udev autodetect microcode modconf kms keyboard keymap consolefont block lvm2 filesystems fsck)' /etc/mkinitcpio.conf
-mkinitcpio -p linux
+pwck -s
+grpck -s
+"
+```
 
+## sudoersの設定
+
+```sh
+arch-chroot /mnt /bin/bash -euc "
 echo '%wheel ALL=(ALL:ALL) ALL' > /etc/sudoers.d/wheel
 chmod 440 /etc/sudoers.d/wheel
 visudo -csf /etc/sudoers.d/wheel
+"
+```
 
-pwck -s
-grpck -s
+## mkinitcpio.confの設定
 
+```sh
+arch-chroot /mnt /bin/bash -euc "
+sed -i '/^HOOKS/c HOOKS=(systemd keyboard autodetect microcode modconf kms sd-vconsole block sd-encrypt lvm2 filesystems fsck)' /etc/mkinitcpio.conf
+mkinitcpio -p linux
+"
+```
+
+## ブートマネージャーのインストール
+
+```sh
+arch-chroot /mnt /bin/bash -euc "
 bootctl --path=/boot install
 
 echo 'default arch
@@ -159,6 +199,33 @@ linux /vmlinuz-linux
 initrd /initramfs-linux.img
 options root=UUID=$(blkid -o value -s UUID "/dev/${volume_group_name}/${root_lv_name}") rw' > /boot/loader/entries/arch.conf
 "
+```
+
+## セキュアブート
+
+```sh
+arch-chroot /mnt /bin/bash -euc "
+sbctl create-keys
+sbctl enroll-keys -m
+sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI
+sbctl sign -s /boot/vmlinuz-linux
+```
+
+# ブートエントリを変更
+
+```sh
+efibootmgr -v
+
+read -rp 'delete boot entry num: ' -a arr
+for i in "${arr[@]}"; do
+    efibootmgr -B -b "${i}"
+done
+
+efibootmgr -c -d "${install_block_device_path}" -p '1' -l '\EFI\BOOT\BOOTX64.EFI' -L 'Systemd Boot'
+
+read -rp 'boot order num: ' -a arr
+printf -v arr '%s,' "${arr[@]}"
+efibootmgr -o "${arr%,}"
 ```
 
 # 再起動するかどうかの確認
