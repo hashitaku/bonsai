@@ -149,6 +149,7 @@ genfstab -U /mnt > /mnt/etc/fstab
 arch-chroot /mnt /bin/bash -euc "
 echo 'change root passwd'
 passwd
+"
 ```
 
 ## ユーザーの追加
@@ -171,15 +172,6 @@ arch-chroot /mnt /bin/bash -euc "
 echo '%wheel ALL=(ALL:ALL) ALL' > /etc/sudoers.d/wheel
 chmod 440 /etc/sudoers.d/wheel
 visudo -csf /etc/sudoers.d/wheel
-"
-```
-
-## mkinitcpio.confの設定
-
-```sh
-arch-chroot /mnt /bin/bash -euc "
-sed -i '/^HOOKS/c HOOKS=(systemd keyboard autodetect microcode modconf kms sd-vconsole block sd-encrypt lvm2 filesystems fsck)' /etc/mkinitcpio.conf
-mkinitcpio -p linux
 "
 ```
 
@@ -209,6 +201,17 @@ sbctl create-keys
 sbctl enroll-keys -m
 sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI
 sbctl sign -s /boot/vmlinuz-linux
+"
+```
+
+## mkinitcpio.confの設定
+
+```sh
+arch-chroot /mnt /bin/bash -euc "
+touch /etc/vconsole.conf
+sed -i '/^HOOKS/c HOOKS=(systemd keyboard autodetect microcode modconf kms sd-vconsole block sd-encrypt lvm2 filesystems fsck)' /etc/mkinitcpio.conf
+mkinitcpio -p linux
+"
 ```
 
 # ブートエントリを変更
