@@ -189,7 +189,7 @@ console-mode max' > /boot/loader/loader.conf
 echo 'title Arch Linux
 linux /vmlinuz-linux
 initrd /initramfs-linux.img
-options root=UUID=$(blkid -o value -s UUID "/dev/${volume_group_name}/${root_lv_name}") rw' > /boot/loader/entries/arch.conf
+options rd.luks.name=$(blkid -o value -s UUID  "$(join_part ${install_block_device_path} 2)")=cryptlvm root=UUID=$(blkid -o value -s UUID "/dev/${volume_group_name}/${root_lv_name}") rw
 "
 ```
 
@@ -209,7 +209,7 @@ sbctl sign -s /boot/vmlinuz-linux
 ```sh
 arch-chroot /mnt /bin/bash -euc "
 touch /etc/vconsole.conf
-sed -i '/^HOOKS/c HOOKS=(systemd keyboard autodetect microcode modconf kms sd-vconsole block sd-encrypt lvm2 filesystems fsck)' /etc/mkinitcpio.conf
+sed -i '/^HOOKS/c HOOKS=(systemd autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt lvm2 filesystems fsck)' /etc/mkinitcpio.conf
 mkinitcpio -p linux
 "
 ```
