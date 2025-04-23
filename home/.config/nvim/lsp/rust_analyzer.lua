@@ -1,7 +1,7 @@
 ---@type vim.lsp.Config
 return {
     cmd = {
-        "rust_analyzer",
+        "rust-analyzer",
     },
     filetypes = { "rust" },
     root_markers = {
