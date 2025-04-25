@@ -19,6 +19,10 @@ export GOPATH
 NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME}/npm/npmrc"
 export NPM_CONFIG_USERCONFIG
 
+# Azure
+AZURE_CONFIG_DIR="${XDG_DATA_HOME}/azure"
+export AZURE_CONFIG_DIR
+
 # 野良ビルド用変数
 [ -d "${HOME}/.local/bin" ] && PATH="${PATH}:${HOME}/.local/bin"
 [ -d "${HOME}/.local/include" ] && CPATH="${CPATH}:${HOME}/.local/include"
