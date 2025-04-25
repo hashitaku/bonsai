@@ -55,7 +55,9 @@ type erd >/dev/null 2>&1 && eval "$(erd --completions bash)"
 type gh >/dev/null 2>&1 && eval "$(gh completion --shell bash)"
 
 # プロンプト設定
-if [[ !(-x oh-my-posh) ]]; then
+if type oh-my-posh >/dev/null 2>&1; then
+    eval "$(oh-my-posh init bash --config ${XDG_CONFIG_HOME}/oh-my-posh/config.toml)"
+else
     test -f /usr/share/git/git-prompt.sh && source /usr/share/git/git-prompt.sh
 
     if [[ "$(type -t __git_ps1)" == 'function' ]]; then
@@ -80,5 +82,3 @@ if [[ !(-x oh-my-posh) ]]; then
     esac
     unset title prompt
 fi
-
-type oh-my-posh >/dev/null 2>&1 && eval "$(oh-my-posh init bash --config ${XDG_CONFIG_HOME}/oh-my-posh/config.toml)"
