@@ -25,6 +25,15 @@ return {
     },
 
     {
+        "zbirenbaum/copilot-cmp",
+        cond = not vim.g.vscode,
+        opts = {},
+        dependencies = {
+            "zbirenbaum/copilot.lua",
+        },
+    },
+
+    {
         "hrsh7th/nvim-cmp",
         cond = not vim.g.vscode,
         dependencies = {
@@ -35,6 +44,7 @@ return {
             "hrsh7th/cmp-path",
             "hrsh7th/cmp-vsnip",
             "windwp/nvim-autopairs",
+            "zbirenbaum/copilot-cmp",
         },
         event = { "InsertEnter", "CmdLineEnter" },
         config = function()
@@ -114,6 +124,7 @@ return {
                     end,
                 },
                 sources = {
+                    { name = "copilot" },
                     { name = "cmp-omni" },
                     { name = "nvim_lsp" },
                     { name = "path" },
