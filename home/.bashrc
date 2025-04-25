@@ -43,7 +43,6 @@ alias pbpaste='xclip -selection c -o'
 
 # セットアップ
 type fnm >/dev/null 2>&1 && eval "$(fnm env)"
-test -f /usr/share/git/git-prompt.sh && source /usr/share/git/git-prompt.sh
 
 # 補完
 type rustup >/dev/null 2>&1 && eval "$(rustup completions bash cargo)"
@@ -53,28 +52,33 @@ type deno >/dev/null 2>&1 && eval "$(deno completions bash)"
 type uv >/dev/null 2>&1 && eval "$(uv generate-shell-completion bash)"
 type uvx >/dev/null 2>&1 && eval "$(uvx --generate-shell-completion bash)"
 type erd >/dev/null 2>&1 && eval "$(erd --completions bash)"
+type gh >/dev/null 2>&1 && eval "$(gh completion --shell bash)"
 
 # プロンプト設定
-if [[ "$(type -t __git_ps1)" == 'function' ]]; then
-    GIT_PS1_SHOWDIRTYSTATE=true
-    GIT_PS1_SHOWSTASHSTATE=true
-    GIT_PS1_SHOWUNTRACKEDFILES=true
-    GIT_PS1_SHOWUPSTREAM='auto'
-    title='\[\e]0;\w$(__git_ps1)\a\]'
-    prompt='\[\e[31m\]\u\[\e[0m\] at\[\e[33m\] \h\[\e[0m\] in\[\e[32m\] \w\[\e[36m\]$(__git_ps1)\[\e[0m\]\$ '
-else
-    title='\[\e]0;\w\a\]'
-    prompt='\[\e[31m\]\u\[\e[0m\] at\[\e[33m\] \h\[\e[0m\] in\[\e[32m\] \w\[\e[0m\]\$ '
-fi
+if [[ !(-x oh-my-posh) ]]; then
+    test -f /usr/share/git/git-prompt.sh && source /usr/share/git/git-prompt.sh
 
-case "${TERM}" in
-    xterm*|rxvt*)
-        PS1="${title}${prompt}"
-        ;;
-    *)
-        PS1="${prompt}"
-        ;;
-esac
-unset title prompt
+    if [[ "$(type -t __git_ps1)" == 'function' ]]; then
+        GIT_PS1_SHOWDIRTYSTATE=true
+        GIT_PS1_SHOWSTASHSTATE=true
+        GIT_PS1_SHOWUNTRACKEDFILES=true
+        GIT_PS1_SHOWUPSTREAM='auto'
+        title='\[\e]0;\w$(__git_ps1)\a\]'
+        prompt='\[\e[31m\]\u\[\e[0m\] at\[\e[33m\] \h\[\e[0m\] in\[\e[32m\] \w\[\e[36m\]$(__git_ps1)\[\e[0m\]\$ '
+    else
+        title='\[\e]0;\w\a\]'
+        prompt='\[\e[31m\]\u\[\e[0m\] at\[\e[33m\] \h\[\e[0m\] in\[\e[32m\] \w\[\e[0m\]\$ '
+    fi
+
+    case "${TERM}" in
+        xterm*|rxvt*)
+            PS1="${title}${prompt}"
+            ;;
+        *)
+            PS1="${prompt}"
+            ;;
+    esac
+    unset title prompt
+fi
 
 type oh-my-posh >/dev/null 2>&1 && eval "$(oh-my-posh init bash --config ${XDG_CONFIG_HOME}/oh-my-posh/config.toml)"
