@@ -189,7 +189,7 @@ console-mode max' > /boot/loader/loader.conf
 echo 'title Arch Linux
 linux /vmlinuz-linux
 initrd /initramfs-linux.img
-options rd.luks.name=$(blkid -o value -s UUID  "$(join_part ${install_block_device_path} 2)")=cryptlvm root=UUID=$(blkid -o value -s UUID "/dev/${volume_group_name}/${root_lv_name}") rw
+options rd.luks.name=$(blkid -o value -s UUID  "$(join_part ${install_block_device_path} 2)")=cryptlvm root=UUID=$(blkid -o value -s UUID "/dev/${volume_group_name}/${root_lv_name}") rw' > /boot/loader/entries/arch.conf
 "
 ```
 
