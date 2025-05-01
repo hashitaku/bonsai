@@ -18,10 +18,12 @@ function join_part () {
 }
 
 function is_virt () {
-    if [[ $(systemd-detect-virt) == 'none' ]]; then
+    if [[ $(systemd-detect-virt --vm) == 'none' ]]; then
         return 1
     fi
 }
+
+export -f is_virt
 ```
 
 # 設定項目の入力
@@ -47,10 +49,10 @@ read -rp 'Home Logical Volume Percentage(default: 50): ' home_lv_percentage
 read -rp 'Volume Group Name(default: ArchLinux-VG): ' volume_group_name
 read -rp 'Root Logical Volume Name(default: root-LV): ' root_lv_name
 read -rp 'Home Logical Volume Name(default: home-LV): ' home_lv_name
-read -rsp 'LUKS password: ' luks_password
-read -rsp 'Root Password: ' root_password
+read -rsp 'LUKS password: ' luks_password; echo;
+read -rsp 'Root Password: ' root_password; echo;
 read -rp 'User Name: ' user_name
-read -rsp 'User Password: ' user_password
+read -rsp 'User Password: ' user_password; echo;
 
 mapping_name="${mapping_name:-cryptlvm}"
 esp_size="${esp_size:-1G}"
@@ -206,7 +208,7 @@ console-mode max' > /boot/loader/loader.conf
 echo 'title Arch Linux
 linux /vmlinuz-linux
 initrd /initramfs-linux.img
-options rd.luks.name=$(blkid -o value -s UUID  "$(join_part ${install_block_device_path} 2)")=cryptlvm root=UUID=$(blkid -o value -s UUID "/dev/${volume_group_name}/${root_lv_name}") rw' > /boot/loader/entries/arch.conf
+options rd.luks.name=$(blkid -o value -s UUID  $(join_part ${install_block_device_path} 2))=cryptlvm root=UUID=$(blkid -o value -s UUID /dev/${volume_group_name}/${root_lv_name}) rw' > /boot/loader/entries/arch.conf
 "
 ```
 
