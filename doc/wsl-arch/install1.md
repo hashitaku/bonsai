@@ -16,6 +16,7 @@ read -rsp 'User Password: ' user_password; echo;
 
 ```sh
 sed -i '/ja_JP.UTF-8/c ja_JP.UTF-8 UTF-8' /etc/locale.gen
+sed -i '/en_US.UTF-8/c en_US.UTF-8 UTF-8' /etc/locale.gen
 locale-gen
 localectl set-locale LANG=ja_JP.UTF-8
 ```
