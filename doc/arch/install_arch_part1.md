@@ -1,12 +1,11 @@
-# 設定項目の入力
+# 初期設定
 
 ```sh
 #!/bin/bash -eu
 
 function join_part () {
     if [[ "$(lsblk -dn -o TYPE ${1})" != 'disk' ]]; then
-        false
-        return
+        return 1
     fi
 
     if [[ $(basename ${1}) == sd* ]]; then
@@ -14,11 +13,20 @@ function join_part () {
     elif [[ $(basename ${1}) == nvme* ]]; then
         echo "${1}p${2}"
     else
-        false
-        return
+        return 1
     fi
 }
 
+function is_virt () {
+    if [[ $(systemd-detect-virt) == 'none' ]]; then
+        return 1
+    fi
+}
+```
+
+# 設定項目の入力
+
+```sh
 ip l
 lsblk
 
@@ -39,7 +47,10 @@ read -rp 'Home Logical Volume Percentage(default: 50): ' home_lv_percentage
 read -rp 'Volume Group Name(default: ArchLinux-VG): ' volume_group_name
 read -rp 'Root Logical Volume Name(default: root-LV): ' root_lv_name
 read -rp 'Home Logical Volume Name(default: home-LV): ' home_lv_name
-read -rp 'Add User Name: ' user
+read -rsp 'LUKS password: ' luks_password
+read -rsp 'Root Password: ' root_password
+read -rp 'User Name: ' user_name
+read -rsp 'User Password: ' user_password
 
 mapping_name="${mapping_name:-cryptlvm}"
 esp_size="${esp_size:-1G}"
@@ -54,7 +65,7 @@ if [[ $((root_lv_percentage + home_lv_percentage)) > 100 ]]; then
     false
 fi
 
-if [[ "${user}" == "" ]]; then
+if [[ "${user_name}" == "" ]]; then
     echo "User is empty"
     false
 fi
@@ -95,8 +106,8 @@ sgdisk --typecode '2:8309' "${install_block_device_path}"
 ## LUKSの設定
 
 ```sh
-cryptsetup luksFormat "$(join_part ${install_block_device_path} 2)"
-cryptsetup open "$(join_part ${install_block_device_path} 2)" "${mapping_name}"
+echo "${luks_password}" | cryptsetup luksFormat --batch-mode "$(join_part ${install_block_device_path} 2)"
+echo "${luks_password}" | cryptsetup open "$(join_part ${install_block_device_path} 2)" "${mapping_name}"
 ```
 
 ## LVMの設定
@@ -131,8 +142,14 @@ mount "/dev/${volume_group_name}/${home_lv_name}" /mnt/home
 
 # パッケージのインストール
 
+仮想環境の時はセキュアブートの設定は行わないため`sbctl`は不要
+
 ```sh
-pacstrap /mnt base base-devel linux linux-firmware amd-ucode cryptsetup tpm2-tss lvm2 btrfs-progs efibootmgr sbctl git
+if is_virt; then
+    pacstrap /mnt base base-devel linux linux-firmware amd-ucode cryptsetup tpm2-tss lvm2 btrfs-progs efibootmgr git
+else
+    pacstrap /mnt base base-devel linux linux-firmware amd-ucode cryptsetup tpm2-tss lvm2 btrfs-progs efibootmgr sbctl git
+fi
 ```
 
 # fstab生成
@@ -148,7 +165,7 @@ genfstab -U /mnt > /mnt/etc/fstab
 ```sh
 arch-chroot /mnt /bin/bash -euc "
 echo 'change root passwd'
-passwd
+echo "root:${root_password}" | chpasswd
 "
 ```
 
@@ -156,9 +173,9 @@ passwd
 
 ```sh
 arch-chroot /mnt /bin/bash -euc "
-useradd ${user} -m -G wheel,video
-echo 'change ${user} passwd'
-passwd ${user}
+useradd ${user_name} -m -G wheel,video
+echo 'change ${user_name} passwd'
+echo "${user_name}:${user_password}" | chpasswd
 
 pwck -s
 grpck -s
@@ -195,12 +212,16 @@ options rd.luks.name=$(blkid -o value -s UUID  "$(join_part ${install_block_devi
 
 ## セキュアブート
 
+仮想環境ではセキュアブートの設定を行わない
+
 ```sh
 arch-chroot /mnt /bin/bash -euc "
-sbctl create-keys
-sbctl enroll-keys -m
-sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI
-sbctl sign -s /boot/vmlinuz-linux
+if ! is_virt; then
+    sbctl create-keys
+    sbctl enroll-keys -m
+    sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI
+    sbctl sign -s /boot/vmlinuz-linux
+fi
 "
 ```
 
