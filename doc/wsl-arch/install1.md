@@ -7,9 +7,9 @@
 # 入力
 
 ```sh
-read -rsp 'Root Password: ' root_password
+read -rsp 'Root Password: ' root_password; echo;
 read -rp 'User Name: ' user_name
-read -rsp 'User Password: ' user_password
+read -rsp 'User Password: ' user_password; echo;
 ```
 
 # ロケールの設定
@@ -37,7 +37,7 @@ echo "root:${root_password}" | chpasswd
 
 useradd "${user_name}" -m -G wheel,video
 echo "change ${user_name} passwd"
-echo "${user_name}:${user_password} | chpasswd
+echo "${user_name}:${user_password}" | chpasswd
 
 pwck -s
 grpck -s
