@@ -12,7 +12,13 @@ return {
                 lsp_doc_border = true,
             },
             lsp = {
+                hover = {
+                    enabled = false,
+                },
                 signature = {
+                    enabled = false,
+                },
+                messages = {
                     enabled = false,
                 },
             },

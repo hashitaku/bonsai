@@ -2,6 +2,7 @@ return {
     {
         "ray-x/lsp_signature.nvim",
         cond = not vim.g.vscode,
+        event = "LspAttach",
         opts = {
             -- どれぐらいのsignature_helpの大きさになると困るのか不明なため大きな値にする
             max_width = 1000,
