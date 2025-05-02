@@ -240,20 +240,22 @@ mkinitcpio -p linux
 ## ネットワークの設定
 
 ```sh
+arch-chroot /mnt /bin/bash -euc "
 echo \
-"[Match]
+'[Match]
 Name = ether
 
 [Network]
 DHCP = true
 MulticastDNS = true
 LLMNR = true
-IPv6PrivacyExtensions = true" | sudo tee "/etc/systemd/network/50-wired.network"
+IPv6PrivacyExtensions = true' | sudo tee '/etc/systemd/network/50-wired.network'
 
 sudo systemctl enable systemd-networkd.service
 sudo systemctl enable systemd-resolved.service
 
 sudo ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+"
 ```
 
 # ブートエントリを変更
