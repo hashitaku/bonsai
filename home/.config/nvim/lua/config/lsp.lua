@@ -1,3 +1,7 @@
+if vim.g.vscode then
+    return
+end
+
 local lsp_signature = require("lsp_signature")
 local cmp_nvim_lsp = require("cmp_nvim_lsp")
 local user_lsp_augid = vim.api.nvim_create_augroup("user_lsp", { clear = false })
