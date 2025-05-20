@@ -55,7 +55,8 @@ type erd >/dev/null 2>&1 && eval "$(erd --completions bash)"
 type gh >/dev/null 2>&1 && eval "$(gh completion --shell bash)"
 
 # プロンプト設定
-if type oh-my-posh >/dev/null 2>&1; then
+if type oh-my-posh >/dev/null 2>&1 &&
+    [[ "${TERM}" == 'xterm-256color' ]]; then
     eval "$(oh-my-posh init bash --config ${XDG_CONFIG_HOME}/oh-my-posh/config.toml)"
 else
     test -f /usr/share/git/git-prompt.sh && source /usr/share/git/git-prompt.sh
