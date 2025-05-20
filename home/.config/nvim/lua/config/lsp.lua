@@ -84,8 +84,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end,
 })
 
-vim.api.nvim_create_user_command("LspInfo", "checkhealth vim.lsp", {})
-
 vim.lsp.config("*", {
     capabilities = cmp_nvim_lsp.default_capabilities(),
 })
