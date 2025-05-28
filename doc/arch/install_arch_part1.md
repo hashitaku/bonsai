@@ -3,22 +3,22 @@
 ```sh
 #!/bin/bash -eu
 
-function join_part () {
-    if [[ "$(lsblk -dn -o TYPE ${1})" != 'disk' ]]; then
+function join_part() {
+    if [[ "$(lsblk -dn -o TYPE "${1}")" != 'disk' ]]; then
         return 1
     fi
 
-    if [[ $(basename ${1}) == sd* ]]; then
+    if [[ $(basename "${1}") == sd* ]]; then
         echo "${1}${2}"
-    elif [[ $(basename ${1}) == nvme* ]]; then
+    elif [[ $(basename "${1}") == nvme* ]]; then
         echo "${1}p${2}"
     else
         return 1
     fi
 }
 
-function is_virt () {
-    if [[ $(systemd-detect-virt --vm) == 'none' ]]; then
+function is_virt() {
+    if [[ "$(systemd-detect-virt --vm)" == 'none' ]]; then
         return 1
     fi
 }
@@ -35,7 +35,7 @@ lsblk
 while true; do
     read -rp 'install block device path(ex: /dev/sda, /dev/nvme0n1): ' install_block_device_path
 
-    if [[ "$(lsblk -dn -o TYPE ${install_block_device_path})" = 'disk' ]]; then
+    if [[ "$(lsblk -dn -o TYPE "${install_block_device_path}")" == 'disk' ]]; then
         break
     else
         echo 'input block device path is not disk type'
@@ -62,7 +62,7 @@ volume_group_name="${volume_group_name:-ArchLinux-VG}"
 root_lv_name="${root_lv_name:-root-LV}"
 home_lv_name="${home_lv_name:-home-LV}"
 
-if [[ $((root_lv_percentage + home_lv_percentage)) > 100 ]]; then
+if [[ $((root_lv_percentage + home_lv_percentage)) -gt 100 ]]; then
     echo "Sum of root_lv and home_lv percentages exceeds 100"
     false
 fi
@@ -108,8 +108,8 @@ sgdisk --typecode '2:8309' "${install_block_device_path}"
 ## LUKSの設定
 
 ```sh
-echo "${luks_password}" | cryptsetup luksFormat --batch-mode "$(join_part ${install_block_device_path} 2)"
-echo "${luks_password}" | cryptsetup open "$(join_part ${install_block_device_path} 2)" "${mapping_name}"
+echo "${luks_password}" | cryptsetup luksFormat --batch-mode "$(join_part "${install_block_device_path}" 2)"
+echo "${luks_password}" | cryptsetup open "$(join_part "${install_block_device_path}" 2)" "${mapping_name}"
 ```
 
 ## LVMの設定
@@ -127,7 +127,7 @@ lvcreate -y -l "${home_lv_percentage}%VG" -n "${home_lv_name}" "${volume_group_n
 
 ```sh
 umount -R "/mnt" || true
-mkfs.fat -F 32 "$(join_part ${install_block_device_path} 1)"
+mkfs.fat -F 32 "$(join_part "${install_block_device_path}" 1)"
 mkfs.btrfs -f "/dev/${volume_group_name}/${root_lv_name}"
 mkfs.btrfs -f "/dev/${volume_group_name}/${home_lv_name}"
 ```
@@ -137,7 +137,7 @@ mkfs.btrfs -f "/dev/${volume_group_name}/${home_lv_name}"
 ```sh
 mount "/dev/${volume_group_name}/${root_lv_name}" /mnt
 mkdir -m 700 /mnt/boot
-mount -o dmask=077,fmask=077 "$(join_part ${install_block_device_path} 1)" /mnt/boot
+mount -o dmask=077,fmask=077 "$(join_part "${install_block_device_path}" 1)" /mnt/boot
 mkdir /mnt/home
 mount "/dev/${volume_group_name}/${home_lv_name}" /mnt/home
 ```
@@ -148,9 +148,9 @@ mount "/dev/${volume_group_name}/${home_lv_name}" /mnt/home
 
 ```sh
 if is_virt; then
-    pacstrap /mnt base base-devel linux linux-firmware amd-ucode cryptsetup tpm2-tss lvm2 btrfs-progs efibootmgr git
+    pacstrap /mnt base base-devel linux linux-firmware           cryptsetup tpm2-tss lvm2 btrfs-progs wpa_supplicant efibootmgr       git
 else
-    pacstrap /mnt base base-devel linux linux-firmware amd-ucode cryptsetup tpm2-tss lvm2 btrfs-progs efibootmgr sbctl git
+    pacstrap /mnt base base-devel linux linux-firmware amd-ucode cryptsetup tpm2-tss lvm2 btrfs-progs wpa_supplicant efibootmgr sbctl git
 fi
 ```
 
@@ -208,7 +208,7 @@ console-mode max' > /boot/loader/loader.conf
 echo 'title Arch Linux
 linux /vmlinuz-linux
 initrd /initramfs-linux.img
-options rd.luks.name=$(blkid -o value -s UUID  $(join_part ${install_block_device_path} 2))=cryptlvm root=UUID=$(blkid -o value -s UUID /dev/${volume_group_name}/${root_lv_name}) rw' > /boot/loader/entries/arch.conf
+options rd.luks.name=$(blkid -o value -s UUID $(join_part "${install_block_device_path}" 2))=${mapping_name} root=UUID=$(blkid -o value -s UUID /dev/"${volume_group_name}"/"${root_lv_name}") rw' > /boot/loader/entries/arch.conf
 "
 ```
 
@@ -243,13 +243,23 @@ mkinitcpio -p linux
 arch-chroot /mnt /bin/bash -euc "
 echo \
 '[Match]
-Name = ether
+Type = ether
 
 [Network]
 DHCP = true
 MulticastDNS = true
 LLMNR = true
 IPv6PrivacyExtensions = true' | sudo tee '/etc/systemd/network/50-wired.network'
+
+echo \
+'[Match]
+Type = wlan
+
+[Network]
+DHCP = true
+MulticastDNS = true
+LLMNR = true
+IPv6PrivacyExtensions = true' | sudo tee '/etc/systemd/network/50-wireless.network'
 
 sudo systemctl enable systemd-networkd.service
 sudo systemctl enable systemd-resolved.service
