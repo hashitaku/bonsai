@@ -249,7 +249,7 @@ Type = ether
 DHCP = true
 MulticastDNS = true
 LLMNR = true
-IPv6PrivacyExtensions = true' | sudo tee '/etc/systemd/network/50-wired.network'
+IPv6PrivacyExtensions = true' | tee '/etc/systemd/network/50-wired.network'
 
 echo \
 '[Match]
@@ -259,12 +259,18 @@ Type = wlan
 DHCP = true
 MulticastDNS = true
 LLMNR = true
-IPv6PrivacyExtensions = true' | sudo tee '/etc/systemd/network/50-wireless.network'
+IPv6PrivacyExtensions = true' | tee '/etc/systemd/network/50-wireless.network'
 
-sudo systemctl enable systemd-networkd.service
-sudo systemctl enable systemd-resolved.service
+systemctl enable systemd-networkd.service
+systemctl enable systemd-resolved.service
+"
+```
 
-sudo ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+`arch-chroot`では`/etc/resolv.conf`の設定がされてしまうため`chroot`を使用してシンボリックリンクを張る
+
+```sh
+chroot /mnt /bin/bash -euc "
+ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 "
 ```
 
