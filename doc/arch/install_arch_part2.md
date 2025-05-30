@@ -3,17 +3,18 @@
 ```sh
 #!/bin/bash -eu
 
-ip l
-lsblk
-
 XDG_CONFIG_HOME="${HOME}/.config"
 XDG_CACHE_HOME="${HOME}/.cache"
 XDG_DATA_HOME="${HOME}/.local/share"
 XDG_STATE_HOME="${HOME}/.local/state"
 
-read -rp 'nif name: ' nif_name
 read -rp 'hostname: ' hostname
 read -rp 'keymap(default: us): ' keymap
+
+if [[ "${hostname}" == "" ]]; then
+    echo "hostname is empty"
+    false
+fi
 
 keymap="${keymap:-us}"
 ```
@@ -41,32 +42,6 @@ sudo localectl set-keymap "${keymap}"
 
 ```sh
 sudo hostnamectl hostname "${hostname}"
-```
-
-## ネットワーク設定
-
-```sh
-echo \
-"[Match]
-Name = ${nif_name}
-
-[Network]
-DHCP = true
-MulticastDNS = true
-LLMNR = true
-IPv6PrivacyExtensions = true" | sudo tee "/etc/systemd/network/50-${nif_name}.network"
-
-sudo systemctl enable --now systemd-networkd.service
-sudo systemctl enable --now systemd-resolved.service
-
-sudo ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
-
-set +e
-while ! ping -c 1 -W 1 archlinux.jp; do
-    echo 'waiting for connect archlinux.jp'
-    sleep 5
-done
-set -e
 ```
 
 ## pacman設定
@@ -149,6 +124,8 @@ paru -Syyu
     - Rust
 
         ```sh
+        CARGO_HOME="${XDG_DATA_HOME}/cargo"
+        RUSTUP_HOME="${XDG_DATA_HOME}/rustup"
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --no-modify-path -y
         ```
 
