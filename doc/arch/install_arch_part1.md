@@ -23,7 +23,12 @@ function is_virt() {
     fi
 }
 
+function has_wlan() {
+    ip link show dev wlan0 > /dev/null
+}
+
 export -f is_virt
+export -f has_wlan
 ```
 
 # 設定項目の入力
@@ -49,10 +54,31 @@ read -rp 'Home Logical Volume Percentage(default: 50): ' home_lv_percentage
 read -rp 'Volume Group Name(default: ArchLinux-VG): ' volume_group_name
 read -rp 'Root Logical Volume Name(default: root-LV): ' root_lv_name
 read -rp 'Home Logical Volume Name(default: home-LV): ' home_lv_name
-read -rsp 'LUKS password: ' luks_password; echo;
-read -rsp 'Root Password: ' root_password; echo;
+
+read -rsp 'LUKS Password: ' luks_password1; echo;
+read -rsp 'LUKS Password again: ' luks_password2; echo;
+
+if [[ "${luks_password1}" == "${luks_password2}" ]]; then
+    echo 'LUKS Password do not match'
+    false
+fi
+
+read -rsp 'Root Password: ' root_password1; echo;
+read -rsp 'Root Password again: ' root_password2; echo;
+
+if [[ "${root_password1}" == "${root_password2}" ]]; then
+    echo 'LUKS Password do not match'
+    false
+fi
+
 read -rp 'User Name: ' user_name
-read -rsp 'User Password: ' user_password; echo;
+read -rsp 'User Password: ' user_password1; echo;
+read -rsp 'User Password again: ' user_password2; echo;
+
+if [[ "${user_password1}" == "${user_password2}" ]]; then
+    echo 'LUKS Password do not match'
+    false
+fi
 
 mapping_name="${mapping_name:-cryptlvm}"
 esp_size="${esp_size:-1G}"
@@ -147,11 +173,29 @@ mount "/dev/${volume_group_name}/${home_lv_name}" /mnt/home
 仮想環境の時はセキュアブートの設定は行わないため`sbctl`は不要
 
 ```sh
-if is_virt; then
-    pacstrap /mnt base base-devel linux linux-firmware           cryptsetup tpm2-tss lvm2 btrfs-progs wpa_supplicant efibootmgr       git
-else
-    pacstrap /mnt base base-devel linux linux-firmware amd-ucode cryptsetup tpm2-tss lvm2 btrfs-progs wpa_supplicant efibootmgr sbctl git
+declare -a pacstrap_packages=(
+    'base'
+    'base-devel'
+    'linux'
+    'linux-firmware'
+    'cryptsetup'
+    'tpm2-tss'
+    'libfido2'
+    'lvm2'
+    'btrfs-progs'
+    'efibootmgr'
+    'git'
+)
+
+if ! is_virt; then
+    pacstrap_packages+=('amd-ucode' 'sbctl')
 fi
+
+if has_wlan; then
+    pacstrap_packages+=('iwd')
+fi
+
+pacstrap /mnt "${pacstrap_packages[@]}"
 ```
 
 # fstab生成
@@ -263,6 +307,10 @@ IPv6PrivacyExtensions = true' | tee '/etc/systemd/network/50-wireless.network'
 
 systemctl enable systemd-networkd.service
 systemctl enable systemd-resolved.service
+
+if has_wlan; then
+    systemctl enable iwd.service
+fi
 "
 ```
 
