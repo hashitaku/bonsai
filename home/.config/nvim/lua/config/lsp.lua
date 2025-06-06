@@ -41,26 +41,13 @@ vim.api.nvim_create_autocmd("LspAttach", {
                 })
             end
 
-            if client:supports_method("textDocument/inlayHint", bufnr) then
-                -- バッファを開いたときにインレイヒントを表示
-                vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-
-                vim.api.nvim_create_autocmd({ "InsertEnter" }, {
-                    buffer = bufnr,
-                    group = user_lsp_augid,
-                    callback = function()
-                        vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
-                    end,
-                })
-
-                vim.api.nvim_create_autocmd({ "InsertLeave" }, {
-                    buffer = bufnr,
-                    group = user_lsp_augid,
-                    callback = function()
-                        vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-                    end,
-                })
-            end
+            vim.keymap.set("n", "<Leader>v", function()
+                if client:supports_method("textDocument/inlayHint", bufnr) then
+                    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
+                else
+                    vim.notify("Inlay hints not supported by the LSP server", vim.log.levels.WARN)
+                end
+            end, { buffer = bufnr, desc = "Toggle Inlay Hint" })
 
             if
                 client:supports_method("textDocument/formatting", bufnr)
