@@ -53,6 +53,7 @@ type uv >/dev/null 2>&1 && eval "$(uv generate-shell-completion bash)"
 type uvx >/dev/null 2>&1 && eval "$(uvx --generate-shell-completion bash)"
 type erd >/dev/null 2>&1 && eval "$(erd --completions bash)"
 type gh >/dev/null 2>&1 && eval "$(gh completion --shell bash)"
+type fzf >/dev/null 2>&1 && eval "$(fzf --bash)"
 
 # プロンプト設定
 if type oh-my-posh >/dev/null 2>&1 &&
