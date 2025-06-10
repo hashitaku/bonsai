@@ -24,6 +24,7 @@ return {
                     "markdown",
                     "markdown_inline",
                     "meson",
+                    "powershell",
                     "python",
                     "regex",
                     "rust",
