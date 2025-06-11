@@ -7,9 +7,31 @@ return {
                 enabled = true,
                 view = "notify",
             },
+            commands = {
+                history = {
+                    opts = {
+                        scrollbar = false,
+                    },
+                },
+                last = {
+                    opts = {
+                        scrollbar = false,
+                    },
+                },
+                errors = {
+                    opts = {
+                        scrollbar = false,
+                    },
+                },
+                all = {
+                    opts = {
+                        scrollbar = false,
+                    },
+                },
+            },
             presets = {
                 command_palette = false,
-                lsp_doc_border = true,
+                lsp_doc_border = false,
             },
             lsp = {
                 hover = {
