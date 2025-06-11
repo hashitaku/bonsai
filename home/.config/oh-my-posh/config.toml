@@ -4,15 +4,26 @@ version = 3
 console_title_template = "{{ if .WSL }}\ue712 {{ end }}{{ .PWD }}"
 
 [palette]
-foreground = "#e0e0e0"
-background = "#2c3643"
-black = "#666666"
-blue = "#288ad6"
-green = "#16c98d"
-magenta = "#b267e6"
-red = "#fa5e5b"
-white = "#f8f8f2"
-yellow = "#ffc83f"
+foreground        = "#C0CAF5"
+background        = "#24283B"
+background_bright = "#3B4261"
+background_dark   = "#1F2335"
+black             = "#15161E"
+black_bright      = "#414868"
+blue              = "#7AA2F7"
+blue_bright       = "#8DB0FF"
+cyan              = "#7DCFFF"
+cyan_bright       = "#A4DAFF"
+green             = "#9ECE6A"
+green_bright      = "#9FE044"
+magenta           = "#BB9AF7"
+magenta_bright    = "#C7A9FF"
+red               = "#F7768E"
+red_bright        = "#FF899D"
+white             = "#A9B1D6"
+white_bright      = "#C0CAF5"
+yellow            = "#E0AF68"
+yellow_bright     = "#FABA4A"
 
 [[blocks]]
 type = "prompt"
@@ -21,19 +32,19 @@ alignment = "left"
   [[blocks.segments]]
   type = "session"
   style = "diamond"
-  leading_diamond = "\ue0b6"
-  trailing_diamond = "\ue0b4"
+  leading_diamond = "\uE0B6"  # 
+  trailing_diamond = "\uE0B4" # 
   foreground = "p:background"
-  background = "p:magenta"
+  background = "p:blue"
   templates = ["{{ .UserName }}"]
 
   [[blocks.segments]]
   type = "path"
   style = "diamond"
-  leading_diamon = "\ue0b5"
-  trailing_diamond = "\ue0b4"
-  foreground = "p:background"
-  background = "p:green"
+  leading_diamond = ""
+  trailing_diamond = "\uE0B4" # 
+  foreground = "p:blue"
+  background = "p:background_bright"
   templates = ["\u2800", "{{ path .Path .Location }}"]
 
     [blocks.segments.properties]
@@ -45,19 +56,20 @@ alignment = "left"
   [[blocks.segments]]
   type = "git"
   style = "diamond"
-  leading_diamon = "\ue0b5"
-  trailing_diamond = "\ue0b4"
+  leading_diamond = ""
+  trailing_diamond = "\uE0B4" # 
   foreground = "p:background"
   background = "p:blue"
   templates = [
+    # Braille Pattern Blank
     "\u2800",
     "{{ if .Ref }}{{ url .Ref .UpstreamURL }}{{ end }}",
-
-    "{{ if or (ne .Ahead 0) (ne .Behind 0)}} [\uf062{{ .Ahead }} \uf063{{ .Behind }}]{{ end }}",
-
-    "{{ if .Staging.Changed }} [<p:green>\uf067{{ .Staging.Added }} \uf068{{ .Staging.Deleted }} \uf069{{ .Staging.Modified }}</>]{{ end }}",
-
-    "{{ if .Working.Changed }} [<p:red>\uf067{{ .Working.Untracked }} \uf068{{ .Working.Deleted }} \uf069{{ .Working.Modified }}</>]{{ end }}",
+    #  
+    "{{ if or (ne .Ahead 0) (ne .Behind 0)}} [\uF062{{ .Ahead }} \uF063{{ .Behind }}]{{ end }}",
+    #   
+    "{{ if .Staging.Changed }} [<p:green>\uF067{{ .Staging.Added }} \uF068{{ .Staging.Deleted }} \uF069{{ .Staging.Modified }}</>]{{ end }}",
+    #   
+    "{{ if .Working.Changed }} [<p:red>\uF067{{ .Working.Untracked }} \uF068{{ .Working.Deleted }} \uF069{{ .Working.Modified }}</>]{{ end }}",
   ]
 
     [blocks.segments.properties]
@@ -71,20 +83,22 @@ alignment = "left"
   [[blocks.segments]]
   type = "python"
   style = "diamond"
-  leading_diamon = "\ue0b5"
-  trailing_diamond = "\ue0b4"
+  leading_diamond = ""
+  trailing_diamond = "\uE0B4" # 
   foreground = "p:background"
   background = "p:yellow"
-  templates = ["\u2800", "\U000f0320", "{{ .Full }}"]
+  # Braille Pattern Blank 󰌠
+  templates = ["\u2800", "\U000F0320", "{{ .Full }}"]
 
   [[blocks.segments]]
   type = "node"
   style = "diamond"
-  leading_diamon = "\ue0b5"
-  trailing_diamond = "\ue0b4"
+  leading_diamond = ""
+  trailing_diamond = "\uE0B4" # 
   foreground = "p:background"
   background = "p:yellow"
-  templates = ["\u2800", "\U000f0399", "{{ .Full }}"]
+  # Braille Pattern Blank 󰎙
+  templates = ["\u2800", "\U000F0399", "{{ .Full }}"]
 
     [blocks.segments.properties]
     extensions = ["package.json"]
@@ -92,11 +106,12 @@ alignment = "left"
   [[blocks.segments]]
   type = "deno"
   style = "diamond"
-  leading_diamon = "\ue0b5"
-  trailing_diamond = "\ue0b4"
+  leading_diamond = ""
+  trailing_diamond = "\uE0B4" # 
   foreground = "p:background"
   background = "p:yellow"
-  templates = ["\u2800", "\U000f0399", "{{ .Full }}"]
+  # Braille Pattern Blank 
+  templates = ["\u2800", "\uE7C0", "{{ .Full }}"]
 
     [blocks.segments.properties]
     extensions = ["deno.json"]
@@ -104,8 +119,8 @@ alignment = "left"
   [[blocks.segments]]
   type = "root"
   style = "diamond"
-  leading_diamon = "\ue0b5"
-  trailing_diamond = "\ue0b4"
+  leading_diamond = ""
+  trailing_diamond = "\uE0B4" # 
   foreground = "p:background"
   background = "p:yellow"
-  template = " \uf0e7 "
+  template = "\uF0E7" # 
