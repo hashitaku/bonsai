@@ -98,3 +98,6 @@ if (Get-Command -ErrorAction SilentlyContinue eza) {
     Set-Alias -Name "ll" -Value "ll_impl"
     Set-Alias -Name "la" -Value "la_impl"
 }
+
+# 起動時にSteadyBarにする
+Write-Host -NoNewLine "`e[6 q"
