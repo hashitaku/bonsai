@@ -13,7 +13,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
         local bufnr = args.buf
 
         if client then
-            if client:supports_method("textDocument/hover", bufnr) then
+            -- omnisharpはserver_capabilitiesを正しく出力していない？
+            if client:supports_method("textDocument/hover", bufnr) or client.name == "omnisharp" then
                 vim.keymap.set("n", "K", function()
                     vim.lsp.buf.hover({ border = "rounded" })
                 end, { buffer = bufnr, desc = "vim.lsp.buf.hover()" })
