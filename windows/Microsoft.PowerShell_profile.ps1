@@ -27,11 +27,27 @@ Set-PSReadLineOption -Colors @{ "InlinePrediction"="`e[38;2;153;169;179m" }
 
 # Function List
 # https://learn.microsoft.com/en-us/powershell/module/psreadline/about/about_psreadline_functions?view=powershell-7.4
-Set-PSReadLineKeyHandler -Key Tab -Function Complete
+Set-PSReadLineKeyHandler -Chord 'Tab' -Function Complete
 # [Console]::ReadKey()
 # https://github.com/PowerShell/PSReadLine/issues/906
 Set-PSReadLineKeyHandler -Chord 'Ctrl+Oem4' -ViMode Insert -Function ViCommandMode
 Set-PSReadLineKeyHandler -Chord 'Ctrl+Oem4' -ViMode Command -Function Abort
+
+if (Get-Command -ErrorAction SilentlyContinue fzf) {
+    Remove-PSReadLineKeyHandler -Chord 'Ctrl+r'
+    Remove-PSReadLineKeyHandler -Chord 'Ctrl+r' -ViMode Insert
+    Remove-PSReadLineKeyHandler -Chord 'Ctrl+r' -ViMode Command
+    Set-PSReadLineKeyHandler -Chord 'Ctrl+r' -Description 'fzf history' -ScriptBlock {
+        $command = Get-Content (Get-PSReadLineOption).HistorySavePath | fzf --tac
+
+        if ($null -eq $command)
+        {
+            return
+        }
+
+        [Microsoft.PowerShell.PSConsoleReadLine]::Insert($command)
+    }
+}
 
 if (Get-Command -ErrorAction SilentlyContinue fnm) {
     fnm env --use-on-cd --shell power-shell | Out-String | Invoke-Expression
