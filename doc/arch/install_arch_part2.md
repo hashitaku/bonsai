@@ -101,6 +101,12 @@ paru -Syyu
     paru -S --noconfirm --asexplicit noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji ttf-ubuntu-mono-nerd ttf-inconsolata-nerd
     ```
 
+- 開発環境のインストール
+
+    ```sh
+    paru -S --noconfirm --asexplicit docker docker-buildx docker-compose
+    ```
+
 - 言語処理系
 
     - C/C++
