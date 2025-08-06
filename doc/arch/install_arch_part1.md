@@ -58,7 +58,7 @@ read -rp 'Home Logical Volume Name(default: home-LV): ' home_lv_name
 read -rsp 'LUKS Password: ' luks_password1; echo;
 read -rsp 'LUKS Password again: ' luks_password2; echo;
 
-if [[ "${luks_password1}" == "${luks_password2}" ]]; then
+if [[ "${luks_password1}" != "${luks_password2}" ]]; then
     echo 'LUKS Password do not match'
     false
 fi
@@ -66,8 +66,8 @@ fi
 read -rsp 'Root Password: ' root_password1; echo;
 read -rsp 'Root Password again: ' root_password2; echo;
 
-if [[ "${root_password1}" == "${root_password2}" ]]; then
-    echo 'LUKS Password do not match'
+if [[ "${root_password1}" != "${root_password2}" ]]; then
+    echo 'Root Password do not match'
     false
 fi
 
@@ -75,11 +75,17 @@ read -rp 'User Name: ' user_name
 read -rsp 'User Password: ' user_password1; echo;
 read -rsp 'User Password again: ' user_password2; echo;
 
-if [[ "${user_password1}" == "${user_password2}" ]]; then
-    echo 'LUKS Password do not match'
+if [[ -z "${user_name}" ]]; then
+    echo "User is empty"
     false
 fi
 
+if [[ "${user_password1}" != "${user_password2}" ]]; then
+    echo 'User Password do not match'
+    false
+fi
+
+user_password
 mapping_name="${mapping_name:-cryptlvm}"
 esp_size="${esp_size:-1G}"
 root_lv_percentage="${root_lv_percentage:-50}"
@@ -90,11 +96,6 @@ home_lv_name="${home_lv_name:-home-LV}"
 
 if [[ $((root_lv_percentage + home_lv_percentage)) -gt 100 ]]; then
     echo "Sum of root_lv and home_lv percentages exceeds 100"
-    false
-fi
-
-if [[ "${user_name}" == "" ]]; then
-    echo "User is empty"
     false
 fi
 ```

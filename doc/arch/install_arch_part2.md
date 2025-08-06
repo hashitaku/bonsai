@@ -139,7 +139,7 @@ paru -Syyu
 
         ```sh
         paru -S --noconfirm --asexplicit nodejs fnm-bin npm deno typescript typescript-language-server
-        test -z "${XDG_DATA_HOME}" && mkdir -p "${XDG_DATA_HOME}/npm/lib"
+        test -n "${XDG_DATA_HOME}" && mkdir -p "${XDG_DATA_HOME}/npm/lib"
         ```
 
     - Lua
