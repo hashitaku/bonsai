@@ -24,6 +24,10 @@ export NPM_CONFIG_USERCONFIG
 PATH="${PATH}:$(npm prefix --global)/bin"
 export PATH
 
+# Dotnet
+PATH="${PATH}:${HOME}/.dotnet/tools"
+export PATH
+
 # Azure
 AZURE_CONFIG_DIR="${XDG_DATA_HOME}/azure"
 export AZURE_CONFIG_DIR
@@ -41,13 +45,14 @@ export PATH CPATH LIBRARY_PATH LD_RUN_PATH
 INPUTRC="${XDG_CONFIG_HOME}/readline/inputrc"
 GNUPGHOME="${XDG_DATA_HOME}/gnupg"
 XAUTHORITY="${XDG_RUNTIME_DIR}/Xauthority"
+export INPUTRC GNUPGHOME XAUTHORITY
 
 # WSL用設定
 if [ "$(systemd-detect-virt)" = "wsl" ]; then
     # Waylandの設定をしてしまうとfirefoxに不具合があるためX11を使用する
     # ln -sf /mnt/wslg/runtime-dir/wayland-0* /run/user/$(id -u)/
     ln -sf /mnt/wslg/.X11-unix/* /tmp/.X11-unix/
-fixport INPUTRC GNUPGHOME XAUTHORITY
+fi
 
 # bashrc
 if [ -n "${BASH_VERSION}" ]; then
