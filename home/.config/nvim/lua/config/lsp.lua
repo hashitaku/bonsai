@@ -2,8 +2,6 @@ if vim.g.vscode then
     return
 end
 
-local lsp_signature = require("lsp_signature")
-local cmp_nvim_lsp = require("cmp_nvim_lsp")
 local user_lsp_augid = vim.api.nvim_create_augroup("user_lsp", { clear = false })
 
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -20,7 +18,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
                 end, { buffer = bufnr, desc = "vim.lsp.buf.hover()" })
             end
 
-            if client:supports_method("textDocument/signatureHelp", bufnr) then
+            local result, lsp_signature = pcall(require, "lsp_signature")
+            if result and client:supports_method("textDocument/signatureHelp", bufnr) then
                 lsp_signature.on_attach({}, bufnr)
             end
 
@@ -72,9 +71,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end,
 })
 
-vim.lsp.config("*", {
-    capabilities = cmp_nvim_lsp.default_capabilities(),
-})
+local result, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+if result then
+    vim.lsp.config("*", {
+        capabilities = cmp_nvim_lsp.default_capabilities(),
+    })
+end
 
 vim.lsp.enable({
     "angularls",

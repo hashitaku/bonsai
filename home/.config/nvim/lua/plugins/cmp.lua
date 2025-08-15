@@ -49,7 +49,6 @@ return {
         event = { "InsertEnter", "CmdLineEnter" },
         config = function()
             local cmp = require("cmp")
-            local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 
             cmp.setup.cmdline({ ":" }, {
                 mapping = cmp.mapping.preset.cmdline(),
@@ -58,7 +57,10 @@ return {
                 }),
             })
 
-            cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
+            local result, cmp_autopairs = pcall(require, "nvim-autopairs.completion.cmp")
+            if result then
+                cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
+            end
 
             cmp.setup({
                 preselect = cmp.PreselectMode.None,
