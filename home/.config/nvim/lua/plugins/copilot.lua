@@ -84,6 +84,22 @@ return {
     },
 
     {
+        "ravitemer/mcphub.nvim",
+        cond = not vim.g.vscode,
+        build = "npm install -g mcp-hub@latest",
+        opts = {
+            extensions = {
+                copilotchat = {
+                    enabled = true,
+                    convert_tools_to_functions = true,
+                    convert_resources_to_functions = true,
+                    add_mcp_prefix = false,
+                },
+            },
+        },
+    },
+
+    {
         "CopilotC-Nvim/CopilotChat.nvim",
         cond = not vim.g.vscode,
         dependencies = {
@@ -91,7 +107,10 @@ return {
             "zbirenbaum/copilot.lua",
         },
         opts = {
-            model = "gpt-4.1",
+            model = "gpt-5-mini",
+            window = {
+                border = "rounded",
+            },
             prompts = {
                 COPILOT_BASE = {
                     system_prompt = COPILOT_BASE,
