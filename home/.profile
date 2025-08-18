@@ -24,6 +24,11 @@ export NPM_CONFIG_USERCONFIG
 PATH="${PATH}:$(npm prefix --global)/bin"
 export PATH
 
+# bun
+BUN_INSTALL="${XDG_DATA_HOME}/bun"
+PATH="${PATH}:${BUN_INSTALL}/bin"
+export BUN_INSTALL PATH
+
 # Dotnet
 PATH="${PATH}:${HOME}/.dotnet/tools"
 export PATH

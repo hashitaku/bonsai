@@ -148,6 +148,13 @@ paru -Syyu
         test -n "${XDG_DATA_HOME}" && mkdir -p "${XDG_DATA_HOME}/npm/lib"
         ```
 
+    - Bun
+
+        ```sh
+        export BUN_INSTALL="${XDG_DATA_HOME}/bun"
+        curl -fsSL https://bun.com/install | bash
+        ```
+
     - Lua
 
         ```sh
