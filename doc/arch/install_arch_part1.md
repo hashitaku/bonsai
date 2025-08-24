@@ -85,7 +85,7 @@ if [[ "${user_password1}" != "${user_password2}" ]]; then
     false
 fi
 
-user_password
+user_password="${user_password1}"
 mapping_name="${mapping_name:-cryptlvm}"
 esp_size="${esp_size:-1G}"
 root_lv_percentage="${root_lv_percentage:-50}"
