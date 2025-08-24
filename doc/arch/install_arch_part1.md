@@ -62,6 +62,7 @@ if [[ "${luks_password1}" != "${luks_password2}" ]]; then
     echo 'LUKS Password do not match'
     false
 fi
+luks_password="${luks_password1}"
 
 read -rsp 'Root Password: ' root_password1; echo;
 read -rsp 'Root Password again: ' root_password2; echo;
@@ -70,6 +71,7 @@ if [[ "${root_password1}" != "${root_password2}" ]]; then
     echo 'Root Password do not match'
     false
 fi
+root_password="${root_password1}"
 
 read -rp 'User Name: ' user_name
 read -rsp 'User Password: ' user_password1; echo;
@@ -84,8 +86,8 @@ if [[ "${user_password1}" != "${user_password2}" ]]; then
     echo 'User Password do not match'
     false
 fi
-
 user_password="${user_password1}"
+
 mapping_name="${mapping_name:-cryptlvm}"
 esp_size="${esp_size:-1G}"
 root_lv_percentage="${root_lv_percentage:-50}"
