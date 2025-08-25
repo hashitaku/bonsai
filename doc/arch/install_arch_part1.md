@@ -115,9 +115,9 @@ done
 set -e
 
 timedatectl set-ntp true
-echo 'Server = https://ftp.jaist.ac.jp/pub/Linux/ArchLinux/$repo/os/$arch
-Server = http://ftp.jaist.ac.jp/pub/Linux/ArchLinux/$repo/os/$arch
-Server = http://ftp.tsukuba.wide.ad.jp/Linux/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
+echo 'Server = https://geo.mirror.pkgbuild.com/$repo/os/$arch
+Server = https://mirror.rackspace.com/archlinux/$repo/os/$arch
+Server = https://mirror.leaseweb.net/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
 sed -i '/Parallel/c ParallelDownloads = 5' /etc/pacman.conf
 ```
 
