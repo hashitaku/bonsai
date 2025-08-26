@@ -297,24 +297,34 @@ DHCP = true
 MulticastDNS = true
 LLMNR = true
 IPv6PrivacyExtensions = true' | tee '/etc/systemd/network/50-wired.network'
+"
+```
 
-echo \
-'[Match]
-Type = wlan
+```sh
+if has_wlan; then
+    arch-chroot /mnt /bin/bash -euc "
+    echo \
+    '[Match]
+    Type = wlan
 
-[Network]
-DHCP = true
-MulticastDNS = true
-LLMNR = true
-IPv6PrivacyExtensions = true' | tee '/etc/systemd/network/50-wireless.network'
+    [Network]
+    DHCP = true
+    MulticastDNS = true
+    LLMNR = true
+    IPv6PrivacyExtensions = true' | tee '/etc/systemd/network/50-wireless.network'
+    "
+fi
+```
 
+```sh
+arch-chroot /mnt /bin/bash -euc '
 systemctl enable systemd-networkd.service
 systemctl enable systemd-resolved.service
 
 if has_wlan; then
     systemctl enable iwd.service
 fi
-"
+'
 ```
 
 `arch-chroot`では`/etc/resolv.conf`の設定がされてしまうため`chroot`を使用してシンボリックリンクを張る
