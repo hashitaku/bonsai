@@ -72,7 +72,14 @@ if (Get-Command -ErrorAction SilentlyContinue uvx) {
 
 if (Get-Command -ErrorAction SilentlyContinue oh-my-posh) {
     $ENV:VIRTUAL_ENV_DISABLE_PROMPT=1
-    oh-my-posh --config "${ENV:HOMEDRIVE}${ENV:HOMEPATH}\.config\oh-my-posh\config.toml" init pwsh | Invoke-Expression
+    if ($PSVersionTable.Platform -ceq 'Unix')
+    {
+        oh-my-posh --config "${ENV:HOME}/.config/oh-my-posh/config.toml" init pwsh | Invoke-Expression
+    }
+    else
+    {
+        oh-my-posh --config "${ENV:USERPROFILE}\.config\oh-my-posh\config.toml" init pwsh | Invoke-Expression
+    }
 }
 
 if (Get-Command -ErrorAction SilentlyContinue himalaya) {
