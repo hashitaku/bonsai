@@ -2,6 +2,19 @@
 [Console]::InputEncoding = [System.Text.Encoding]::UTF8
 $PSDefaultParameterValues["*:Encoding"] = "utf8"
 
+# 環境変数
+if (Test-Path -PathType Container $(Join-Path $ENV:USERPROFILE '.local' 'bin'))
+{
+    if ($ENV:PATH.EndsWith(';'))
+    {
+        $ENV:PATH += "$(Join-Path $ENV:USERPROFILE '.local' 'bin')"
+    }
+    else
+    {
+        $ENV:PATH += ";$(Join-Path $ENV:USERPROFILE '.local' 'bin')"
+    }
+}
+
 # DECSCUSR
 # CSI Ps q
 # 0: default
