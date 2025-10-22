@@ -3,15 +3,18 @@
 $PSDefaultParameterValues["*:Encoding"] = "utf8"
 
 # 環境変数
-if (Test-Path -PathType Container $(Join-Path $ENV:USERPROFILE '.local' 'bin'))
+if ($PSVersionTable.Platform -ceq 'Win32NT')
 {
-    if ($ENV:PATH.EndsWith(';'))
+    if (Test-Path -PathType Container $(Join-Path $ENV:USERPROFILE '.local' 'bin'))
     {
-        $ENV:PATH += "$(Join-Path $ENV:USERPROFILE '.local' 'bin')"
-    }
-    else
-    {
-        $ENV:PATH += ";$(Join-Path $ENV:USERPROFILE '.local' 'bin')"
+        if ($ENV:PATH.EndsWith(';'))
+        {
+            $ENV:PATH += "$(Join-Path $ENV:USERPROFILE '.local' 'bin')"
+        }
+        else
+        {
+            $ENV:PATH += ";$(Join-Path $ENV:USERPROFILE '.local' 'bin')"
+        }
     }
 }
 
