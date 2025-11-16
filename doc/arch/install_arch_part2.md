@@ -3,21 +3,19 @@
 ```sh
 #!/bin/bash -eu
 
-ip l
-lsblk
-
 XDG_CONFIG_HOME="${HOME}/.config"
 XDG_CACHE_HOME="${HOME}/.cache"
 XDG_DATA_HOME="${HOME}/.local/share"
 XDG_STATE_HOME="${HOME}/.local/state"
 
-read -rp 'nif name: ' nif_name
-read -rp 'efi disk(ex: /dev/sda, /dev/nvme0n1): ' efi_disk
-read -rp 'efi part(default: 1): ' efi_part
 read -rp 'hostname: ' hostname
 read -rp 'keymap(default: us): ' keymap
 
-efi_part="${efi_part:-1}"
+if [[ "${hostname}" == "" ]]; then
+    echo "hostname is empty"
+    false
+fi
+
 keymap="${keymap:-us}"
 ```
 
@@ -46,32 +44,6 @@ sudo localectl set-keymap "${keymap}"
 sudo hostnamectl hostname "${hostname}"
 ```
 
-## ネットワーク設定
-
-```sh
-echo \
-"[Match]
-Name = ${nif_name}
-
-[Network]
-DHCP = true
-MulticastDNS = true
-LLMNR = true
-IPv6PrivacyExtensions = true" | sudo tee "/etc/systemd/network/50-${nif_name}.network"
-
-sudo systemctl enable --now systemd-networkd.service
-sudo systemctl enable --now systemd-resolved.service
-
-sudo ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
-
-set +e
-while ! ping -c 1 -W 1 archlinux.jp; do
-    echo 'waiting for connect archlinux.jp'
-    sleep 5
-done
-set -e
-```
-
 ## pacman設定
 
 ```sh
@@ -91,50 +63,6 @@ rm -rf paru-bin
 paru -Syyu
 ```
 
-# セキュアブート
-
-## 必要パッケージのインストール
-
-```sh
-paru -S --noconfirm --asexplicit efibootmgr sbctl
-```
-
-## 鍵の生成
-
-```sh
-sudo sbctl create-keys
-```
-
-## 鍵の登録
-
-```sh
-sudo sbctl enroll-keys -m
-```
-
-## ブートローダー、カーネルの署名
-
-```sh
-sudo sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI
-sudo sbctl sign -s /boot/vmlinuz-linux
-```
-
-## ブートエントリを変更
-
-```sh
-sudo efibootmgr -v
-
-read -rp 'delete boot entry num: ' -a arr
-for i in "${arr[@]}"; do
-    sudo efibootmgr -B -b "${i}"
-done
-
-sudo efibootmgr -c -d "${efi_disk}" -p "${efi_part}" -l '\EFI\BOOT\BOOTX64.EFI' -L 'Systemd Boot'
-
-read -rp 'boot order num: ' -a arr
-printf -v arr '%s,' "${arr[@]}"
-sudo efibootmgr -o "${arr%,}"
-```
-
 # パッケージインストール
 
 - Radeonドライバインストール
@@ -152,7 +80,7 @@ sudo efibootmgr -o "${arr%,}"
 - CLIアプリのインストール
 
     ```sh
-    paru -S --noconfirm --asexplicit bash-completion neovim oh-my-posh-bin zip unzip tree wget aria2 jq btop pipes.sh bat ripgrep fd erdtree git-delta neofetch glow
+    paru -S --noconfirm --asexplicit bash-completion neovim oh-my-posh-bin zip unzip tree wget aria2 jq btop pipes.sh bat ripgrep fd fzf erdtree git-delta neofetch glow walk lazygit github-cli
     ```
 
 - デスクトップ環境のインストール
@@ -171,6 +99,12 @@ sudo efibootmgr -o "${arr%,}"
 
     ```sh
     paru -S --noconfirm --asexplicit noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji ttf-ubuntu-mono-nerd ttf-inconsolata-nerd
+    ```
+
+- 開発環境のインストール
+
+    ```sh
+    paru -S --noconfirm --asexplicit docker docker-buildx docker-compose
     ```
 
 - 言語処理系
@@ -196,6 +130,8 @@ sudo efibootmgr -o "${arr%,}"
     - Rust
 
         ```sh
+        export CARGO_HOME="${XDG_DATA_HOME}/cargo"
+        export RUSTUP_HOME="${XDG_DATA_HOME}/rustup"
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --no-modify-path -y
         ```
 
@@ -209,7 +145,14 @@ sudo efibootmgr -o "${arr%,}"
 
         ```sh
         paru -S --noconfirm --asexplicit nodejs fnm-bin npm deno typescript typescript-language-server
-        test -z "${XDG_DATA_HOME}" && mkdir -p "${XDG_DATA_HOME}/npm/lib"
+        test -n "${XDG_DATA_HOME}" && mkdir -p "${XDG_DATA_HOME}/npm/lib"
+        ```
+
+    - Bun
+
+        ```sh
+        export BUN_INSTALL="${XDG_DATA_HOME}/bun"
+        curl -fsSL https://bun.com/install | bash
         ```
 
     - Lua

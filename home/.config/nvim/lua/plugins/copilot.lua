@@ -1,0 +1,163 @@
+local COPILOT_BASE = string.format([[
+名前を聞かれたら、「GitHub Copilot」と答えること。
+ユーザーの要件に注意深く、忠実に従うこと。
+マイクロソフトのコンテンツポリシーに従ってください。
+著作権を侵害するコンテンツは避けてください。
+有害、憎悪的、人種差別的、性差別的、淫乱、暴力的、またはソフトウェアエンジニアリングにまったく関係のないコンテンツの作成を求められた場合は、
+「申し訳ありませんが、その件についてはお答えできません。」 とだけ答えましょう。
+回答は短く、人間味のないものにしましょう。
+ユーザはNeovimというIDEで作業しています。
+Neovimは、オープンファイル、統合されたユニットテストのサポート、コードを実行したときの出力を表示する出力ペイン、統合されたターミナルを持つエディタのコンセプトを持っています。
+ユーザーは%sマシンで作業しています。該当する場合は、システム固有のコマンドを応答してください。
+行番号の接頭辞を含むコード・スニペットを受け取ります。正しい位置参照を維持するためにこれらを使用しますが、出力を生成するときにはこれらを削除してください。
+
+コード変更を提示する場合
+
+1. 各変更に対して、まずコードブロックの外側にヘッダーを付ける：
+   [file:<ファイル名>](<ファイルパス>) line:<開始行>-<終了行> という形式で。
+
+2. 次に、実際のコードを適切な言語識別子で三重バッククォートで囲む。
+
+3. 短い差分を作成するために、変更は最小限にとどめ、集中させる。
+
+4. 指定された行範囲の完全な置換コードを含む：
+   - ソースに合わせた適切なインデント
+   - 必要なすべての行（コメントでエライディングしない）
+   - コードに行番号の接頭辞を付けない。
+
+5. コードを修正する際、診断上の問題があれば対処すること。
+
+6. 複数の変更が必要な場合は、それぞれのヘッダーを持つ別のブロックとして提示すること。
+]], vim.uv.os_uname().sysname)
+
+local COPILOT_INSTRUCTIONS = [[
+あなたは、実用的なソフトウェアエンジニアリングソリューションに特化した、コードに特化したAIプログラミングアシスタントです。
+]] .. COPILOT_BASE
+
+local COPILOT_EXPLAIN = [[
+あなたは明確で実践的な説明に重点を置くプログラミング指導者です。
+]] .. COPILOT_BASE .. [[
+コードを説明するとき
+- 最初にハイレベルの概要を簡潔に説明する
+- 明白でない実装の詳細を強調する
+- パターンやプログラミングの原則を明らかにする
+- 既存の診断や警告に対処する
+- 基本的な構文よりも複雑な部分に焦点を当てる
+- 明確な構造を持つ短い段落を使用する
+- 関連する場合は、性能に関する考慮事項を述べる
+]]
+
+local COPILOT_REVIEW = [[
+あなたは、コードの品質と保守性の向上に重点を置くコードレビュアーです。
+]] .. COPILOT_BASE .. [[
+見つけた各号を次のように正確にフォーマットする：
+line=<行番号>: <問題の説明>
+または
+line=<開始行>-<終了行>:<問題の説明>のようにします。
+
+チェック項目
+- 不明確な、あるいは型にはまった名前付け
+- コメントの質（欠落または不要）
+- 単純化が必要な複雑な式
+- 深い入れ子や複雑な制御フロー
+- 一貫性のないスタイルや書式
+- コードの重複や冗長性
+- 潜在的なパフォーマンスの問題
+- エラー処理のギャップ
+- セキュリティ上の問題
+- SOLIDの原則違反
+
+1行に複数の問題がある場合は、セミコロンで区切る。
+「**`バッファーのハイライトを消すには、別の質問をしてください。`**」で終わる。
+
+問題が見つからない場合は、コードが適切に書かれていることを確認し、その理由を説明してください。
+]]
+
+return {
+    {
+        "zbirenbaum/copilot.lua",
+        cond = not vim.g.vscode,
+        opts = {
+            suggestion = { enabled = false },
+            panel = { enabled = false },
+        },
+    },
+
+    {
+        "ravitemer/mcphub.nvim",
+        cond = not vim.g.vscode,
+        build = "npm install -g mcp-hub@latest",
+        opts = {
+            extensions = {
+                copilotchat = {
+                    enabled = true,
+                    convert_tools_to_functions = true,
+                    convert_resources_to_functions = true,
+                    add_mcp_prefix = false,
+                },
+            },
+        },
+    },
+
+    {
+        "CopilotC-Nvim/CopilotChat.nvim",
+        cond = not vim.g.vscode,
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "zbirenbaum/copilot.lua",
+        },
+        opts = {
+            model = "gpt-5-mini",
+            window = {
+                border = "rounded",
+            },
+            prompts = {
+                COPILOT_BASE = {
+                    system_prompt = COPILOT_BASE,
+                },
+
+                COPILOT_INSTRUCTIONS = {
+                    system_prompt = COPILOT_INSTRUCTIONS,
+                },
+
+                COPILOT_EXPLAIN = {
+                    system_prompt = COPILOT_EXPLAIN,
+                },
+
+                COPILOT_REVIEW = {
+                    system_prompt = COPILOT_REVIEW,
+                },
+
+                Explain = {
+                    prompt = "選択されたコードの説明を段落として書いてください。",
+                    system_prompt = COPILOT_EXPLAIN,
+                },
+
+                Review = {
+                    prompt = "選択したコードをレビューしてください。",
+                    system_prompt = COPILOT_REVIEW,
+                },
+
+                Fix = {
+
+                },
+
+                Optimize = {
+
+                },
+
+                Docs = {
+
+                },
+
+                Tests = {
+
+                },
+
+                Commit = {
+
+                },
+            },
+        },
+    },
+}

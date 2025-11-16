@@ -1,80 +1,82 @@
----@param client vim.lsp.Client
----@param bufnr integer
-local on_attach_handler = function(client, bufnr)
-    local lsp_signature = require("lsp_signature")
-    local user_lsp_augid = vim.api.nvim_create_augroup("user_lsp", { clear = false })
-
-    if client:supports_method("textDocument/hover", bufnr) then
-        vim.keymap.set("n", "K", function()
-            vim.lsp.buf.hover({ border = "rounded" })
-        end, { buffer = bufnr })
-    end
-
-    if client:supports_method("textDocument/signatureHelp", bufnr) then
-        lsp_signature.on_attach({}, bufnr)
-    end
-
-    if client:supports_method("textDocument/documentHighlight", bufnr) then
-        vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-            buffer = bufnr,
-            group = user_lsp_augid,
-            callback = function()
-                vim.lsp.buf.document_highlight()
-            end,
-        })
-
-        vim.api.nvim_create_autocmd("CursorMoved", {
-            buffer = bufnr,
-            group = user_lsp_augid,
-            callback = function()
-                vim.lsp.buf.clear_references()
-            end,
-        })
-    end
-
-    if client:supports_method("textDocument/inlayHint", bufnr) then
-        vim.api.nvim_create_autocmd({ "InsertEnter" }, {
-            buffer = bufnr,
-            group = user_lsp_augid,
-            callback = function()
-                vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
-            end,
-        })
-
-        vim.api.nvim_create_autocmd({ "InsertLeave" }, {
-            buffer = bufnr,
-            group = user_lsp_augid,
-            callback = function()
-                vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-            end,
-        })
-    end
-
-    if
-        client:supports_method("textDocument/formatting", bufnr)
-        and vim.list_contains({ "rust_analyzer", "ruff" }, client.name)
-    then
-        vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-            buffer = bufnr,
-            group = user_lsp_augid,
-            callback = function()
-                vim.lsp.buf.format({
-                    async = false,
-                })
-            end,
-        })
-    end
-
-    if client.name == "ruff" then
-        client.server_capabilities.hoverProvider = false
-    end
+if vim.g.vscode then
+    return
 end
 
-vim.api.nvim_create_user_command("LspInfo", "checkhealth vim.lsp", {})
+local user_lsp_augid = vim.api.nvim_create_augroup("user_lsp", { clear = false })
 
-vim.lsp.config("*", {
-    on_attach = on_attach_handler,
+vim.api.nvim_create_autocmd("LspAttach", {
+    group = user_lsp_augid,
+    callback = function(args)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        local bufnr = args.buf
+
+        if client then
+            -- omnisharpはserver_capabilitiesを正しく出力していない？
+            if client:supports_method("textDocument/hover", bufnr) or client.name == "omnisharp" then
+                vim.keymap.set("n", "K", function()
+                    vim.lsp.buf.hover({ border = "rounded" })
+                end, { buffer = bufnr, desc = "vim.lsp.buf.hover()" })
+            end
+
+            local result, lsp_signature = pcall(require, "lsp_signature")
+            if result and client:supports_method("textDocument/signatureHelp", bufnr) then
+                lsp_signature.on_attach({}, bufnr)
+            end
+
+            if client:supports_method("textDocument/documentHighlight", bufnr) then
+                vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+                    buffer = bufnr,
+                    group = user_lsp_augid,
+                    callback = function()
+                        vim.lsp.buf.document_highlight()
+                    end,
+                })
+
+                vim.api.nvim_create_autocmd("CursorMoved", {
+                    buffer = bufnr,
+                    group = user_lsp_augid,
+                    callback = function()
+                        vim.lsp.buf.clear_references()
+                    end,
+                })
+            end
+
+            vim.keymap.set("n", "<Leader>v", function()
+                if client:supports_method("textDocument/inlayHint", bufnr) then
+                    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
+                else
+                    vim.notify("Inlay hints not supported by the LSP server", vim.log.levels.WARN)
+                end
+            end, { buffer = bufnr, desc = "Toggle Inlay Hint" })
+
+            if
+                client:supports_method("textDocument/formatting", bufnr)
+                and vim.list_contains({ "rust_analyzer", "ruff" }, client.name)
+            then
+                vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+                    buffer = bufnr,
+                    group = user_lsp_augid,
+                    callback = function()
+                        vim.lsp.buf.format({
+                            async = false,
+                        })
+                    end,
+                })
+            end
+
+            if client.name == "ruff" then
+                client.server_capabilities.hoverProvider = false
+            end
+        end
+    end,
 })
+
+local result, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+if result then
+    vim.lsp.config("*", {
+        capabilities = cmp_nvim_lsp.default_capabilities(),
+    })
+end
 
 vim.lsp.enable({
     "angularls",

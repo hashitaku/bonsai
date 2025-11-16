@@ -45,6 +45,7 @@ return {
                 lualine_a = {
                     {
                         "tabs",
+                        max_length =  vim.api.nvim_get_option_value("columns", {}),
                         mode = 2,
                         tabs_color = {
                             active = "TabLineSel",

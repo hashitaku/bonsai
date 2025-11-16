@@ -25,6 +25,15 @@ return {
     },
 
     {
+        "zbirenbaum/copilot-cmp",
+        cond = not vim.g.vscode,
+        opts = {},
+        dependencies = {
+            "zbirenbaum/copilot.lua",
+        },
+    },
+
+    {
         "hrsh7th/nvim-cmp",
         cond = not vim.g.vscode,
         dependencies = {
@@ -35,11 +44,11 @@ return {
             "hrsh7th/cmp-path",
             "hrsh7th/cmp-vsnip",
             "windwp/nvim-autopairs",
+            "zbirenbaum/copilot-cmp",
         },
         event = { "InsertEnter", "CmdLineEnter" },
         config = function()
             local cmp = require("cmp")
-            local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 
             cmp.setup.cmdline({ ":" }, {
                 mapping = cmp.mapping.preset.cmdline(),
@@ -48,7 +57,10 @@ return {
                 }),
             })
 
-            cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
+            local result, cmp_autopairs = pcall(require, "nvim-autopairs.completion.cmp")
+            if result then
+                cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
+            end
 
             cmp.setup({
                 preselect = cmp.PreselectMode.None,
@@ -114,6 +126,7 @@ return {
                     end,
                 },
                 sources = {
+                    { name = "copilot" },
                     { name = "cmp-omni" },
                     { name = "nvim_lsp" },
                     { name = "path" },

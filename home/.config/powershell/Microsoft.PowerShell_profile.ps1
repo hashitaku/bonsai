@@ -2,6 +2,22 @@
 [Console]::InputEncoding = [System.Text.Encoding]::UTF8
 $PSDefaultParameterValues["*:Encoding"] = "utf8"
 
+# 環境変数
+if ($PSVersionTable.Platform -ceq 'Win32NT')
+{
+    if (Test-Path -PathType Container $(Join-Path $ENV:USERPROFILE '.local' 'bin'))
+    {
+        if ($ENV:PATH.EndsWith(';'))
+        {
+            $ENV:PATH += "$(Join-Path $ENV:USERPROFILE '.local' 'bin')"
+        }
+        else
+        {
+            $ENV:PATH += ";$(Join-Path $ENV:USERPROFILE '.local' 'bin')"
+        }
+    }
+}
+
 # DECSCUSR
 # CSI Ps q
 # 0: default
@@ -27,11 +43,27 @@ Set-PSReadLineOption -Colors @{ "InlinePrediction"="`e[38;2;153;169;179m" }
 
 # Function List
 # https://learn.microsoft.com/en-us/powershell/module/psreadline/about/about_psreadline_functions?view=powershell-7.4
-Set-PSReadLineKeyHandler -Key Tab -Function Complete
+Set-PSReadLineKeyHandler -Chord 'Tab' -Function Complete
 # [Console]::ReadKey()
 # https://github.com/PowerShell/PSReadLine/issues/906
 Set-PSReadLineKeyHandler -Chord 'Ctrl+Oem4' -ViMode Insert -Function ViCommandMode
 Set-PSReadLineKeyHandler -Chord 'Ctrl+Oem4' -ViMode Command -Function Abort
+
+if (Get-Command -ErrorAction SilentlyContinue fzf) {
+    Remove-PSReadLineKeyHandler -Chord 'Ctrl+r'
+    Remove-PSReadLineKeyHandler -Chord 'Ctrl+r' -ViMode Insert
+    Remove-PSReadLineKeyHandler -Chord 'Ctrl+r' -ViMode Command
+    Set-PSReadLineKeyHandler -Chord 'Ctrl+r' -Description 'fzf history' -ScriptBlock {
+        $command = Get-Content (Get-PSReadLineOption).HistorySavePath | fzf --tac
+
+        if ($null -eq $command)
+        {
+            return
+        }
+
+        [Microsoft.PowerShell.PSConsoleReadLine]::Insert($command)
+    }
+}
 
 if (Get-Command -ErrorAction SilentlyContinue fnm) {
     fnm env --use-on-cd --shell power-shell | Out-String | Invoke-Expression
@@ -56,7 +88,14 @@ if (Get-Command -ErrorAction SilentlyContinue uvx) {
 
 if (Get-Command -ErrorAction SilentlyContinue oh-my-posh) {
     $ENV:VIRTUAL_ENV_DISABLE_PROMPT=1
-    oh-my-posh --config "${ENV:HOMEDRIVE}${ENV:HOMEPATH}\.config\oh-my-posh\config.toml" init pwsh | Invoke-Expression
+    if ($PSVersionTable.Platform -ceq 'Unix')
+    {
+        oh-my-posh --config "${ENV:HOME}/.config/oh-my-posh/config.toml" init pwsh | Invoke-Expression
+    }
+    else
+    {
+        oh-my-posh --config "${ENV:USERPROFILE}\.config\oh-my-posh\config.toml" init pwsh | Invoke-Expression
+    }
 }
 
 if (Get-Command -ErrorAction SilentlyContinue himalaya) {
@@ -98,3 +137,6 @@ if (Get-Command -ErrorAction SilentlyContinue eza) {
     Set-Alias -Name "ll" -Value "ll_impl"
     Set-Alias -Name "la" -Value "la_impl"
 }
+
+# 起動時にSteadyBarにする
+Write-Host -NoNewLine "`e[6 q"

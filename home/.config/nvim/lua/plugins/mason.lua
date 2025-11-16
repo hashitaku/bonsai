@@ -24,12 +24,14 @@ return {
             "williamboman/mason.nvim",
         },
         opts = {
+            automatic_enable = false,
             ensure_installed = {
-                "ts_ls",
-                "html",
-                "cssls",
                 "angularls",
+                "cssls",
+                "html",
+                "omnisharp",
                 "powershell_es",
+                "ts_ls",
             },
         },
     },

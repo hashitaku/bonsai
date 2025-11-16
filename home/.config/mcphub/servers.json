@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "microsoft.docs.mcp": {
+      "autoApprove": [
+        "microsoft_docs_search",
+        "microsoft_docs_fetch"
+      ],
+      "disabled": false,
+      "url": "https://learn.microsoft.com/api/mcp"
+    }
+  }
+}
