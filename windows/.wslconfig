@@ -1,3 +1,5 @@
 [wsl2]
-memory=4GB
+memory=8GB
+swap=8GB
+networkingMode = mirrored
 kernelCommandLine = cgroup_no_v1=all
