@@ -34,7 +34,6 @@ sudo timedatectl set-ntp true
 sudo sed -i '/ja_JP.UTF-8/c ja_JP.UTF-8 UTF-8' /etc/locale.gen
 sudo locale-gen
 sudo localectl set-locale LANG=ja_JP.UTF-8
-echo -e 'FONT=sun12x22' | sudo tee /etc/vconsole.conf
 sudo localectl set-keymap "${keymap}"
 ```
 
