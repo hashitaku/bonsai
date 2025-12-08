@@ -111,7 +111,7 @@ paru -Syyu
     - C/C++
 
         ```sh
-        paru -S --noconfirm --asexplicit gdb clang lldb libc++ libc++abi cmake meson mesonlsp ninja
+        paru -S --noconfirm --asexplicit gdb clang lldb libc++ libc++abi cmake meson ninja
         ```
 
     - Vulkan
