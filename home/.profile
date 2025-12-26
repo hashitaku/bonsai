@@ -9,7 +9,8 @@ export XDG_CONFIG_HOME XDG_CACHE_HOME XDG_DATA_HOME XDG_STATE_HOME
 CARGO_HOME="${XDG_DATA_HOME}/cargo"
 RUSTUP_HOME="${XDG_DATA_HOME}/rustup"
 export CARGO_HOME RUSTUP_HOME
-[ -f "${XDG_DATA_HOME}/cargo/env" ] && . "${XDG_DATA_HOME}/cargo/env"
+PATH="${PATH}:${CARGO_HOME}/bin"
+export PATH
 
 # Go
 GOPATH="${XDG_DATA_HOME}/go"
