@@ -25,3 +25,43 @@ vim.api.nvim_create_user_command("Grep", function(tbl)
 end, {
     nargs = 1,
 })
+
+vim.api.nvim_create_user_command("DiffOrig", function()
+    local current_winnr = vim.api.nvim_get_current_win()
+    local new_bufnr = vim.api.nvim_create_buf(false, true)
+
+    local new_winnr = vim.api.nvim_open_win(new_bufnr, true, {
+        split = "right",
+        win = 0,
+    })
+
+    local alt_file_path = vim.fn.expand("#")
+
+    if alt_file_path == "" then
+        vim.notify("DiffOrig: not exists alternate file", vim.log.levels.ERROR)
+        vim.api.nvim_win_close(new_winnr, true)
+        return
+    end
+
+    local file = io.open(alt_file_path, "r")
+
+    if not file then
+        vim.notify("DiffOrig: alternate file open error", vim.log.levels.ERROR)
+        vim.api.nvim_win_close(new_winnr, true)
+        return
+    end
+
+    local lines = {}
+    for line in file:lines() do
+        table.insert(lines, line)
+    end
+
+    file:close()
+
+    vim.api.nvim_buf_set_lines(new_bufnr, 0, 1, true, lines)
+
+    vim.api.nvim_set_current_win(new_winnr)
+    vim.cmd.diffthis()
+    vim.api.nvim_set_current_win(current_winnr)
+    vim.cmd.diffthis()
+end, {})
