@@ -7,35 +7,9 @@ XDG_CONFIG_HOME="${HOME}/.config"
 XDG_CACHE_HOME="${HOME}/.cache"
 XDG_DATA_HOME="${HOME}/.local/share"
 XDG_STATE_HOME="${HOME}/.local/state"
-
-read -rp 'hostname: ' hostname
-read -rp 'keymap(default: us): ' keymap
-
-if [[ "${hostname}" == "" ]]; then
-    echo "hostname is empty"
-    false
-fi
-
-keymap="${keymap:-us}"
 ```
 
 # 初期設定
-
-## タイムゾーンの設定
-
-```sh
-sudo timedatectl set-timezone Asia/Tokyo
-sudo timedatectl set-ntp true
-```
-
-## ロケール設定
-
-```sh
-sudo sed -i '/ja_JP.UTF-8/c ja_JP.UTF-8 UTF-8' /etc/locale.gen
-sudo locale-gen
-sudo localectl set-locale LANG=ja_JP.UTF-8
-sudo localectl set-keymap "${keymap}"
-```
 
 ## ホストネーム設定
 

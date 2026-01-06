@@ -3,6 +3,8 @@
 ```sh
 #!/bin/bash -eu
 
+CONTAINER_NAME='INSTALL-CONTAINER'
+
 function join_part() {
     if [[ "$(lsblk -dn -o TYPE "${1}")" != 'disk' ]]; then
         return 1
@@ -48,25 +50,50 @@ while true; do
 done
 
 read -rp 'LUKS Mapping Name(default: cryptlvm): ' mapping_name
+mapping_name="${mapping_name:-cryptlvm}"
+
 read -rp 'EFI System Partition Size(default: 1G): ' esp_size
+esp_size="${esp_size:-1G}"
+
 read -rp 'Root Logical Volume Percentage(default: 50): ' root_lv_percentage
+root_lv_percentage="${root_lv_percentage:-50}"
+
 read -rp 'Home Logical Volume Percentage(default: 50): ' home_lv_percentage
+home_lv_percentage="${home_lv_percentage:-50}"
+
 read -rp 'Volume Group Name(default: ArchLinux-VG): ' volume_group_name
+volume_group_name="${volume_group_name:-ArchLinux-VG}"
+
 read -rp 'Root Logical Volume Name(default: root-LV): ' root_lv_name
+root_lv_name="${root_lv_name:-root-LV}"
+
 read -rp 'Home Logical Volume Name(default: home-LV): ' home_lv_name
+home_lv_name="${home_lv_name:-home-LV}"
+
+if [[ $((root_lv_percentage + home_lv_percentage)) -gt 100 ]]; then
+    echo "Sum of root_lv and home_lv percentages exceeds 100"
+    false
+fi
 
 read -rsp 'LUKS Password: ' luks_password1; echo;
 read -rsp 'LUKS Password again: ' luks_password2; echo;
-
 if [[ "${luks_password1}" != "${luks_password2}" ]]; then
     echo 'LUKS Password do not match'
     false
 fi
 luks_password="${luks_password1}"
 
+read -rp 'hostname: ' hostname
+if [[ "${hostname}" == "" ]]; then
+    echo "hostname is empty"
+    false
+fi
+
+read -rp 'keymap(default: us): ' keymap
+keymap="${keymap:-us}"
+
 read -rsp 'Root Password: ' root_password1; echo;
 read -rsp 'Root Password again: ' root_password2; echo;
-
 if [[ "${root_password1}" != "${root_password2}" ]]; then
     echo 'Root Password do not match'
     false
@@ -74,32 +101,18 @@ fi
 root_password="${root_password1}"
 
 read -rp 'User Name: ' user_name
-read -rsp 'User Password: ' user_password1; echo;
-read -rsp 'User Password again: ' user_password2; echo;
-
 if [[ -z "${user_name}" ]]; then
     echo "User is empty"
     false
 fi
 
+read -rsp 'User Password: ' user_password1; echo;
+read -rsp 'User Password again: ' user_password2; echo;
 if [[ "${user_password1}" != "${user_password2}" ]]; then
     echo 'User Password do not match'
     false
 fi
 user_password="${user_password1}"
-
-mapping_name="${mapping_name:-cryptlvm}"
-esp_size="${esp_size:-1G}"
-root_lv_percentage="${root_lv_percentage:-50}"
-home_lv_percentage="${home_lv_percentage:-50}"
-volume_group_name="${volume_group_name:-ArchLinux-VG}"
-root_lv_name="${root_lv_name:-root-LV}"
-home_lv_name="${home_lv_name:-home-LV}"
-
-if [[ $((root_lv_percentage + home_lv_percentage)) -gt 100 ]]; then
-    echo "Sum of root_lv and home_lv percentages exceeds 100"
-    false
-fi
 ```
 
 # ライブ環境の設定
@@ -115,9 +128,11 @@ done
 set -e
 
 timedatectl set-ntp true
+
 echo 'Server = https://geo.mirror.pkgbuild.com/$repo/os/$arch
 Server = https://mirror.rackspace.com/archlinux/$repo/os/$arch
 Server = https://mirror.leaseweb.net/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
+
 sed -i '/Parallel/c ParallelDownloads = 5' /etc/pacman.conf
 ```
 
@@ -276,6 +291,12 @@ fi
 
 ## mkinitcpio.confの設定
 
+initramfsで実行するフックの設定
+
+項目と順序が大切であるため以下用参照
+
+https://wiki.archlinux.jp/index.php/Mkinitcpio#%E9%80%9A%E5%B8%B8%E3%81%AE%E3%83%95%E3%83%83%E3%82%AF
+
 ```sh
 arch-chroot /mnt /bin/bash -euc "
 touch /etc/vconsole.conf
@@ -303,16 +324,16 @@ IPv6PrivacyExtensions = true' | tee '/etc/systemd/network/50-wired.network'
 ```sh
 if has_wlan; then
     arch-chroot /mnt /bin/bash -euc "
-    echo \
-    '[Match]
-    Type = wlan
+echo \
+'[Match]
+Type = wlan
 
-    [Network]
-    DHCP = true
-    MulticastDNS = true
-    LLMNR = true
-    IPv6PrivacyExtensions = true' | tee '/etc/systemd/network/50-wireless.network'
-    "
+[Network]
+DHCP = true
+MulticastDNS = true
+LLMNR = true
+IPv6PrivacyExtensions = true' | tee '/etc/systemd/network/50-wireless.network'
+"
 fi
 ```
 
@@ -333,6 +354,24 @@ fi
 chroot /mnt /bin/bash -euc "
 ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 "
+```
+
+## タイムゾーン・ロケールの設定
+
+```sh
+systemd-run --quiet systemd-nspawn --directory=/mnt --boot --machine="${CONTAINER_NAME}"
+
+systemd-run --quiet --pipe --uid=root --machine="${CONTAINER_NAME}" /bin/bash -euc "
+timedatectl set-timezone Asia/Tokyo
+timedatectl set-ntp true
+
+sed -i '/ja_JP.UTF-8/c ja_JP.UTF-8 UTF-8' /etc/locale.gen
+locale-gen
+localectl set-locale LANG=ja_JP.UTF-8
+localectl set-keymap "${keymap}"
+"
+
+machinectl stop "${CONTAINER_NAME}"
 ```
 
 # ブートエントリを変更
