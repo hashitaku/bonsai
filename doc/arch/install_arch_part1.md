@@ -256,6 +256,15 @@ visudo -csf /etc/sudoers.d/wheel
 "
 ```
 
+## pacman設定
+
+```sh
+arch-chroot /mnt /bin/bash -euc "
+sed -i '/Parallel/c ParallelDownloads = 5' /etc/pacman.conf
+sed -i '/Color/c Color' /etc/pacman.conf
+"
+```
+
 ## ブートマネージャーのインストール
 
 ```sh
@@ -356,7 +365,7 @@ ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 "
 ```
 
-## タイムゾーン・ロケールの設定
+## ホスト名・タイムゾーン・ロケールの設定
 
 ```sh
 systemd-run --quiet systemd-nspawn --directory=/mnt --boot --machine="${CONTAINER_NAME}"
@@ -369,6 +378,8 @@ sed -i '/ja_JP.UTF-8/c ja_JP.UTF-8 UTF-8' /etc/locale.gen
 locale-gen
 localectl set-locale LANG=ja_JP.UTF-8
 localectl set-keymap "${keymap}"
+
+hostnamectl hostname "${hostname}"
 "
 
 machinectl stop "${CONTAINER_NAME}"

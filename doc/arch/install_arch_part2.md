@@ -11,19 +11,6 @@ XDG_STATE_HOME="${HOME}/.local/state"
 
 # 初期設定
 
-## ホストネーム設定
-
-```sh
-sudo hostnamectl hostname "${hostname}"
-```
-
-## pacman設定
-
-```sh
-sudo sed -i '/Parallel/c ParallelDownloads = 5' /etc/pacman.conf
-sudo sed -i '/Color/c Color' /etc/pacman.conf
-```
-
 ## AURヘルパーのインストール
 
 ```sh
