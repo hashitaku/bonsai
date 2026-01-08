@@ -25,150 +25,23 @@ paru -Syyu
 
 # パッケージインストール
 
-- Radeonドライバインストール
-
-    ```sh
-    paru -S --noconfirm --asexplicit mesa libva-utils xf86-video-amdgpu vulkan-radeon rocm-opencl-sdk rocm-hip-sdk rocm-ml-sdk rocm-smi-lib
-    ```
-
-- ミドルウェアのインストール
-
-    ```sh
-    paru -S --noconfirm --asexplicit openssh polkit gnome-keyring man-db man-pages arch-install-scripts usbutils nftables bluez bluez-utils libappimage
-    ```
-
-- CLIアプリのインストール
-
-    ```sh
-    paru -S --noconfirm --asexplicit bash-completion neovim oh-my-posh-bin zip unzip tree wget aria2 jq btop pipes.sh bat ripgrep fd fzf erdtree git-delta neofetch glow walk lazygit github-cli
-    ```
-
-- デスクトップ環境のインストール
-
-    ```sh
-    paru -S --noconfirm --asexplicit xorg-server xorg-xinit xorg-xrandr i3-wm wezterm xclip picom polybar rofi feh dunst libnotify playerctl pipewire pipewire-pulse pipewire-jack wireplumber alsa-utils fcitx5-mozc fcitx5-configtool fcitx5-qt fcitx5-gtk
-    ```
-
-- GUIアプリのインストール
-
-    ```sh
-    paru -S --noconfirm --asexplicit seahorse discord visual-studio-code-bin brave-bin gimp vlc thunderbird thunderbird-i18n-ja firefox firefox-i18n-ja gnome-screenshot peek libreoffice-fresh libreoffice-fresh-ja
-    ```
-
-- フォントのインストール
-
-    ```sh
-    paru -S --noconfirm --asexplicit noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji ttf-ubuntu-mono-nerd ttf-inconsolata-nerd
-    ```
-
-- 開発環境のインストール
-
-    ```sh
-    paru -S --noconfirm --asexplicit docker docker-buildx docker-compose
-    ```
-
 - 言語処理系
-
-    - C/C++
-
-        ```sh
-        paru -S --noconfirm --asexplicit gdb clang lldb libc++ libc++abi cmake meson ninja
-        ```
-
-    - Vulkan
-
-        ```sh
-        paru -S --noconfirm --asexplicit vulkan-devel
-        ```
-
-    - QMK firmware
-
-        ```sh
-        paru -S --noconfirm --asexplicit avr-gcc avr-libc arm-none-eabi-binutils arm-none-eabi-gcc arm-none-eabi-newlib dfu-programmer
-        ```
 
     - Rust
 
         ```sh
         export CARGO_HOME="${XDG_DATA_HOME}/cargo"
         export RUSTUP_HOME="${XDG_DATA_HOME}/rustup"
-        paru -S --noconfirm --asexplicit rustup
         rustup default stable
-        ```
-
-    - Python
-
-        ```sh
-        paru -S --noconfirm --asexplicit python ruff pyright uv
         ```
 
     - JavaScript/TypeScript
 
         ```sh
-        paru -S --noconfirm --asexplicit nodejs fnm-bin npm deno typescript typescript-language-server
         test -n "${XDG_DATA_HOME}" && mkdir -p "${XDG_DATA_HOME}/npm/lib"
         ```
 
-    - Bun
-
-        ```sh
-        export BUN_INSTALL="${XDG_DATA_HOME}/bun"
-        curl -fsSL https://bun.com/install | bash
-        ```
-
-    - Lua
-
-        ```sh
-        paru -S --noconfirm --asexplicit lua-language-server stylua
-        ```
-
-    - Typst
-
-        ```sh
-        paru -S --noconfirm --asexplicit typst tinymist
-        ```
-
 # その他設定
-
-## カーネルモジュールの自動ロード
-
-```sh
-echo 'ntfs3' | sudo tee /etc/modules-load.d/ntfs3.conf
-```
-
-## ファイアウォールの有効化
-
-```sh
-echo \
-'# add table inet filter
-# create chain inet filter input { type filter hook input priority 0; policy drop; }
-# add rule inet filter input meta iifname "lo" accept
-# add rule inet filter input ct state { established, related } accept
-# add rule inet filter input icmp type { echo-reply, echo-request } accept
-# add rule inet filter input icmpv6 type { echo-request, echo-reply, mld-listener-query, nd-router-solicit, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert  } accept
-# add rule inet filetr input udp dport { mdns, llmnr } accept
-# add rule inet filter input log prefix "[nft] "
-
-flush ruleset
-
-table inet filter {
-    chain input {
-        type filter hook input priority filter; policy drop;
-
-        meta iif "lo" accept
-        ct state { established, related } accept
-
-        icmp type { echo-reply, echo-request } accept
-        icmpv6 type { echo-request, echo-reply, mld-listener-query, nd-router-solicit, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept
-
-        udp dport { mdns, llmnr } accept
-
-        log prefix "[nft] "
-    }
-}' | sudo tee /etc/nftables.conf
-
-sudo systemctl enable --now nftables.service
-```
 
 ## Bluezの有効化
 

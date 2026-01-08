@@ -192,6 +192,7 @@ mount "/dev/${volume_group_name}/${home_lv_name}" /mnt/home
 
 ```sh
 declare -a pacstrap_packages=(
+    # base
     'base'
     'base-devel'
     'linux'
@@ -203,10 +204,165 @@ declare -a pacstrap_packages=(
     'btrfs-progs'
     'efibootmgr'
     'git'
+
+    # drivers
+    'mesa'
+
+    # middleware
+    'openssh'
+    'polkit'
+    'gnome-keyring'
+    'man-db'
+    'man-pages'
+    'arch-install-scripts'
+    'usbutils'
+    'nftables'
+    'bluez'
+    'bluez-utils'
+    'libappimage'
+
+    # CLI Application
+    'bash-completion'
+    'neovim'
+    'oh-my-posh-bin'
+    'zip'
+    'unzip'
+    'tree'
+    'wget'
+    'aria2'
+    'jq'
+    'btop'
+    'pipes.sh'
+    'bat'
+    'ripgrep'
+    'fd'
+    'fzf'
+    'erdtree'
+    'git-delta'
+    'neofetch'
+    'glow'
+    'walk'
+    'lazygit'
+    'github-cli'
+
+    # Desktop Environment
+    'xorg-server'
+    'xorg-xinit'
+    'xorg-xrandr'
+    'i3-wm'
+    'xclip'
+    'picom'
+    'polybar'
+    'rofi'
+    'feh'
+    'dunst'
+    'libnotify'
+    'playerctl'
+    'pipewire'
+    'pipewire-pulse'
+    'pipewire-jack'
+    'wireplumber'
+    'alsa-utils'
+    'fcitx5-mozc'
+    'fcitx5-configtool'
+    'fcitx5-qt'
+    'fcitx5-gtk'
+
+    # GUI Application
+    'wezterm'
+    'seahorse'
+    'discord'
+    'visual-studio-code-bin'
+    'brave-bin'
+    'gimp'
+    'vlc'
+    'thunderbird'
+    'thunderbird-i18n-ja'
+    'firefox'
+    'firefox-i18n-ja'
+    'gnome-screenshot'
+    'peek'
+    'libreoffice-fresh'
+    'libreoffice-fresh-ja'
+
+    # fonts
+    'noto-fonts'
+    'noto-fonts-cjk'
+    'noto-fonts-extra'
+    'noto-fonts-emoji'
+    'ttf-ubuntu-mono-nerd'
+    'ttf-inconsolata-nerd'
+
+    # docker
+    'docker'
+    'docker-buildx'
+    'docker-compose'
+
+    # C/C++
+    'gdb'
+    'clang'
+    'lldb'
+    'libc++'
+    'libc++abi'
+    'cmake'
+    'meson'
+    'ninja'
+
+    # vulkan
+    'vulkan-devel'
+
+    # QMK firmware
+    'avr-gcc'
+    'avr-libc'
+    'arm-none-eabi-binutils'
+    'arm-none-eabi-gcc'
+    'arm-none-eabi-newlib'
+    'dfu-programmer'
+
+    # Rust
+    'rustup'
+
+    # Python
+    'python'
+    'ruff'
+    'pyright'
+    'uv'
+
+    # JavaScript/TypeScript
+    'nodejs'
+    'fnm-bin'
+    'npm'
+    'deno'
+    'bun'
+    'typescript'
+    'typescript-language-server'
+
+    # Lua
+    'lua-language-server'
+    'stylua'
+
+    # Typst
+    'typst'
+    'tinymist'
+
+    
 )
 
 if ! is_virt; then
-    pacstrap_packages+=('amd-ucode' 'sbctl')
+    pacstrap_packages+=(
+        'amd-ucode'
+
+        'libva'
+        'libva-utils'
+        'xf86-video-amdgpu'
+        'vulkan-radeon'
+        'rocm-opencl-sdk'
+        'rocm-hip-sdk'
+        'rocm-ml-sdk'
+        'rocm-smi-lib'
+
+        'sbctl'
+    )
 fi
 
 if has_wlan; then
@@ -314,6 +470,14 @@ mkinitcpio -p linux
 "
 ```
 
+## カーネルモジュールの自動ロード
+
+```sh
+arch-chroot /mnt /bin/bash -euc "
+echo 'ntfs3' | tee /etc/modules-load.d/ntfs3.conf
+"
+```
+
 ## ネットワークの設定
 
 ```sh
@@ -365,10 +529,48 @@ ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 "
 ```
 
+## ファイアウォールの有効化
+
+```sh
+chroot /mnt /bin/bash -euc "
+echo \
+'# add table inet filter
+# create chain inet filter input { type filter hook input priority 0; policy drop; }
+# add rule inet filter input meta iifname "lo" accept
+# add rule inet filter input ct state { established, related } accept
+# add rule inet filter input icmp type { echo-reply, echo-request } accept
+# add rule inet filter input icmpv6 type { echo-request, echo-reply, mld-listener-query, nd-router-solicit, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert  } accept
+# add rule inet filetr input udp dport { mdns, llmnr } accept
+# add rule inet filter input log prefix "[nft] "
+
+flush ruleset
+
+table inet filter {
+    chain input {
+        type filter hook input priority filter; policy drop;
+
+        meta iif "lo" accept
+        ct state { established, related } accept
+
+        icmp type { echo-reply, echo-request } accept
+        icmpv6 type { echo-request, echo-reply, mld-listener-query, nd-router-solicit, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept
+
+        udp dport { mdns, llmnr } accept
+
+        log prefix "[nft] "
+    }
+}' | tee /etc/nftables.conf
+
+systemctl enable nftables.service
+"
+```
+
 ## ホスト名・タイムゾーン・ロケールの設定
 
 ```sh
 systemd-run --quiet systemd-nspawn --directory=/mnt --boot --machine="${CONTAINER_NAME}"
+
+sleep 5s
 
 systemd-run --quiet --pipe --uid=root --machine="${CONTAINER_NAME}" /bin/bash -euc "
 timedatectl set-timezone Asia/Tokyo
