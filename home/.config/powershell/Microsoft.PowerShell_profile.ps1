@@ -1,6 +1,6 @@
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 [Console]::InputEncoding = [System.Text.Encoding]::UTF8
-$PSDefaultParameterValues["*:Encoding"] = "utf8"
+$PSDefaultParameterValues['*:Encoding'] = 'utf8'
 
 # 環境変数
 if ($PSVersionTable.Platform -ceq 'Win32NT')
@@ -104,38 +104,47 @@ if (Get-Command -ErrorAction SilentlyContinue himalaya) {
 
 if (Get-Command -ErrorAction SilentlyContinue uutils) {
     Remove-Alias -Name @(
-        "cat"
-        "cp"
-        "echo"
-        "ls"
-        "mv"
-        "pwd"
-        "rm"
-        "rmdir"
+        'cat'
+        'cp'
+        'echo'
+        'ls'
+        'mv'
+        'pwd'
+        'rm'
+        'rmdir'
     )
 
     function ls_impl { ls.exe --color=auto $Args }
     function ll_impl { ls.exe --color=auto -l $Args }
     function la_impl { ls.exe --color=auto -Al $Args }
-    Set-Alias -Name "ls" -Value "ls_impl"
-    Set-Alias -Name "ll" -Value "ll_impl"
-    Set-Alias -Name "la" -Value "la_impl"
+    Set-Alias -Name 'ls' -Value 'ls_impl'
+    Set-Alias -Name 'll' -Value 'll_impl'
+    Set-Alias -Name 'la' -Value 'la_impl'
 
     # mkdirはPowershellでは組み込みの関数なのでエイリアスで上書き
-    Set-Alias -Name "mkdir" -Value "mkdir.exe"
+    Set-Alias -Name 'mkdir' -Value 'mkdir.exe'
 }
 
 if (Get-Command -ErrorAction SilentlyContinue eza) {
     Remove-Alias -Name @(
-        "ls"
+        'ls'
     )
 
     function ls_impl { eza.exe --color=auto $Args }
     function ll_impl { eza.exe --color=auto -l $Args }
     function la_impl { eza.exe --color=auto -Al $Args }
-    Set-Alias -Name "ls" -Value "ls_impl"
-    Set-Alias -Name "ll" -Value "ll_impl"
-    Set-Alias -Name "la" -Value "la_impl"
+    Set-Alias -Name 'ls' -Value 'ls_impl'
+    Set-Alias -Name 'll' -Value 'll_impl'
+    Set-Alias -Name 'la' -Value 'la_impl'
+}
+
+# .venvがあるときに有効化する
+function venv {
+    if (Test-Path -PathType Container '.\.venv') {
+        . '.\.venv\Scripts\activate'
+    } else {
+        Write-Error '.\.venv is not exists'
+    }
 }
 
 # 起動時にSteadyBarにする
