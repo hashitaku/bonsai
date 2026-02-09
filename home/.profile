@@ -52,6 +52,18 @@ export INPUTRC GNUPGHOME XAUTHORITY
 
 # WSL用設定
 if [ "$(systemd-detect-virt)" = "wsl" ]; then
+    # Waylandの設定をしてしまうとfirefoxに不具合があるためX11を使用する
+    # WSLg環境下においてfirefoxをwaylandにて起動するとポップアップが表示されない
+    # AltやShiftなど修飾キーを押しながらクリックすることで対応可能
+    ln -sf /mnt/wslg/runtime-dir/wayland-0* /run/user/$(id -u)/
+    ln -sf /mnt/wslg/.X11-unix/* /tmp/.X11-unix/
+
+    if [ -L /run/user/$(id -u)/wayland-0 ]; then
+        rm /run/user/$(id -u)/wayland-0*
+    fi
+    WAYLAND_DISPLAY=''
+    export WAYLAND_DISPLAY
+
     LANG=ja_JP.UTF-8
     LC_ALL=ja_JP.UTF-8
     export LANG LC_ALL
