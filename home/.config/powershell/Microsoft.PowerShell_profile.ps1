@@ -102,7 +102,7 @@ if (Get-Command -ErrorAction SilentlyContinue himalaya) {
     himalaya completion powershell | Out-String | Invoke-Expression
 }
 
-if (Get-Command -ErrorAction SilentlyContinue uutils) {
+if (Get-Command -ErrorAction SilentlyContinue coreutils) {
     Remove-Alias -Name @(
         'cat'
         'cp'
