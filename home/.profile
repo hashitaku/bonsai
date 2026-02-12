@@ -51,16 +51,21 @@ XAUTHORITY="${XDG_RUNTIME_DIR}/Xauthority"
 export INPUTRC GNUPGHOME XAUTHORITY
 
 # WSL用設定
-if [ "$(systemd-detect-virt)" = "wsl" ]; then
+if [ "$(systemd-detect-virt)" = 'wsl' ]; then
     # Waylandの設定をしてしまうとfirefoxに不具合があるためX11を使用する
     # WSLg環境下においてfirefoxをwaylandにて起動するとポップアップが表示されない
-    # AltやShiftなど修飾キーを押しながらクリックすることで対応可能
-    ln -sf /mnt/wslg/runtime-dir/wayland-0* /run/user/$(id -u)/
-    ln -sf /mnt/wslg/.X11-unix/* /tmp/.X11-unix/
-
-    if [ -L /run/user/$(id -u)/wayland-0 ]; then
-        rm /run/user/$(id -u)/wayland-0*
+    if [ ! -L /tmp/.X11-unix/X0 ] && [ ! -S /tmp/.X11-unix/X0 ]; then
+        ln -sf /mnt/wslg/.X11-unix/X0 /tmp/.X11-unix/X0
     fi
+
+    # if [ ! -L /run/user/$(id -u)/wayland-0 ]; then
+    #     ln -sf /mnt/wslg/runtime-dir/wayland-0 /run/user/$(id -u)/wayland-0
+    #     ln -sf /mnt/wslg/runtime-dir/wayland-0.lock /run/user/$(id -u)/wayland-0.lock
+    # fi
+    echo "ls /run/user/$(id -u)/"
+    ls /run/user/$(id -u)/
+    [ -L /run/user/$(id -u)/wayland-0 ] && rm /run/user/$(id -u)/wayland-0
+    [ -L /run/user/$(id -u)/wayland-0.lock ] && rm /run/user/$(id -u)/wayland-0.lock
     WAYLAND_DISPLAY=''
     export WAYLAND_DISPLAY
 
