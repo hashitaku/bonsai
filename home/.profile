@@ -62,8 +62,6 @@ if [ "$(systemd-detect-virt)" = 'wsl' ]; then
     #     ln -sf /mnt/wslg/runtime-dir/wayland-0 /run/user/$(id -u)/wayland-0
     #     ln -sf /mnt/wslg/runtime-dir/wayland-0.lock /run/user/$(id -u)/wayland-0.lock
     # fi
-    echo "ls /run/user/$(id -u)/"
-    ls /run/user/$(id -u)/
     [ -L /run/user/$(id -u)/wayland-0 ] && rm /run/user/$(id -u)/wayland-0
     [ -L /run/user/$(id -u)/wayland-0.lock ] && rm /run/user/$(id -u)/wayland-0.lock
     WAYLAND_DISPLAY=''

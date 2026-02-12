@@ -86,6 +86,10 @@ if (Get-Command -ErrorAction SilentlyContinue uvx) {
     uvx --generate-shell-completion powershell | Out-String | Invoke-Expression
 }
 
+if (Get-Command -ErrorAction SilentlyContinue tree-sitter) {
+    tree-sitter complete --shell power-shell | Out-String | Invoke-Expression
+}
+
 if (Get-Command -ErrorAction SilentlyContinue oh-my-posh) {
     $ENV:VIRTUAL_ENV_DISABLE_PROMPT=1
     if ($PSVersionTable.Platform -ceq 'Unix')
@@ -96,10 +100,6 @@ if (Get-Command -ErrorAction SilentlyContinue oh-my-posh) {
     {
         oh-my-posh --config "${ENV:USERPROFILE}\.config\oh-my-posh\config.toml" init pwsh | Invoke-Expression
     }
-}
-
-if (Get-Command -ErrorAction SilentlyContinue himalaya) {
-    himalaya completion powershell | Out-String | Invoke-Expression
 }
 
 if (Get-Command -ErrorAction SilentlyContinue coreutils) {
