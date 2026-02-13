@@ -2,6 +2,7 @@
     name =
     email =
 [core]
+    autocrlf = input
     editor = nvim
     quotePath = false
     pager = delta
