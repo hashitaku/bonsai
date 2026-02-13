@@ -3,16 +3,11 @@
 $PSDefaultParameterValues['*:Encoding'] = 'utf8'
 
 # 環境変数
-if ($PSVersionTable.Platform -ceq 'Win32NT')
-{
-    if (Test-Path -PathType Container $(Join-Path $ENV:USERPROFILE '.local' 'bin'))
-    {
-        if ($ENV:PATH.EndsWith(';'))
-        {
+if ($PSVersionTable.Platform -ceq 'Win32NT') {
+    if (Test-Path -PathType Container $(Join-Path $ENV:USERPROFILE '.local' 'bin')) {
+        if ($ENV:PATH.EndsWith(';')) {
             $ENV:PATH += "$(Join-Path $ENV:USERPROFILE '.local' 'bin')"
-        }
-        else
-        {
+        } else {
             $ENV:PATH += ";$(Join-Path $ENV:USERPROFILE '.local' 'bin')"
         }
     }
@@ -56,8 +51,7 @@ if (Get-Command -ErrorAction SilentlyContinue fzf) {
     Set-PSReadLineKeyHandler -Chord 'Ctrl+r' -Description 'fzf history' -ScriptBlock {
         $command = Get-Content (Get-PSReadLineOption).HistorySavePath | fzf --tac
 
-        if ($null -eq $command)
-        {
+        if ($null -eq $command) {
             return
         }
 
@@ -92,12 +86,9 @@ if (Get-Command -ErrorAction SilentlyContinue tree-sitter) {
 
 if (Get-Command -ErrorAction SilentlyContinue oh-my-posh) {
     $ENV:VIRTUAL_ENV_DISABLE_PROMPT=1
-    if ($PSVersionTable.Platform -ceq 'Unix')
-    {
+    if ($PSVersionTable.Platform -ceq 'Unix') {
         oh-my-posh --config "${ENV:HOME}/.config/oh-my-posh/config.toml" init pwsh | Invoke-Expression
-    }
-    else
-    {
+    } else {
         oh-my-posh --config "${ENV:USERPROFILE}\.config\oh-my-posh\config.toml" init pwsh | Invoke-Expression
     }
 }
