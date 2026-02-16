@@ -166,6 +166,7 @@ if has_wlan; then
 fi
 
 ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+"
 ```
 
 ## ホスト名・タイムゾーン・ロケールの設定
@@ -191,19 +192,8 @@ hostnamectl hostname arch-vm
 machinectl stop "${CONTAINER_NAME}"
 ```
 
-## ブートエントリを変更
+## ISOの取り外し
 
 ```sh
-efibootmgr -v
-
-read -rp 'delete boot entry num: ' -a arr
-for i in "${arr[@]}"; do
-    efibootmgr -B -b "${i}"
-done
-
-efibootmgr -c -d "${install_block_device_path}" -p '1' -l '\EFI\BOOT\BOOTX64.EFI' -L 'Systemd Boot'
-
-read -rp 'boot order num: ' -a arr
-printf -v arr '%s,' "${arr[@]}"
-efibootmgr -o "${arr%,}"
+qm set "${VM_ID}" --delete ide2
 ```
