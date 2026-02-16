@@ -133,7 +133,7 @@ arch-chroot /mnt /bin/bash -euc "
 bootctl --path=/boot install
 
 echo 'default arch
-timeout 10
+timeout 0
 secure-boot-enroll manual
 console-mode max' > /boot/loader/loader.conf
 
@@ -160,11 +160,15 @@ IPv6PrivacyExtensions = true' | tee '/etc/systemd/network/50-wired.network'
 
 systemctl enable systemd-networkd.service
 systemctl enable systemd-resolved.service
-
-if has_wlan; then
-    systemctl enable iwd.service
-fi
 "
+```
+
+`arch-chroot`では`/etc/resolv.conf`の設定がされてしまうため`chroot`を使用してシンボリックリンクを張る
+
+```sh
+chroot /mnt /bin/bash -euc '
+ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+'
 ```
 
 ## ホスト名・タイムゾーン・ロケールの設定
@@ -176,8 +180,6 @@ systemd-run --quiet systemd-nspawn --directory=/mnt --boot --machine="${CONTAINE
 sleep 5s
 
 systemd-run --quiet --pipe --uid=root --machine="${CONTAINER_NAME}" /bin/bash -euc "
-ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
-
 timedatectl set-timezone Asia/Tokyo
 timedatectl set-ntp true
 
