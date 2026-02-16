@@ -164,20 +164,20 @@ systemctl enable systemd-resolved.service
 if has_wlan; then
     systemctl enable iwd.service
 fi
-
-ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 "
 ```
 
 ## ホスト名・タイムゾーン・ロケールの設定
 
 ```sh
-CONTAINER_NAME='INSTALL_CONTAINER'
+CONTAINER_NAME='INSTALL-CONTAINER'
 systemd-run --quiet systemd-nspawn --directory=/mnt --boot --machine="${CONTAINER_NAME}"
 
 sleep 5s
 
 systemd-run --quiet --pipe --uid=root --machine="${CONTAINER_NAME}" /bin/bash -euc "
+ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+
 timedatectl set-timezone Asia/Tokyo
 timedatectl set-ntp true
 
