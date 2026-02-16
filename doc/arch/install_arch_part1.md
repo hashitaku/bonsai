@@ -216,6 +216,7 @@ declare -a pacstrap_packages=(
     'man-pages'
     'arch-install-scripts'
     'usbutils'
+    'tailscale'
     'nftables'
     'bluez'
     'bluez-utils'
@@ -524,9 +525,9 @@ fi
 `arch-chroot`では`/etc/resolv.conf`の設定がされてしまうため`chroot`を使用してシンボリックリンクを張る
 
 ```sh
-chroot /mnt /bin/bash -euc "
+chroot /mnt /bin/bash -euc '
 ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
-"
+'
 ```
 
 ## ファイアウォールの有効化
@@ -587,7 +588,7 @@ hostnamectl hostname "${hostname}"
 machinectl stop "${CONTAINER_NAME}"
 ```
 
-# ブートエントリを変更
+## ブートエントリを変更
 
 ```sh
 efibootmgr -v
