@@ -76,7 +76,6 @@ declare -a pacstrap_packages=(
     'btrfs-progs'
     'git'
 
-    'openssh'
     'polkit'
     'man-db'
     'man-pages'
@@ -179,7 +178,7 @@ systemd-run --quiet systemd-nspawn --directory=/mnt --boot --machine="${CONTAINE
 
 sleep 5s
 
-systemd-run --quiet --pipe --uid=root --machine="${CONTAINER_NAME}" /bin/bash -euc "
+systemd-run --quiet --wait --pipe --uid=root --machine="${CONTAINER_NAME}" /bin/bash -euxc "
 timedatectl set-timezone Asia/Tokyo
 timedatectl set-ntp true
 
