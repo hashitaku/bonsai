@@ -1,8 +1,8 @@
 ## VMの作成
 
 ```sh
-VM_ID='100'
-VM_NAME='arch'
+VM_ID="$(pvesh get /cluster/nextid)"
+VM_NAME='arch-template'
 VM_CORE='2'
 VM_MEMORY='2048'
 ISO_NAME='archlinux-x86_64.iso'
