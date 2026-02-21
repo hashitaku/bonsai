@@ -1,28 +1,3 @@
-## VMの作成
-
-```sh
-VM_ID="$(pvesh get /cluster/nextid)"
-VM_NAME='arch-template'
-VM_CORE='2'
-VM_MEMORY='2048'
-ISO_NAME='archlinux-x86_64.iso'
-
-qm create "${VM_ID}" \
---name "${VM_NAME}" \
---cpu 'host' \
---cores "${VM_CORE}" \
---memory "${VM_MEMORY}" \
---bios 'ovmf' \
---machine 'q35' \
---ostype 'l26' \
---net0 'virtio,bridge=vmbr0' \
---boot 'order=ide2;scsi0' \
---efidisk0 'local-lvm:1' \
---scsihw 'virtio-scsi-single' \
---scsi0 'local-lvm:50,discard=on' \
---cdrom "local:iso/${ISO_NAME}"
-```
-
 ## ライブ環境の設定
 
 ```sh
@@ -139,7 +114,7 @@ console-mode max' > /boot/loader/loader.conf
 echo 'title Arch Linux
 linux /vmlinuz-linux
 initrd /initramfs-linux.img
-options root=UUID=$(blkid -o value -s UUID /dev/sda2) rw' > /boot/loader/entries/arch.conf
+options root=UUID=$(blkid -o value -s UUID /dev/sda2) console=ttyS0,115200 rw' > /boot/loader/entries/arch.conf
 "
 ```
 
@@ -159,6 +134,16 @@ IPv6PrivacyExtensions = true' | tee '/etc/systemd/network/50-wired.network'
 
 systemctl enable systemd-networkd.service
 systemctl enable systemd-resolved.service
+"
+```
+
+## systemdのサービスの有効化
+
+
+```sh
+arch-chroot /mnt /bin/bash -euc "
+systemctl enable tailscaled.service
+systemctl enable serial-getty@ttyS0.service
 "
 ```
 
@@ -191,10 +176,4 @@ hostnamectl hostname arch-vm
 "
 
 machinectl stop "${CONTAINER_NAME}"
-```
-
-## ISOの取り外し
-
-```sh
-qm set "${VM_ID}" --delete ide2
 ```
