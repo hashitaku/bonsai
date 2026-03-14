@@ -54,3 +54,10 @@ Signed-By:
 ```sh
 rm /etc/apt/sources.list.d/ceph.list
 ```
+
+## 必要なパッケージのインストール
+
+```sh
+apt install \
+vim
+```

@@ -29,8 +29,13 @@ function has_wlan() {
     ip link show dev wlan0 > /dev/null
 }
 
+function has_bt() {
+    test -e /sys/class/bluetooth/*
+}
+
 export -f is_virt
 export -f has_wlan
+export -f has_bt
 ```
 
 # 設定項目の入力
@@ -50,30 +55,10 @@ while true; do
 done
 
 read -rp 'LUKS Mapping Name(default: cryptlvm): ' mapping_name
-mapping_name="${mapping_name:-cryptlvm}"
+mapping_name="${mapping_name:-cryptroot}"
 
 read -rp 'EFI System Partition Size(default: 1G): ' esp_size
 esp_size="${esp_size:-1G}"
-
-read -rp 'Root Logical Volume Percentage(default: 50): ' root_lv_percentage
-root_lv_percentage="${root_lv_percentage:-50}"
-
-read -rp 'Home Logical Volume Percentage(default: 50): ' home_lv_percentage
-home_lv_percentage="${home_lv_percentage:-50}"
-
-read -rp 'Volume Group Name(default: ArchLinux-VG): ' volume_group_name
-volume_group_name="${volume_group_name:-ArchLinux-VG}"
-
-read -rp 'Root Logical Volume Name(default: root-LV): ' root_lv_name
-root_lv_name="${root_lv_name:-root-LV}"
-
-read -rp 'Home Logical Volume Name(default: home-LV): ' home_lv_name
-home_lv_name="${home_lv_name:-home-LV}"
-
-if [[ $((root_lv_percentage + home_lv_percentage)) -gt 100 ]]; then
-    echo "Sum of root_lv and home_lv percentages exceeds 100"
-    false
-fi
 
 read -rsp 'LUKS Password: ' luks_password1; echo;
 read -rsp 'LUKS Password again: ' luks_password2; echo;
@@ -136,14 +121,13 @@ Server = https://mirror.leaseweb.net/archlinux/$repo/os/$arch' > /etc/pacman.d/m
 sed -i '/Parallel/c ParallelDownloads = 5' /etc/pacman.conf
 ```
 
-# ファイルシステム周りの設定
+# ファイルシステムの設定
 
 ## パーティショニング
 
 ```sh
 sgdisk --clear "${install_block_device_path}"
 sgdisk --new "1::+${esp_size}" "${install_block_device_path}"
-# ESP以外の範囲をすべてLVM用のパーティションにする
 sgdisk --new '2::' "${install_block_device_path}"
 sgdisk --typecode '1:EF00' "${install_block_device_path}"
 sgdisk --typecode '2:8309' "${install_block_device_path}"
@@ -156,39 +140,40 @@ echo "${luks_password}" | cryptsetup luksFormat --batch-mode "$(join_part "${ins
 echo "${luks_password}" | cryptsetup open "$(join_part "${install_block_device_path}" 2)" "${mapping_name}"
 ```
 
-## LVMの設定
-
-```sh
-pvcreate -y "/dev/mapper/${mapping_name}"
-
-vgcreate -y "${volume_group_name}" "/dev/mapper/${mapping_name}"
-
-lvcreate -y -l "${root_lv_percentage}%VG" -n "${root_lv_name}" "${volume_group_name}"
-lvcreate -y -l "${home_lv_percentage}%VG" -n "${home_lv_name}" "${volume_group_name}"
-```
-
 ## パーティションのフォーマット
 
 ```sh
 umount -R "/mnt" || true
 mkfs.fat -F 32 "$(join_part "${install_block_device_path}" 1)"
-mkfs.btrfs -f "/dev/${volume_group_name}/${root_lv_name}"
-mkfs.btrfs -f "/dev/${volume_group_name}/${home_lv_name}"
+mkfs.btrfs -f "$(join_part "${install_block_device_path}" 2)"
+```
+
+## btrfsサブボリュームの作成
+
+```sh
+mount "/dev/mapper/${mapping_name}" /mnt
+btrfs subvolume create /mnt/@
+btrfs subvolume create /mnt/@home
+umount /mnt
 ```
 
 ## ファイルシステムのマウント
 
 ```sh
-mount "/dev/${volume_group_name}/${root_lv_name}" /mnt
-mkdir -m 700 /mnt/boot
-mount -o dmask=077,fmask=077 "$(join_part "${install_block_device_path}" 1)" /mnt/boot
+mount -o subvol=@ "/dev/mapper/${mapping_name}" /mnt
 mkdir /mnt/home
-mount "/dev/${volume_group_name}/${home_lv_name}" /mnt/home
+mkdir -m 700 /mnt/boot
+mount -o subvol=@home "/dev/mapper/${mapping_name}" /mnt/home
+mount -o dmask=077,fmask=077 "$(join_part "${install_block_device_path}" 1)" /mnt/boot
+```
+
+## fstab生成
+
+```sh
+genfstab /mnt > /mnt/etc/fstab
 ```
 
 # パッケージのインストール
-
-仮想環境の時はセキュアブートの設定は行わないため`sbctl`は不要
 
 ```sh
 declare -a pacstrap_packages=(
@@ -218,8 +203,6 @@ declare -a pacstrap_packages=(
     'usbutils'
     'tailscale'
     'nftables'
-    'bluez'
-    'bluez-utils'
     'libappimage'
 
     # CLI Application
@@ -274,7 +257,6 @@ declare -a pacstrap_packages=(
     'seahorse'
     'discord'
     'visual-studio-code-bin'
-    'brave-bin'
     'gimp'
     'vlc'
     'thunderbird'
@@ -345,10 +327,9 @@ declare -a pacstrap_packages=(
     # Typst
     'typst'
     'tinymist'
-
-    
 )
 
+# 仮想環境の時はセキュアブートの設定は行わないため`sbctl`は不要
 if ! is_virt; then
     pacstrap_packages+=(
         'amd-ucode'
@@ -370,13 +351,19 @@ if has_wlan; then
     pacstrap_packages+=('iwd')
 fi
 
+if has_bt; then
+    pacstrap_packages+=('bluez' 'bluez-utils')
+fi
+
 pacstrap /mnt "${pacstrap_packages[@]}"
 ```
 
-# fstab生成
+## インストール用コンテナの立ち上げ
 
 ```sh
-genfstab -U /mnt > /mnt/etc/fstab
+systemd-run --quiet systemd-nspawn --directory=/mnt --boot --machine="${CONTAINER_NAME}"
+
+sleep 5s
 ```
 
 # arch-chroot
@@ -479,6 +466,19 @@ echo 'ntfs3' | tee /etc/modules-load.d/ntfs3.conf
 "
 ```
 
+## pamの設定
+
+`/bin/login`を使用してログインする際の`gnome-keyring`解除設定
+
+```sh
+tac /etc/pam.d/login | \
+sed '0,/auth/ s/auth/auth       optional     pam_gnome_keyring.so\n&/' | \
+sed '0,/session/ s/session/session    optional     pam_gnome_keyring.so    auto_start\n&/' | \
+tac | \
+uniq | \
+sudo tee /etc/pam.d/login
+```
+
 ## ネットワークの設定
 
 ```sh
@@ -515,11 +515,23 @@ fi
 arch-chroot /mnt /bin/bash -euc '
 systemctl enable systemd-networkd.service
 systemctl enable systemd-resolved.service
-
-if has_wlan; then
-    systemctl enable iwd.service
-fi
 '
+```
+
+ホストがWlanを持ってい場合のみ`iwd`がインストールされているため有効化
+
+```sh
+if has_wlan; then
+    arch-chroot /mnt /bin/bash -euc 'systemctl enable iwd.service'
+fi
+```
+
+ホストがbluetoothを持っている場合のみ`bluez`がインストールされているため有効化
+
+```sh
+if has_bt; then
+    arch-chroot /mnt /bin/bash -euc 'systemctl enable bluetooth.service'
+fi
 ```
 
 `arch-chroot`では`/etc/resolv.conf`の設定がされてしまうため`chroot`を使用してシンボリックリンクを張る
@@ -533,7 +545,7 @@ ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 ## ファイアウォールの有効化
 
 ```sh
-chroot /mnt /bin/bash -euc "
+arch-chroot /mnt /bin/bash -euc "
 echo \
 '# add table inet filter
 # create chain inet filter input { type filter hook input priority 0; policy drop; }
@@ -569,11 +581,7 @@ systemctl enable nftables.service
 ## ホスト名・タイムゾーン・ロケールの設定
 
 ```sh
-systemd-run --quiet systemd-nspawn --directory=/mnt --boot --machine="${CONTAINER_NAME}"
-
-sleep 5s
-
-systemd-run --quiet --wait --pipe --uid=root --machine="${CONTAINER_NAME}" /bin/bash -euxc "
+systemd-run --quiet --wait --pipe --uid=root --machine="${CONTAINER_NAME}" /bin/bash -euc "
 timedatectl set-timezone Asia/Tokyo
 timedatectl set-ntp true
 
@@ -584,7 +592,37 @@ localectl set-keymap "${keymap}"
 
 hostnamectl hostname "${hostname}"
 "
+```
 
+## マウス、タッチパッド設定
+
+```sh
+systemd-run --quiet --wait --pipe --uid=root --machine="${CONTAINER_NAME}" /bin/bash -euc '
+echo \
+"Section "InputClass"
+    Identifier "libinput mouse"
+    Driver "libinput"
+    MatchIsPointer "true"
+    MatchDevicePath "/dev/input/event*"
+    Option "AccelProfile" "flat"
+EndSection" | tee /etc/X11/xorg.conf.d/20-mouse.conf
+
+echo \
+"Section "InputClass"
+    Identifier "libinput touchpad"
+    Driver "libinput"
+    MatchIsTouchpad "true"
+    MatchDevicePath "/dev/input/event*"
+    Option "Tapping" "true"
+    Option "NaturalScrolling" "true"
+    Option "DisableWhileTyping" "false"
+EndSection" | tee /etc/X11/xorg.conf.d/20-touchpad.conf
+'
+```
+
+## インストール用コンテナの停止
+
+```sh
 machinectl stop "${CONTAINER_NAME}"
 ```
 
@@ -605,7 +643,7 @@ printf -v arr '%s,' "${arr[@]}"
 efibootmgr -o "${arr%,}"
 ```
 
-# 再起動するかどうかの確認
+## 再起動するかどうかの確認
 
 ```sh
 read -rp 'reboot [Y/n]: ' ans
@@ -617,3 +655,11 @@ case $ans in
         ;;
 esac
 ```
+## メモ
+
+### firefox
+
+firefoxのハードウェアアクセラレーション対応状況を`about:support`で確認
+
+ハードウェアアクセラレーションが有効になっていない場合は`about:config`で`media.ffmpeg.vaapi.enabled`をtrueにする
+
