@@ -23,6 +23,16 @@ rm -rf paru-bin
 paru -Syyu
 ```
 
+## AURパッケージのインストール
+
+```sh
+paru -S \
+    'oh-my-posh-bin' \
+    'pipes.sh' \
+    'visual-studio-code-bin' \
+    'walk'
+```
+
 # パッケージインストール
 
 - 言語処理系
