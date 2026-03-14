@@ -208,7 +208,6 @@ declare -a pacstrap_packages=(
     # CLI Application
     'bash-completion'
     'neovim'
-    'oh-my-posh-bin'
     'zip'
     'unzip'
     'tree'
@@ -216,7 +215,6 @@ declare -a pacstrap_packages=(
     'aria2'
     'jq'
     'btop'
-    'pipes.sh'
     'bat'
     'ripgrep'
     'fd'
@@ -225,7 +223,6 @@ declare -a pacstrap_packages=(
     'git-delta'
     'neofetch'
     'glow'
-    'walk'
     'lazygit'
     'github-cli'
 
@@ -256,7 +253,6 @@ declare -a pacstrap_packages=(
     'wezterm'
     'seahorse'
     'discord'
-    'visual-studio-code-bin'
     'gimp'
     'vlc'
     'thunderbird'
@@ -313,7 +309,7 @@ declare -a pacstrap_packages=(
 
     # JavaScript/TypeScript
     'nodejs'
-    'fnm-bin'
+    'fnm'
     'npm'
     'deno'
     'bun'
