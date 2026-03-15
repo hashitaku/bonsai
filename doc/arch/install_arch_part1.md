@@ -619,7 +619,7 @@ EndSection" | tee /etc/X11/xorg.conf.d/20-touchpad.conf
 ## AURヘルパーのインストール
 
 ```sh
-systemd-run --quiet --wait --pipe --uid="${user_name}" --machine="${CONTAINER_NAME}" /bin/bash -euc "
+systemd-run --quiet --wait --pipe --uid="${user_name}" --machine="${CONTAINER_NAME}" /bin/bash -euc '
 cd
 git clone https://aur.archlinux.org/paru-bin.git
 cd paru-bin
@@ -627,19 +627,19 @@ makepkg -si --noconfirm
 cd
 rm -rf paru-bin
 paru -Syyu
-"
+'
 ```
 
 ## AURパッケージのインストール
 
 ```sh
-systemd-run --quiet --wait --pipe --uid="${user_name}" --machine="${CONTAINER_NAME}" /bin/bash -euc "
+systemd-run --quiet --wait --pipe --uid="${user_name}" --machine="${CONTAINER_NAME}" /bin/bash -euc '
 paru -S --noconfirm \
-    'oh-my-posh-bin' \
-    'pipes.sh' \
-    'visual-studio-code-bin' \
-    'walk'
-"
+    oh-my-posh-bin \
+    pipes.sh \
+    visual-studio-code-bin \
+    walk
+'
 ```
 
 ## 言語処理系のインストール
@@ -647,19 +647,19 @@ paru -S --noconfirm \
 - Rust
 
     ```sh
-    systemd-run --quiet --wait --pipe --uid="${user_name}" --machine="${CONTAINER_NAME}" /bin/bash -euc "
-    export CARGO_HOME=\"\${HOME}/.local/share/cargo\"
-    export RUSTUP_HOME=\"\${HOME}/.local/share/rustup\"
+    systemd-run --quiet --wait --pipe --uid="${user_name}" --machine="${CONTAINER_NAME}" /bin/bash -euc '
+    export CARGO_HOME="${HOME}/.local/share/cargo"
+    export RUSTUP_HOME="${HOME}/.local/share/rustup"
     rustup default stable
-    "
+    '
     ```
 
 - JavaScript/TypeScript
 
     ```sh
-    systemd-run --quiet --wait --pipe --uid="${user_name}" --machine="${CONTAINER_NAME}" /bin/bash -euc "
-    mkdir -p \"\${HOME}/.local/share/npm/lib\"
-    "
+    systemd-run --quiet --wait --pipe --uid="${user_name}" --machine="${CONTAINER_NAME}" /bin/bash -euc '
+    mkdir -p "${HOME}/.local/share/npm/lib"
+    '
     ```
 
 ## インストール用コンテナの停止
