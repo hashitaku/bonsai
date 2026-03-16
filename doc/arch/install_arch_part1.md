@@ -217,7 +217,7 @@ declare -a pacstrap_packages=(
     'fzf'
     'erdtree'
     'git-delta'
-    'neofetch'
+    'fastfetch'
     'glow'
     'lazygit'
     'github-cli'
