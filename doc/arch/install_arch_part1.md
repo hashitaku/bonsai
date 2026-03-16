@@ -169,12 +169,6 @@ mount -o subvol=@home "/dev/mapper/${mapping_name}" /mnt/home
 mount -o dmask=077,fmask=077 "$(join_part "${install_block_device_path}" 1)" /mnt/boot
 ```
 
-## fstab生成
-
-```sh
-genfstab /mnt > /mnt/etc/fstab
-```
-
 # パッケージのインストール
 
 ```sh
@@ -360,6 +354,12 @@ pacstrap /mnt "${pacstrap_packages[@]}"
 systemd-run --quiet systemd-nspawn --directory=/mnt --boot --machine="${CONTAINER_NAME}"
 
 sleep 5s
+```
+
+## fstab生成
+
+```sh
+genfstab /mnt > /mnt/etc/fstab
 ```
 
 # arch-chroot
