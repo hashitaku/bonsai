@@ -54,7 +54,7 @@ while true; do
     fi
 done
 
-read -rp 'LUKS Mapping Name(default: cryptlvm): ' mapping_name
+read -rp 'LUKS Mapping Name(default: cryptroot): ' mapping_name
 mapping_name="${mapping_name:-cryptroot}"
 
 read -rp 'EFI System Partition Size(default: 1G): ' esp_size
@@ -70,7 +70,7 @@ luks_password="${luks_password1}"
 
 read -rp 'hostname: ' hostname
 if [[ "${hostname}" == "" ]]; then
-    echo "hostname is empty"
+    echo 'hostname is empty'
     false
 fi
 
@@ -87,7 +87,7 @@ root_password="${root_password1}"
 
 read -rp 'User Name: ' user_name
 if [[ -z "${user_name}" ]]; then
-    echo "User is empty"
+    echo 'User is empty'
     false
 fi
 
@@ -113,6 +113,7 @@ done
 set -e
 
 timedatectl set-ntp true
+systemctl disable --now reflector
 
 echo 'Server = https://geo.mirror.pkgbuild.com/$repo/os/$arch
 Server = https://mirror.rackspace.com/archlinux/$repo/os/$arch
@@ -143,9 +144,10 @@ echo "${luks_password}" | cryptsetup open "$(join_part "${install_block_device_p
 ## パーティションのフォーマット
 
 ```sh
-umount -R "/mnt" || true
+umount -R '/mnt' || true
+udevadm settle
 mkfs.fat -F 32 "$(join_part "${install_block_device_path}" 1)"
-mkfs.btrfs -f "$(join_part "${install_block_device_path}" 2)"
+mkfs.btrfs -f "/dev/mapper/${mapping_name}"
 ```
 
 ## btrfsサブボリュームの作成
@@ -272,10 +274,8 @@ declare -a pacstrap_packages=(
     'ttf-ubuntu-mono-nerd'
     'ttf-inconsolata-nerd'
 
-    # docker
-    'docker'
-    'docker-buildx'
-    'docker-compose'
+    # podman
+    'podman'
 
     # C/C++
     'gdb'
@@ -369,7 +369,7 @@ sleep 5s
 ```sh
 arch-chroot /mnt /bin/bash -euc "
 echo 'change root passwd'
-echo "root:${root_password}" | chpasswd
+echo 'root:${root_password}' | chpasswd
 "
 ```
 
@@ -379,7 +379,7 @@ echo "root:${root_password}" | chpasswd
 arch-chroot /mnt /bin/bash -euc "
 useradd ${user_name} -m -G wheel,video
 echo 'change ${user_name} passwd'
-echo "${user_name}:${user_password}" | chpasswd
+echo '${user_name}:${user_password}' | chpasswd
 
 pwck -s
 grpck -s
@@ -402,6 +402,7 @@ visudo -csf /etc/sudoers.d/wheel
 arch-chroot /mnt /bin/bash -euc "
 sed -i '/Parallel/c ParallelDownloads = 5' /etc/pacman.conf
 sed -i '/Color/c Color' /etc/pacman.conf
+sed -i '/VerbosePkgLists/c VerbosePkgLists' /etc/pacman.conf
 "
 ```
 
@@ -419,7 +420,7 @@ console-mode max' > /boot/loader/loader.conf
 echo 'title Arch Linux
 linux /vmlinuz-linux
 initrd /initramfs-linux.img
-options rd.luks.name=$(blkid -o value -s UUID $(join_part "${install_block_device_path}" 2))=${mapping_name} root=UUID=$(blkid -o value -s UUID /dev/"${volume_group_name}"/"${root_lv_name}") rw' > /boot/loader/entries/arch.conf
+options rd.luks.name=$(blkid -o value -s UUID $(join_part ${install_block_device_path} 2))=${mapping_name} root=UUID=$(blkid -o value -s UUID /dev/mapper/${mapping_name}) rw' > /boot/loader/entries/arch.conf
 "
 ```
 
@@ -428,14 +429,14 @@ options rd.luks.name=$(blkid -o value -s UUID $(join_part "${install_block_devic
 仮想環境ではセキュアブートの設定を行わない
 
 ```sh
-arch-chroot /mnt /bin/bash -euc "
 if ! is_virt; then
-    sbctl create-keys
-    sbctl enroll-keys -m
-    sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI
-    sbctl sign -s /boot/vmlinuz-linux
-fi
+    arch-chroot /mnt /bin/bash -euc "
+sbctl create-keys
+sbctl enroll-keys -m
+sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI
+sbctl sign -s /boot/vmlinuz-linux
 "
+fi
 ```
 
 ## mkinitcpio.confの設定
@@ -449,7 +450,7 @@ https://wiki.archlinux.jp/index.php/Mkinitcpio#%E9%80%9A%E5%B8%B8%E3%81%AE%E3%83
 ```sh
 arch-chroot /mnt /bin/bash -euc "
 touch /etc/vconsole.conf
-sed -i '/^HOOKS/c HOOKS=(systemd autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt lvm2 filesystems fsck)' /etc/mkinitcpio.conf
+sed -i '/^HOOKS/c HOOKS=(systemd autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt filesystems fsck)' /etc/mkinitcpio.conf
 mkinitcpio -p linux
 "
 ```
@@ -467,12 +468,14 @@ echo 'ntfs3' | tee /etc/modules-load.d/ntfs3.conf
 `/bin/login`を使用してログインする際の`gnome-keyring`解除設定
 
 ```sh
+arch-chroot /mnt /bin/bash -euc "
 tac /etc/pam.d/login | \
 sed '0,/auth/ s/auth/auth       optional     pam_gnome_keyring.so\n&/' | \
 sed '0,/session/ s/session/session    optional     pam_gnome_keyring.so    auto_start\n&/' | \
 tac | \
 uniq | \
-sudo tee /etc/pam.d/login
+tee /etc/pam.d/login
+"
 ```
 
 ## ネットワークの設定
@@ -511,6 +514,7 @@ fi
 arch-chroot /mnt /bin/bash -euc '
 systemctl enable systemd-networkd.service
 systemctl enable systemd-resolved.service
+systemctl enalbe tailscaled.service
 '
 ```
 
@@ -545,12 +549,12 @@ arch-chroot /mnt /bin/bash -euc "
 echo \
 '# add table inet filter
 # create chain inet filter input { type filter hook input priority 0; policy drop; }
-# add rule inet filter input meta iifname "lo" accept
+# add rule inet filter input meta iifname \"lo\" accept
 # add rule inet filter input ct state { established, related } accept
 # add rule inet filter input icmp type { echo-reply, echo-request } accept
 # add rule inet filter input icmpv6 type { echo-request, echo-reply, mld-listener-query, nd-router-solicit, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert  } accept
 # add rule inet filetr input udp dport { mdns, llmnr } accept
-# add rule inet filter input log prefix "[nft] "
+# add rule inet filter input log prefix \"[nft] \"
 
 flush ruleset
 
@@ -558,7 +562,7 @@ table inet filter {
     chain input {
         type filter hook input priority filter; policy drop;
 
-        meta iif "lo" accept
+        meta iif \"lo\" accept
         ct state { established, related } accept
 
         icmp type { echo-reply, echo-request } accept
@@ -566,7 +570,7 @@ table inet filter {
 
         udp dport { mdns, llmnr } accept
 
-        log prefix "[nft] "
+        log prefix \"[nft] \"
     }
 }' | tee /etc/nftables.conf
 
@@ -584,9 +588,9 @@ timedatectl set-ntp true
 sed -i '/ja_JP.UTF-8/c ja_JP.UTF-8 UTF-8' /etc/locale.gen
 locale-gen
 localectl set-locale LANG=ja_JP.UTF-8
-localectl set-keymap "${keymap}"
+localectl set-keymap ${keymap}
 
-hostnamectl hostname "${hostname}"
+hostnamectl hostname ${hostname}
 "
 ```
 
@@ -620,11 +624,11 @@ EndSection" | tee /etc/X11/xorg.conf.d/20-touchpad.conf
 
 ```sh
 systemd-run --quiet --wait --pipe --uid="${user_name}" --machine="${CONTAINER_NAME}" /bin/bash -euc '
-cd
+cd ~
 git clone https://aur.archlinux.org/paru-bin.git
 cd paru-bin
 makepkg -si --noconfirm
-cd
+cd ~
 rm -rf paru-bin
 paru -Syyu
 '
@@ -668,24 +672,24 @@ paru -S --noconfirm \
 machinectl stop "${CONTAINER_NAME}"
 ```
 
-## ブートエントリを変更
+# ブートエントリを変更
 
 ```sh
 efibootmgr -v
 
-read -rp 'delete boot entry num: ' -a arr
+read -rp 'delete boot entry num(ex: 1 2 4): ' -a arr
 for i in "${arr[@]}"; do
     efibootmgr -B -b "${i}"
 done
 
 efibootmgr -c -d "${install_block_device_path}" -p '1' -l '\EFI\BOOT\BOOTX64.EFI' -L 'Systemd Boot'
 
-read -rp 'boot order num: ' -a arr
+read -rp 'boot order num(ex: 4 2 1): ' -a arr
 printf -v arr '%s,' "${arr[@]}"
 efibootmgr -o "${arr%,}"
 ```
 
-## 再起動するかどうかの確認
+# 再起動するかどうかの確認
 
 ```sh
 read -rp 'reboot [Y/n]: ' ans
@@ -697,9 +701,10 @@ case $ans in
         ;;
 esac
 ```
-## メモ
 
-### firefox
+# メモ
+
+## firefox
 
 firefoxのハードウェアアクセラレーション対応状況を`about:support`で確認
 
