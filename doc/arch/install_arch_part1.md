@@ -26,11 +26,19 @@ function is_virt() {
 }
 
 function has_wlan() {
-    ip link show dev wlan0 > /dev/null
+    if ip link show dev wlan0 &> /dev/null; then
+        return 0
+    fi
+
+    return 1
 }
 
 function has_bt() {
-    test -e /sys/class/bluetooth/*
+    if [[ -e /sys/class/bluetooth/* ]]; then
+        return 0
+    fi
+
+    return 1
 }
 
 export -f is_virt
