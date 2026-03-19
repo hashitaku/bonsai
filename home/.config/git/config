@@ -9,7 +9,7 @@
 [color]
     ui = auto
 [interactive]
-    diffFilter = delta --color-only
+    diffFilter = delta
 [diff]
     colorMoved = default
 [merge]
@@ -30,6 +30,7 @@
 [init]
     defaultBranch = main
 [delta]
+    color-only = true
     navigate = true
     line-numbers = true
     syntax-theme = tokyonight_storm

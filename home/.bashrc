@@ -4,7 +4,9 @@ case $- in
 esac
 
 export LESSHISTFILE=-
-export MANPAGER='less -M +Gg'
+export LESS='-iRMS'
+
+export MANPAGER='less'
 export HISTCONTROL='ignoreboth'
 
 shopt -s histappend
