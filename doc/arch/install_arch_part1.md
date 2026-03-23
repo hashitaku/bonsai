@@ -432,21 +432,6 @@ options rd.luks.name=$(blkid -o value -s UUID $(join_part ${install_block_device
 "
 ```
 
-## セキュアブート
-
-仮想環境ではセキュアブートの設定を行わない
-
-```sh
-if ! is_virt; then
-    arch-chroot /mnt /bin/bash -euc "
-sbctl create-keys
-sbctl enroll-keys -m
-sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI
-sbctl sign -s /boot/vmlinuz-linux
-"
-fi
-```
-
 ## mkinitcpio.confの設定
 
 initramfsで実行するフックの設定
@@ -461,6 +446,21 @@ touch /etc/vconsole.conf
 sed -i '/^HOOKS/c HOOKS=(systemd autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt filesystems fsck)' /etc/mkinitcpio.conf
 mkinitcpio -p linux
 "
+```
+
+## セキュアブート
+
+仮想環境ではセキュアブートの設定を行わない
+
+```sh
+if ! is_virt; then
+    arch-chroot /mnt /bin/bash -euc "
+sbctl create-keys
+sbctl enroll-keys -m
+sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI
+sbctl sign -s /boot/vmlinuz-linux
+"
+fi
 ```
 
 ## カーネルモジュールの自動ロード
@@ -717,4 +717,3 @@ esac
 firefoxのハードウェアアクセラレーション対応状況を`about:support`で確認
 
 ハードウェアアクセラレーションが有効になっていない場合は`about:config`で`media.ffmpeg.vaapi.enabled`をtrueにする
-
