@@ -420,15 +420,31 @@ sed -i '/VerbosePkgLists/c VerbosePkgLists' /etc/pacman.conf
 arch-chroot /mnt /bin/bash -euc "
 bootctl --path=/boot install
 
-echo 'default arch
+echo 'default arch-linux.efi
 timeout 10
 secure-boot-enroll manual
 console-mode max' > /boot/loader/loader.conf
 
-echo 'title Arch Linux
-linux /vmlinuz-linux
-initrd /initramfs-linux.img
-options rd.luks.name=$(blkid -o value -s UUID $(join_part ${install_block_device_path} 2))=${mapping_name} root=UUID=$(blkid -o value -s UUID /dev/mapper/${mapping_name}) rw' > /boot/loader/entries/arch.conf
+mkdir -p /boot/EFI/Linux
+echo 'rd.luks.name=$(blkid -o value -s UUID $(join_part ${install_block_device_path} 2))=${mapping_name} root=UUID=$(blkid -o value -s UUID /dev/mapper/${mapping_name}) rw' > /etc/kernel/cmdline
+"
+```
+
+## mkinitcpio.confの設定
+
+UKIの生成とinitramfsフックの設定
+
+項目と順序が大切であるため以下を参照
+
+https://wiki.archlinux.jp/index.php/Mkinitcpio#%E9%80%9A%E5%B8%B8%E3%81%AE%E3%83%95%E3%83%83%E3%82%AF
+
+```sh
+arch-chroot /mnt /bin/bash -euc "
+touch /etc/vconsole.conf
+sed -i '/^HOOKS/c HOOKS=(systemd autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt filesystems fsck)' /etc/mkinitcpio.conf
+sed -i -e '/^default_image/d' -e '/^fallback_image/d' -e '/^fallback_options=/d' /etc/mkinitcpio.d/linux.preset
+sed -i -e 's/^#default_uki/default_uki/' -e 's/^#default_options/default_options/' -e 's/^#fallback_uki/fallback_uki/' -e 's/^#fallback_options/fallback_options/' /etc/mkinitcpio.d/linux.preset
+mkinitcpio -p linux
 "
 ```
 
@@ -442,25 +458,10 @@ if ! is_virt; then
 sbctl create-keys
 sbctl enroll-keys -m
 sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI
-sbctl sign -s /boot/vmlinuz-linux
+sbctl sign -s /boot/EFI/Linux/arch-linux.efi
+sbctl sign -s /boot/EFI/Linux/arch-linux-fallback.efi
 "
 fi
-```
-
-## mkinitcpio.confの設定
-
-initramfsで実行するフックの設定
-
-項目と順序が大切であるため以下用参照
-
-https://wiki.archlinux.jp/index.php/Mkinitcpio#%E9%80%9A%E5%B8%B8%E3%81%AE%E3%83%95%E3%83%83%E3%82%AF
-
-```sh
-arch-chroot /mnt /bin/bash -euc "
-touch /etc/vconsole.conf
-sed -i '/^HOOKS/c HOOKS=(systemd autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt filesystems fsck)' /etc/mkinitcpio.conf
-mkinitcpio -p linux
-"
 ```
 
 ## カーネルモジュールの自動ロード
