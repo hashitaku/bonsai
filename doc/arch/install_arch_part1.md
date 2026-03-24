@@ -487,7 +487,9 @@ sed '0,/auth/ s/auth/auth       optional     pam_gnome_keyring.so\n&/' | \
 sed '0,/session/ s/session/session    optional     pam_gnome_keyring.so    auto_start\n&/' | \
 tac | \
 uniq | \
-tee /etc/pam.d/login
+tee login.tmp
+
+mv login.tmp /etc/pam.d/login
 "
 ```
 
