@@ -522,7 +522,7 @@ fi
 arch-chroot /mnt /bin/bash -euc '
 systemctl enable systemd-networkd.service
 systemctl enable systemd-resolved.service
-systemctl enalbe tailscaled.service
+systemctl enable tailscaled.service
 '
 ```
 
