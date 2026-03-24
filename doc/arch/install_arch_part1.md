@@ -359,9 +359,14 @@ pacstrap /mnt "${pacstrap_packages[@]}"
 ## インストール用コンテナの立ち上げ
 
 ```sh
-systemd-run --quiet systemd-nspawn --directory=/mnt --boot --machine="${CONTAINER_NAME}"
+systemd-run --quiet systemd-nspawn --directory=/mnt --resolv-conf=bind-stub --boot --machine="${CONTAINER_NAME}"
 
 sleep 5s
+
+systemd-run --quiet --wait --pipe --uid=root --machine="${CONTAINER_NAME}" /bin/bash -euc "
+echo '${user_name} ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/${user_name}
+chmod 440 /etc/sudoers.d/${user_name}
+"
 ```
 
 ## fstab生成
@@ -677,6 +682,9 @@ paru -S --noconfirm \
 ## インストール用コンテナの停止
 
 ```sh
+systemd-run --quiet --wait --pipe --uid=root --machine="${CONTAINER_NAME}" /bin/bash -euc "
+rm /etc/sudoers.d/${user_name}
+"
 machinectl stop "${CONTAINER_NAME}"
 ```
 
