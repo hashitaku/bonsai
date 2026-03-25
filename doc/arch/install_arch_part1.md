@@ -376,6 +376,7 @@ sleep 5s
 systemd-run --quiet --wait --pipe --uid=root --machine="${CONTAINER_NAME}" /bin/bash -euc "
 echo '${user_name} ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/99-${user_name}
 chmod 440 /etc/sudoers.d/99-${user_name}
+visudo -csf /etc/sudoers.d/99-${user_name}
 "
 ```
 
@@ -415,7 +416,7 @@ grpck -s
 arch-chroot /mnt /bin/bash -euc "
 echo '%wheel ALL=(ALL:ALL) ALL' > /etc/sudoers.d/00-wheel
 chmod 440 /etc/sudoers.d/00-wheel
-visudo -csf /etc/sudoers.d/wheel
+visudo -csf /etc/sudoers.d/00-wheel
 "
 ```
 
