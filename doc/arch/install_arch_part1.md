@@ -358,6 +358,10 @@ pacstrap /mnt "${pacstrap_packages[@]}"
 
 ## インストール用コンテナの立ち上げ
 
+`/etc/resolv.conf`はセットアップ完了後はシンボリックリンクであってほしいが、セットアップ中のコンテナ内では`systemd-nspawn`の`bind-stub`で設定されている必要がある
+
+そのため、コンテナ実行前にシンボリックリンクを張り、コンテナはホストのスタブを使用する
+
 `arch-chroot`では`/etc/resolv.conf`の設定がされてしまうため`chroot`を使用してシンボリックリンクを張る
 
 ```sh
@@ -370,8 +374,8 @@ systemd-run --quiet systemd-nspawn --directory=/mnt --resolv-conf=bind-stub --bo
 sleep 5s
 
 systemd-run --quiet --wait --pipe --uid=root --machine="${CONTAINER_NAME}" /bin/bash -euc "
-echo '${user_name} ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/${user_name}
-chmod 440 /etc/sudoers.d/${user_name}
+echo '${user_name} ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/99-${user_name}
+chmod 440 /etc/sudoers.d/99-${user_name}
 "
 ```
 
@@ -409,8 +413,8 @@ grpck -s
 
 ```sh
 arch-chroot /mnt /bin/bash -euc "
-echo '%wheel ALL=(ALL:ALL) ALL' > /etc/sudoers.d/wheel
-chmod 440 /etc/sudoers.d/wheel
+echo '%wheel ALL=(ALL:ALL) ALL' > /etc/sudoers.d/00-wheel
+chmod 440 /etc/sudoers.d/00-wheel
 visudo -csf /etc/sudoers.d/wheel
 "
 ```
@@ -633,35 +637,11 @@ EndSection" | tee /etc/X11/xorg.conf.d/20-touchpad.conf
 '
 ```
 
-## AURヘルパーのインストール
-
-```sh
-systemd-run --quiet --wait --pipe --uid="${user_name}" --machine="${CONTAINER_NAME}" /bin/bash -euc '
-cd ~
-git clone https://aur.archlinux.org/paru-bin.git
-cd paru-bin
-makepkg -si --noconfirm
-cd ~
-rm -rf paru-bin
-paru -Syyu
-'
-```
-
-## AURパッケージのインストール
-
-```sh
-systemd-run --quiet --wait --pipe --uid="${user_name}" --machine="${CONTAINER_NAME}" /bin/bash -euc '
-paru -S --noconfirm \
-    oh-my-posh-bin \
-    pipes.sh \
-    visual-studio-code-bin \
-    walk
-'
-```
-
 ## 言語処理系のインストール
 
 - Rust
+
+    `paru`のインストールのために先にツールチェーンがインストールされている必要がある
 
     ```sh
     systemd-run --quiet --wait --pipe --uid="${user_name}" --machine="${CONTAINER_NAME}" /bin/bash -euc '
@@ -679,11 +659,37 @@ paru -S --noconfirm \
     '
     ```
 
+## AURヘルパーのインストール
+
+```sh
+systemd-run --quiet --wait --pipe --uid="${user_name}" --machine="${CONTAINER_NAME}" /bin/bash -euc '
+cd ~
+git clone https://aur.archlinux.org/paru.git
+cd paru
+makepkg -si --noconfirm
+cd ~
+rm -rf paru
+paru -Syyu
+'
+```
+
+## AURパッケージのインストール
+
+```sh
+systemd-run --quiet --wait --pipe --uid="${user_name}" --machine="${CONTAINER_NAME}" /bin/bash -euc '
+paru -S --noconfirm \
+    oh-my-posh-bin \
+    pipes.sh \
+    visual-studio-code-bin \
+    walk
+'
+```
+
 ## インストール用コンテナの停止
 
 ```sh
 systemd-run --quiet --wait --pipe --uid=root --machine="${CONTAINER_NAME}" /bin/bash -euc "
-rm /etc/sudoers.d/${user_name}
+rm /etc/sudoers.d/99-${user_name}
 "
 machinectl stop "${CONTAINER_NAME}"
 ```
