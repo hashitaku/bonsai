@@ -444,7 +444,7 @@ console-mode max' > /boot/loader/loader.conf
 echo 'title Arch Linux
 linux /vmlinuz-linux
 initrd /initramfs-linux.img
-options rd.luks.name=$(blkid -o value -s UUID $(join_part ${install_block_device_path} 2))=${mapping_name} root=UUID=$(blkid -o value -s UUID /dev/mapper/${mapping_name}) rw' > /boot/loader/entries/arch.conf
+options rd.luks.name=$(blkid -o value -s UUID $(join_part ${install_block_device_path} 2))=${mapping_name} root=UUID=$(blkid -o value -s UUID /dev/mapper/${mapping_name}) rootflags=subvol=@ rw' > /boot/loader/entries/arch.conf
 "
 ```
 
