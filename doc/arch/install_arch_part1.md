@@ -664,6 +664,8 @@ EndSection" | tee /etc/X11/xorg.conf.d/20-touchpad.conf
 
 ```sh
 systemd-run --quiet --wait --pipe --uid="${user_name}" --machine="${CONTAINER_NAME}" /bin/bash -euc '
+export CARGO_HOME="${HOME}/.local/share/cargo"
+export RUSTUP_HOME="${HOME}/.local/share/rustup"
 cd ~
 git clone https://aur.archlinux.org/paru.git
 cd paru
