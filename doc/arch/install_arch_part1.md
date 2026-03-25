@@ -358,7 +358,13 @@ pacstrap /mnt "${pacstrap_packages[@]}"
 
 ## インストール用コンテナの立ち上げ
 
+`arch-chroot`では`/etc/resolv.conf`の設定がされてしまうため`chroot`を使用してシンボリックリンクを張る
+
 ```sh
+chroot /mnt /bin/bash -euc '
+ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+'
+
 systemd-run --quiet systemd-nspawn --directory=/mnt --resolv-conf=bind-stub --boot --machine="${CONTAINER_NAME}"
 
 sleep 5s
@@ -547,14 +553,6 @@ fi
 if has_bt; then
     arch-chroot /mnt /bin/bash -euc 'systemctl enable bluetooth.service'
 fi
-```
-
-`arch-chroot`では`/etc/resolv.conf`の設定がされてしまうため`chroot`を使用してシンボリックリンクを張る
-
-```sh
-chroot /mnt /bin/bash -euc '
-ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
-'
 ```
 
 ## ファイアウォールの有効化
