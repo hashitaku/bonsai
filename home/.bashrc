@@ -59,6 +59,7 @@ type fnm >/dev/null 2>&1 && eval "$(fnm env)"
 type fzf >/dev/null 2>&1 && eval "$(fzf --bash)" && bind -r '\ec'
 
 # 補完
+type wezterm >/dev/null 2>&1 && eval "$(wezterm shell-completion --shell power-shell)"
 type deno >/dev/null 2>&1 && eval "$(deno completions bash)"
 type erd >/dev/null 2>&1 && eval "$(erd --completions bash)"
 type fnm >/dev/null 2>&1 && eval "$(fnm completions --shell bash)"

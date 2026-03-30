@@ -59,6 +59,10 @@ if (Get-Command -ErrorAction SilentlyContinue fzf) {
     }
 }
 
+if (Get-Command -ErrorAction SilentlyContinue wezterm) {
+    wezterm shell-completion --shell power-shell | Out-String | Invoke-Expression
+}
+
 if (Get-Command -ErrorAction SilentlyContinue fnm) {
     fnm env --use-on-cd --shell power-shell | Out-String | Invoke-Expression
     fnm completions --shell power-shell | Out-String | Invoke-Expression
