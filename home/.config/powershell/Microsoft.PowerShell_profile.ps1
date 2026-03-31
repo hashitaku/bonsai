@@ -97,7 +97,7 @@ if (Get-Command -ErrorAction SilentlyContinue oh-my-posh) {
     }
 }
 
-if (Get-Command -ErrorAction SilentlyContinue coreutils) {
+if ((scoop list uutils-coreutil 6> $null).Count -eq 1) {
     Remove-Alias -Name @(
         'cat'
         'cp'
