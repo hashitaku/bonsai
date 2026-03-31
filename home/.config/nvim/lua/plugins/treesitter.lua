@@ -4,7 +4,7 @@ return {
         cond = not vim.g.vscode,
         branch = "main",
         config = function()
-            local parser = {
+            require("nvim-treesitter").install({
                 "bash",
                 "c",
                 "c_sharp",
@@ -30,23 +30,26 @@ return {
                 "vim",
                 "vimdoc",
                 "yaml",
-            }
-
-            require("nvim-treesitter").install(parser)
+            })
 
             local user_treesitter_augid = vim.api.nvim_create_augroup("user_treesitter", { clear = false })
             vim.api.nvim_create_autocmd({ "FileType" }, {
                 group = user_treesitter_augid,
                 callback = function(ev)
-                    if vim.list_contains(parser, ev.match) then
-                        local success, result = pcall(vim.treesitter.start)
+                    local language = vim.treesitter.language.get_lang(ev.match)
+                    local parser = vim.treesitter.get_parser(ev.buf, language, {})
 
-                        vim.api.nvim_set_option_value("foldlevelstart", 1, {})
-                        vim.api.nvim_set_option_value("foldmethod", "expr", {})
-                        vim.api.nvim_set_option_value("foldexpr", "v:lua.vim.treesitter.foldexpr()", {})
-                        vim.api.nvim_set_option_value("foldtext", "", {})
+                    if not parser then
+                        return
                     end
 
+                    vim.treesitter.start(ev.buf, language)
+
+                    vim.api.nvim_set_option_value("foldlevelstart", 1, {})
+                    vim.api.nvim_set_option_value("foldmethod", "expr", { scope = "local" })
+                    vim.api.nvim_set_option_value("foldexpr", "v:lua.vim.treesitter.foldexpr()", { scope = "local" })
+                    vim.api.nvim_set_option_value("foldtext", "", { scope = "local" })
+                    vim.api.nvim_set_option_value("indentexpr", "v:lua.require('nvim-treesitter').indentexpr()", { scope = "local" })
                 end,
             })
         end,
