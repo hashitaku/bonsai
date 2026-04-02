@@ -18,6 +18,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
                 end, { buffer = bufnr, desc = "vim.lsp.buf.hover()" })
             end
 
+            if client:supports_method("textDocument/inlayHint", bufnr) then
+                vim.keymap.set("n", "<Leader>v", function()
+                    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
+                end, { buffer = bufnr, desc = "Toggle Inlay Hint" })
+            end
+
             local result, lsp_signature = pcall(require, "lsp_signature")
             if result and client:supports_method("textDocument/signatureHelp", bufnr) then
                 lsp_signature.on_attach({}, bufnr)
@@ -40,14 +46,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
                     end,
                 })
             end
-
-            vim.keymap.set("n", "<Leader>v", function()
-                if client:supports_method("textDocument/inlayHint", bufnr) then
-                    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
-                else
-                    vim.notify("Inlay hints not supported by the LSP server", vim.log.levels.WARN)
-                end
-            end, { buffer = bufnr, desc = "Toggle Inlay Hint" })
 
             if
                 client:supports_method("textDocument/formatting", bufnr)
