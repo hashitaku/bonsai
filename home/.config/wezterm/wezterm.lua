@@ -1,4 +1,5 @@
 local wezterm = require("wezterm")
+local act = wezterm.action
 
 local target = wezterm.target_triple
 
@@ -53,13 +54,101 @@ config.window_frame = {
     inactive_titlebar_bg = "none",
 }
 
+config.disable_default_key_bindings = true
 config.keys = {
+    -- Tab
+    {
+        key = "Tab",
+        mods = "CTRL",
+        action = act.ActivateTabRelative(1),
+    },
+    {
+        key = "Tab",
+        mods = "CTRL|SHIFT",
+        action = act.ActivateTabRelative(-1),
+    },
+    {
+        key = "T",
+        mods = "CTRL|SHIFT",
+        action = act.SpawnTab("CurrentPaneDomain"),
+    },
+
+    -- Pane
+    {
+        key = "H",
+        mods = "CTRL|SHIFT",
+        action = act.SplitPane({
+            direction = "Left",
+        }),
+    },
+    {
+        key = "J",
+        mods = "CTRL|SHIFT",
+        action = act.SplitPane({
+            direction = "Down",
+        }),
+    },
     {
         key = "K",
-        mods = "SHIFT|CTRL",
-        action = wezterm.action.DisableDefaultAssignment,
+        mods = "CTRL|SHIFT",
+        action = act.SplitPane({
+            direction = "Up",
+        }),
+    },
+    {
+        key = "L",
+        mods = "CTRL|SHIFT",
+        action = act.SplitPane({
+            direction = "Right",
+        }),
+    },
+    {
+        key = "M",
+        mods = "CTRL|SHIFT",
+        action = act.PaneSelect({ mode = "SwapWithActive" }),
+    },
+
+    -- clipboard
+    {
+        key = "C",
+        mods = "CTRL|SHIFT",
+        action = act.CopyTo("Clipboard"),
+    },
+    {
+        key = "V",
+        mods = "CTRL|SHIFT",
+        action = act.PasteFrom("Clipboard"),
+    },
+
+    -- fonts
+    {
+        key = "mapped:+",
+        mods = "CTRL|SHIFT",
+        action = act.IncreaseFontSize,
+    },
+    {
+        -- shift押した際の"-"
+        key = "mapped:_",
+        mods = "CTRL|SHIFT",
+        action = act.DecreaseFontSize,
+    },
+    {
+        -- shift押した際の"0"
+        key = "mapped:0",
+        mods = "CTRL|SHIFT",
+        action = act.ResetFontSize,
+    },
+
+    -- debug
+    {
+        -- shift押した際の"0"
+        key = "L",
+        mods = "CTRL|SHIFT",
+        action = act.ShowDebugOverlay,
     },
 }
+config.debug_key_events = false
+
 config.enable_kitty_keyboard = true
 
 config.default_cursor_style = "SteadyBar"
