@@ -37,7 +37,10 @@ return {
                 group = user_treesitter_augid,
                 callback = function(ev)
                     local language = vim.treesitter.language.get_lang(ev.match)
-                    local parser = vim.treesitter.get_parser(ev.buf, language, {})
+
+                    -- neovim 0.12未満であればget_parserをerror = falseで呼び出す
+                    local get_parser_opts = vim.version().major == 0 and vim.version().minor < 12 and { error = false } or {}
+                    local parser = vim.treesitter.get_parser(ev.buf, language, get_parser_opts)
 
                     if not parser then
                         return
