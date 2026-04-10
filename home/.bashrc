@@ -70,6 +70,7 @@ type uv >/dev/null 2>&1 && eval "$(uv generate-shell-completion bash)"
 type uvx >/dev/null 2>&1 && eval "$(uvx --generate-shell-completion bash)"
 type tree-sitter >/dev/null 2>&1 && eval "$(tree-sitter complete --shell bash)"
 type warp-cli >/dev/null 2>&1 && eval "$(warp-cli generate-completions bash)"
+type wrangler >/dev/null 2>&1 && eval "$(wrangler complete bash)"
 
 # プロンプト設定
 if type oh-my-posh >/dev/null 2>&1 &&
