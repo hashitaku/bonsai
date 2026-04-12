@@ -34,11 +34,7 @@ function has_wlan() {
 }
 
 function has_bt() {
-    if [[ -e /sys/class/bluetooth/* ]]; then
-        return 0
-    fi
-
-    return 1
+    compgen -G '/sys/class/bluetooth/*' 2> /dev/null
 }
 
 export -f is_virt
@@ -474,6 +470,7 @@ mkinitcpio -p linux
 ```sh
 if ! is_virt; then
     arch-chroot /mnt /bin/bash -euc "
+chattr -i /sys/firmware/efi/efivars/{KEK,db}-*
 sbctl create-keys
 sbctl enroll-keys -m
 sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI
@@ -618,27 +615,27 @@ hostnamectl hostname ${hostname}
 ## マウス、タッチパッド設定
 
 ```sh
-systemd-run --quiet --wait --pipe --uid=root --machine="${CONTAINER_NAME}" /bin/bash -euc '
+systemd-run --quiet --wait --pipe --uid=root --machine="${CONTAINER_NAME}" /bin/bash -euc "
 echo \
-"Section "InputClass"
-    Identifier "libinput mouse"
-    Driver "libinput"
-    MatchIsPointer "true"
-    MatchDevicePath "/dev/input/event*"
-    Option "AccelProfile" "flat"
-EndSection" | tee /etc/X11/xorg.conf.d/20-mouse.conf
+'Section \"InputClass\"
+    Identifier \"libinput mouse\"
+    Driver \"libinput\"
+    MatchIsPointer \"true\"
+    MatchDevicePath \"/dev/input/event*\"
+    Option \"AccelProfile\" \"flat\"
+EndSection' | tee /etc/X11/xorg.conf.d/20-mouse.conf
 
 echo \
-"Section "InputClass"
-    Identifier "libinput touchpad"
-    Driver "libinput"
-    MatchIsTouchpad "true"
-    MatchDevicePath "/dev/input/event*"
-    Option "Tapping" "true"
-    Option "NaturalScrolling" "true"
-    Option "DisableWhileTyping" "false"
-EndSection" | tee /etc/X11/xorg.conf.d/20-touchpad.conf
-'
+'Section \"InputClass\"
+    Identifier \"libinput touchpad\"
+    Driver \"libinput\"
+    MatchIsTouchpad \"true\"
+    MatchDevicePath \"/dev/input/event*\"
+    Option \"Tapping\" \"on\"
+    Option \"NaturalScrolling\" \"true\"
+    Option \"DisableWhileTyping\" \"false\"
+EndSection' | tee /etc/X11/xorg.conf.d/20-touchpad.conf
+"
 ```
 
 ## 言語処理系のインストール
