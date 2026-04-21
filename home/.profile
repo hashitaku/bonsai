@@ -58,20 +58,10 @@ export INPUTRC GNUPGHOME XAUTHORITY
 
 # WSL用設定
 if [ "$(systemd-detect-virt)" = 'wsl' ]; then
-    # Waylandの設定をしてしまうとfirefoxに不具合があるためX11を使用する
-    # WSLg環境下においてfirefoxをwaylandにて起動するとポップアップが表示されない
-    if [ ! -L /tmp/.X11-unix/X0 ] && [ ! -S /tmp/.X11-unix/X0 ]; then
-        ln -sf /mnt/wslg/.X11-unix/X0 /tmp/.X11-unix/X0
+    if [ ! -L /run/user/$(id -u)/wayland-0 ]; then
+        ln -sf /mnt/wslg/runtime-dir/wayland-0 /run/user/$(id -u)/wayland-0
+        ln -sf /mnt/wslg/runtime-dir/wayland-0.lock /run/user/$(id -u)/wayland-0.lock
     fi
-
-    # if [ ! -L /run/user/$(id -u)/wayland-0 ]; then
-    #     ln -sf /mnt/wslg/runtime-dir/wayland-0 /run/user/$(id -u)/wayland-0
-    #     ln -sf /mnt/wslg/runtime-dir/wayland-0.lock /run/user/$(id -u)/wayland-0.lock
-    # fi
-    [ -L /run/user/$(id -u)/wayland-0 ] && rm /run/user/$(id -u)/wayland-0
-    [ -L /run/user/$(id -u)/wayland-0.lock ] && rm /run/user/$(id -u)/wayland-0.lock
-    WAYLAND_DISPLAY=''
-    export WAYLAND_DISPLAY
 
     LANG=ja_JP.UTF-8
     LC_ALL=ja_JP.UTF-8
