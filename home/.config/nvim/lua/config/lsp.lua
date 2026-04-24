@@ -24,6 +24,14 @@ vim.api.nvim_create_autocmd("LspAttach", {
                 end, { buffer = bufnr, desc = "Toggle Inlay Hint" })
             end
 
+            if client:supports_method("textDocument/inlineCompletion", bufnr) then
+                vim.lsp.inline_completion.enable(true, {})
+
+                vim.keymap.set("i", "<M-l>", function()
+                    vim.lsp.inline_completion.get({ bufnr = bufnr })
+                end, { buffer = bufnr, desc = "Select Inline Completion" })
+            end
+
             local result, lsp_signature = pcall(require, "lsp_signature")
             if result and client:supports_method("textDocument/signatureHelp", bufnr) then
                 lsp_signature.on_attach({}, bufnr)
@@ -79,6 +87,7 @@ end
 vim.lsp.enable({
     "angularls",
     "clangd",
+    "copilot",
     "cssls",
     "denols",
     "gopls",

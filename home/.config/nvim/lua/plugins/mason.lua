@@ -27,6 +27,7 @@ return {
             automatic_enable = false,
             ensure_installed = {
                 "angularls",
+                "copilot",
                 "cssls",
                 "html",
                 "omnisharp",
