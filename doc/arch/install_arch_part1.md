@@ -276,7 +276,7 @@ declare -a pacstrap_packages=(
     'podman'
 
     # LLM
-    'codex'
+    'opencode'
 
     # C/C++
     'gdb'
