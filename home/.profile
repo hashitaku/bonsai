@@ -35,12 +35,6 @@ export PATH
 AZURE_CONFIG_DIR="${XDG_DATA_HOME}/azure"
 export AZURE_CONFIG_DIR
 
-# copilot-cli
-COPILOT_HOME="${XDG_CONFIG_HOME}/copilot"
-
-# codex
-CODEX_HOME="${XDG_CONFIG_HOME}/codex"
-
 # 野良ビルド用変数
 [ -d "${HOME}/.local/bin" ] && PATH="${PATH}:${HOME}/.local/bin"
 [ -d "${HOME}/.local/include" ] && CPATH="${CPATH}:${HOME}/.local/include"
