@@ -208,6 +208,7 @@ declare -a pacstrap_packages=(
     # CLI Application
     'bash-completion'
     'neovim'
+    'tree-sitter-cli'
     'zip'
     'unzip'
     'tree'
