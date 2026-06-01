@@ -27,6 +27,8 @@ config.default_prog = shell
 config.initial_cols = 130
 config.initial_rows = 30
 
+config.audible_bell = "Disabled"
+
 config.show_new_tab_button_in_tab_bar = false
 -- nightly build
 -- config.show_close_tab_button_in_tabs = false
@@ -74,6 +76,13 @@ config.keys = {
     },
 
     -- Pane
+    {
+        key = "w",
+        mods = "CTRL",
+        action = act.CloseCurrentPane({
+            confirm = true,
+        }),
+    },
     {
         key = "H",
         mods = "CTRL|SHIFT",
@@ -139,12 +148,11 @@ config.keys = {
         action = act.ResetFontSize,
     },
 
-    -- debug
+    -- cmd
     {
-        -- shift押した際の"0"
-        key = "L",
+        key = "P",
         mods = "CTRL|SHIFT",
-        action = act.ShowDebugOverlay,
+        action = act.ActivateCommandPalette,
     },
 }
 config.debug_key_events = false

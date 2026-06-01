@@ -33,6 +33,8 @@ return {
                 "omnisharp",
                 "powershell_es",
                 "ts_ls",
+                "pyright",
+                "ruff",
             },
         },
     },
