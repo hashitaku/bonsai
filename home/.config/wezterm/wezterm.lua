@@ -77,8 +77,8 @@ config.keys = {
 
     -- Pane
     {
-        key = "w",
-        mods = "CTRL",
+        key = "W",
+        mods = "CTRL|SHIFT",
         action = act.CloseCurrentPane({
             confirm = true,
         }),
