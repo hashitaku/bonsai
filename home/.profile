@@ -57,6 +57,9 @@ if [ "$(systemd-detect-virt)" = 'wsl' ]; then
         ln -sf /mnt/wslg/runtime-dir/wayland-0.lock /run/user/$(id -u)/wayland-0.lock
     fi
 
+    # WSLgでWaylandがあまりうまく動作しないためXを使用
+    unset WAYLAND_DISPLAY
+
     LANG=ja_JP.UTF-8
     LC_ALL=ja_JP.UTF-8
     export LANG LC_ALL

@@ -74,7 +74,7 @@ type wrangler >/dev/null 2>&1 && eval "$(wrangler complete bash)"
 
 # プロンプト設定
 if type oh-my-posh >/dev/null 2>&1 &&
-    [[ "${TERM}" == 'xterm-256color' ]]; then
+    [[ "${TERM}" == 'xterm-256color' || "${TERM}" == 'xterm-kitty' ]]; then
     eval "$(oh-my-posh init bash --config ${XDG_CONFIG_HOME}/oh-my-posh/config.toml)"
 else
     test -f /usr/share/git/git-prompt.sh && source /usr/share/git/git-prompt.sh
