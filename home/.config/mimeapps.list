@@ -1,0 +1,10 @@
+[Default Applications]
+x-scheme-handler/mailto=org.mozilla.Thunderbird.desktop
+message/rfc822=org.mozilla.Thunderbird.desktop
+x-scheme-handler/file=org.gnome.Nautilus.desktop
+image/png=imv.desktop
+image/jpeg=imv.desktop
+
+[Added Associations]
+image/png=imv.desktop;
+image/jpeg=imv.desktop;

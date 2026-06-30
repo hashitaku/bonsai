@@ -42,17 +42,6 @@ alias eman='LC_ALL=C man'
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-alias pbcopy='xclip -selection c'
-alias pbpaste='xclip -selection c -o'
-
-# 関数・コマンド
-if type walk >/dev/null 2>&1; then
-    function lk() {
-        # type tput >/dev/null 2>&1 && tput smcup && tput home
-        cd "$(walk --icons --with-border "${@}")"
-        # type tput >/dev/null 2>&1 && tput rmcup
-    }
-fi
 
 # セットアップ
 type fnm >/dev/null 2>&1 && eval "$(fnm env)"
