@@ -1,3 +1,4 @@
+exec dbus-update-activation-environment --systemd --all
 xwayland disable
 
 set $mod Mod4

@@ -43,6 +43,10 @@ alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 
+if [[ "${TERM}" == "xterm-kitty" ]]; then
+    alias ssh="kitty +kitten ssh"
+fi
+
 # セットアップ
 type fnm >/dev/null 2>&1 && eval "$(fnm env)"
 type fzf >/dev/null 2>&1 && eval "$(fzf --bash)" && bind -r '\ec'
