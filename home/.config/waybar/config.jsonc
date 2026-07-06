@@ -1,0 +1,137 @@
+// -*- mode: jsonc -*-
+[
+    // メインディスプレイ: 全モジュールを表示
+    {
+        "name": "main",
+        "output": ["DP-1"],
+        "layer": "top",
+        "position": "top",
+        "height": 30,
+        "spacing": 4,
+
+        "modules-left": [
+            "sway/workspaces",
+            "sway/mode",
+            "sway/scratchpad"
+        ],
+        "modules-center": [
+            "clock"
+        ],
+        "modules-right": [
+            "wireplumber",
+            "network",
+            "battery",
+            "custom/notification",
+            "custom/media",
+            "tray"
+        ],
+
+        "sway/workspaces": {
+            "disable-scroll": false,
+            "all-outputs": false,
+            "warp-on-scroll": false,
+            "format": "{name}"
+        },
+
+        "sway/mode": {
+            "format": "<span style=\"italic\">{}</span>"
+        },
+
+        "sway/scratchpad": {
+            "format": "{icon} {count}",
+            "show-empty": false,
+            "format-icons": ["", ""],
+            "tooltip": true,
+            "tooltip-format": "{app}: {title}"
+        },
+
+        "clock": {
+            "format": "{:%Y-%m-%d %H:%M}",
+            "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+            "format-alt": "{:%Y-%m-%d}"
+        },
+
+        "wireplumber": {
+            "format": "{volume}% {icon}",
+            "format-muted": "",
+            "format-icons": ["", "", ""],
+            "scroll-step": 5,
+            "on-click": "pavucontrol"
+        },
+
+        "network": {
+            // "interface": "wlp2*",
+            "format-wifi": "{essid} 󰤨",
+            "format-ethernet": "󰈀",
+            "format-linked": "󰈀",
+            "format-disconnected": "󰌙",
+            "tooltip-format": "{ifname} via {gwaddr}",
+            "format-alt": "{ifname}"
+        },
+
+        "battery": {
+            "states": {
+                "warning": 30,
+                "critical": 15
+            },
+            "format": "{capacity}% {icon}",
+            "format-full": "{capacity}% {icon}",
+            "format-charging": "{capacity}% ",
+            "format-plugged": "{capacity}% ",
+            "format-alt": "{time} {icon}",
+            "format-icons": ["", "", "", "", ""]
+        },
+
+        "custom/notification": {
+            "tooltip": true,
+            "format": "{icon}",
+            "format-icons": {
+                "notification": "󰂚󰄮",
+                "none": "󰂚",
+                "dnd": "󰂛"
+            },
+            "return-type": "json",
+            "exec": "$HOME/.config/waybar/notification.sh",
+            "on-click": "dunstctl history-pop",
+            "interval": 1,
+            "escape": true
+        },
+
+        "custom/media": {
+            "format": "{icon} {text}",
+            "return-type": "json",
+            "max-length": 40,
+            "format-icons": {
+                "spotify": "",
+                "default": "🎜"
+            },
+            "interval": 5,
+            "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null"
+        },
+
+        "tray": {
+            "spacing": 10
+        }
+    },
+
+    // メインディスプレイ以外: デスクトップ番号のみ
+    {
+        "name": "secondary",
+        "output": ["DP-2"],
+        "layer": "top",
+        "position": "top",
+        "height": 30,
+        "spacing": 4,
+
+        "modules-left": ["sway/workspaces"],
+        "modules-center": [],
+        "modules-right": [],
+
+        "sway/workspaces": {
+            "disable-scroll": false,
+            "all-outputs": false,
+            "warp-on-scroll": false,
+            "format": "{name}"
+        }
+    }
+]
