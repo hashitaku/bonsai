@@ -75,7 +75,7 @@ luks_password="${luks_password1}"
 while true; do
     read -rp 'swap file size: ' swap_file_size
 
-    if [[ "swap_file_size" ~= ^[0-9]+$ ]] && [[ "${swap_file_size}" -ne 0 ]]; then
+    if [[ "${swap_file_size}" =~ ^[0-9]+$ ]] && [[ "${swap_file_size}" -ne 0 ]]; then
         break
     else
         echo 'input swap file size'
