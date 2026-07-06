@@ -72,6 +72,16 @@ if [[ "${luks_password1}" != "${luks_password2}" ]]; then
 fi
 luks_password="${luks_password1}"
 
+while true; do
+    read -rp 'swap file size: ' swap_file_size
+
+    if [[ "swap_file_size" ~= ^[0-9]+$ ]] && [[ "${swap_file_size}" -ne 0 ]]; then
+        break
+    else
+        echo 'input swap file size'
+    fi
+done
+
 read -rp 'hostname: ' hostname
 if [[ "${hostname}" == "" ]]; then
     echo 'hostname is empty'
@@ -160,6 +170,7 @@ mkfs.btrfs -f "/dev/mapper/${mapping_name}"
 mount "/dev/mapper/${mapping_name}" /mnt
 btrfs subvolume create /mnt/@
 btrfs subvolume create /mnt/@home
+btrfs subvolume create /mnt/@swap
 umount /mnt
 ```
 
@@ -168,9 +179,18 @@ umount /mnt
 ```sh
 mount -o subvol=@ "/dev/mapper/${mapping_name}" /mnt
 mkdir /mnt/home
+mkdir /mnt/swap
 mkdir -m 700 /mnt/boot
 mount -o subvol=@home "/dev/mapper/${mapping_name}" /mnt/home
+mount -o subvol=@swap "/dev/mapper/${mapping_name}" /mnt/swap
 mount -o dmask=077,fmask=077 "$(join_part "${install_block_device_path}" 1)" /mnt/boot
+```
+
+## スワップファイルの作成
+
+```sh
+btrfs filesystem mkswapfile --size "${swap_file_size}G" /mnt/swap/swapfile
+swapon /mnt/swap/swapfile
 ```
 
 # パッケージのインストール
@@ -228,15 +248,17 @@ declare -a pacstrap_packages=(
     'github-cli'
 
     # Desktop Environment
-    'xorg-server'
-    'xorg-xinit'
-    'xorg-xrandr'
-    'i3-wm'
-    'xclip'
-    'picom'
-    'polybar'
+    'sway'
+    'swaybg'
+    'swaylock'
+    'swayidle'
+    'waybar'
+    'wl-clipboard'
+    'grim'
+    'slurp'
+    'imv'
+    'satty'
     'rofi'
-    'feh'
     'dunst'
     'libnotify'
     'playerctl'
@@ -250,9 +272,19 @@ declare -a pacstrap_packages=(
     'fcitx5-qt'
     'fcitx5-gtk'
 
+    'xorg-server'
+    'xorg-xinit'
+    'xorg-xrandr'
+    'i3-wm'
+    'xclip'
+    'picom'
+    'polybar'
+    'feh'
+
     # GUI Application
-    'wezterm'
+    'kitty'
     'seahorse'
+    'nautilus'
     'discord'
     'gimp'
     'vlc'
@@ -260,10 +292,9 @@ declare -a pacstrap_packages=(
     'thunderbird-i18n-ja'
     'firefox'
     'firefox-i18n-ja'
-    'gnome-screenshot'
-    'peek'
     'libreoffice-fresh'
     'libreoffice-fresh-ja'
+    'spotify-launcher'
 
     # fonts
     'noto-fonts'
@@ -275,6 +306,7 @@ declare -a pacstrap_packages=(
 
     # podman
     'podman'
+    'podman-compose'
 
     # LLM
     'opencode'
@@ -308,6 +340,9 @@ declare -a pacstrap_packages=(
     'ruff'
     'pyright'
     'uv'
+
+    # Go
+    'go'
 
     # JavaScript/TypeScript
     'nodejs'
@@ -383,7 +418,7 @@ visudo -csf /etc/sudoers.d/99-${user_name}
 ## fstab生成
 
 ```sh
-genfstab /mnt > /mnt/etc/fstab
+genfstab -U /mnt > /mnt/etc/fstab
 ```
 
 # arch-chroot
@@ -444,7 +479,7 @@ console-mode max' > /boot/loader/loader.conf
 echo 'title Arch Linux
 linux /vmlinuz-linux
 initrd /initramfs-linux.img
-options rd.luks.name=$(blkid -o value -s UUID $(join_part ${install_block_device_path} 2))=${mapping_name} root=UUID=$(blkid -o value -s UUID /dev/mapper/${mapping_name}) rootflags=subvol=@ rw' > /boot/loader/entries/arch.conf
+options rd.luks.name=$(blkid -o value -s UUID $(join_part ${install_block_device_path} 2))=${mapping_name} root=UUID=$(blkid -o value -s UUID /dev/mapper/${mapping_name}) rootflags=subvol=@ resume=UUID=$(blkid -o value -s UUID /dev/mapper/${mapping_name}) resume_offset=$(btrfs inspect-internal map-swapfile -r /swap/swapfile) rw' > /boot/loader/entries/arch.conf
 "
 ```
 
@@ -471,7 +506,7 @@ mkinitcpio -p linux
 ```sh
 if ! is_virt; then
     arch-chroot /mnt /bin/bash -euc "
-chattr -i /sys/firmware/efi/efivars/{KEK,db}-*
+chattr -i /sys/firmware/efi/efivars/{KEK,db}*
 sbctl create-keys
 sbctl enroll-keys -m
 sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI
@@ -685,7 +720,6 @@ paru -S --noconfirm \
     oh-my-posh-bin \
     pipes.sh \
     visual-studio-code-bin \
-    walk
 '
 ```
 
