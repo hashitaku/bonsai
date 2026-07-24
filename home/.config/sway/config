@@ -123,6 +123,15 @@ input type:pointer {
     accel_profile flat
 }
 
+# TouchPad
+input type:touchpad {
+    natural_scroll enable
+    tap enable
+    dwt enable
+    pointer_accel 0.1
+}
+
+
 # Display
 output DP-2 {
     resolution 1920x1080@144Hz
@@ -149,6 +158,10 @@ exec swaymsg workspace 1
 exec --no-startup-id fcitx5 -rd
 exec --no-startup-id waybar
 exec --no-startup-id dunst
+exec swayidle -w \
+    timeout 300 'swaylock -f' \
+    timeout 305 'swaymsg "output * power off"' \
+    resume 'swaymsg "output * power on"'
 
 # scratchpad
 assign [app_id = "spotify"] workspace 1
