@@ -1,7 +1,15 @@
 {
     "$help": "https://aka.ms/terminal-documentation",
     "$schema": "https://aka.ms/terminal-profiles-schema",
-    "actions": [],
+    "actions": [
+        {
+            "id": "User.sendInput.ShiftEnterCustom",
+            "command": {
+                "action": "sendInput",
+                "input": "\u001b[13;2u"
+            }
+        }
+    ],
     "copyFormatting": "none",
     "copyOnSelect": false,
     "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
@@ -24,6 +32,10 @@
         {
             "id": "Terminal.DuplicatePaneAuto",
             "keys": "alt+shift+d"
+        },
+        {
+            "id": "User.sendInput.ShiftEnterCustom",
+            "keys": "shift+enter"
         }
     ],
     "newTabMenu":
@@ -98,9 +110,9 @@
                 "source": "Microsoft.WSL"
             },
             {
-                "guid": "{045b96d2-fe41-5430-beed-24d808cbe83a}",
+                "guid": "{e42fe721-98d7-5bb5-91de-9a5e803b0f2d}",
                 "hidden": false,
-                "name": "Debian",
+                "name": "NixOS",
                 "source": "Microsoft.WSL"
             },
             {
@@ -160,7 +172,7 @@
             {
                 "background": "#3B4261FF",
                 "iconStyle": "default",
-                "showCloseButton": "always",
+                "showCloseButton": "never",
                 "unfocusedBackground": "#2F334DFF"
             },
             "tabRow":
