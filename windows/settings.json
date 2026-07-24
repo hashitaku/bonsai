@@ -8,6 +8,13 @@
                 "action": "sendInput",
                 "input": "\u001b[13;2u"
             }
+        },
+        {
+            "id": "User.sendInput.CtrlEnterCustom",
+            "command": {
+                "action": "sendInput",
+                "input": "\u001b[13;5u"
+            }
         }
     ],
     "copyFormatting": "none",
@@ -36,6 +43,10 @@
         {
             "id": "User.sendInput.ShiftEnterCustom",
             "keys": "shift+enter"
+        },
+        {
+            "id": "User.sendInput.CtrlEnterCustom",
+            "keys": "ctrl+enter"
         }
     ],
     "newTabMenu":
