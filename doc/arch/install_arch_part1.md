@@ -250,7 +250,7 @@ declare -a pacstrap_packages=(
     # Desktop Environment
     'sway'
     'swaybg'
-    'swaylock'
+    'hyprlock'
     'swayidle'
     'waybar'
     'wl-clipboard'
