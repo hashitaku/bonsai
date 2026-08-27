@@ -1,5 +1,5 @@
 exec dbus-update-activation-environment --systemd --all
-xwayland disable
+xwayland enable
 
 set $mod Mod4
 
@@ -164,8 +164,8 @@ exec swayidle -w \
     resume 'swaymsg "output * power on"'
 
 # scratchpad
-assign [app_id = "spotify"] workspace 1
-for_window [app_id = "spotify"] \
+assign [class = "Spotify"] workspace 1
+for_window [class = "Spotify"] \
     floating enable, \
     resize set width 1280 px height 960 px, \
     move position center, \
