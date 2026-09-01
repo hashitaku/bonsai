@@ -49,7 +49,8 @@ return {
 
                     vim.treesitter.start(ev.buf, language)
 
-                    vim.api.nvim_set_option_value("foldlevelstart", 1, {})
+                    vim.api.nvim_set_option_value("foldlevel", 99, {})
+                    vim.api.nvim_set_option_value("foldlevelstart", 99, {})
                     vim.api.nvim_set_option_value("foldmethod", "expr", { scope = "local" })
                     vim.api.nvim_set_option_value("foldexpr", "v:lua.vim.treesitter.foldexpr()", { scope = "local" })
                     vim.api.nvim_set_option_value("foldtext", "", { scope = "local" })
