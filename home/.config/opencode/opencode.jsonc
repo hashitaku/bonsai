@@ -1,9 +1,5 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "theme": "tokyonight",
-  "keybinds": {
-    "input_newline": "shift+return",
-  },
   "permission": {
     "*": "ask",
     "bash": "ask",
@@ -33,6 +29,16 @@
       "enabled": false,
       "type": "remote",
       "url": "https://learn.microsoft.com/api/mcp",
+    },
+    "Blume": {
+      "enalbed": false,
+      "type": "remote",
+      "url": "https://useblume.dev/mcp",
+    },
+    "Cloudflare Docs": {
+      "enalbed": false,
+      "type": "remote",
+      "url": "https://docs.mcp.cloudflare.com/mcp",
     },
   },
 }
