@@ -31,14 +31,19 @@
       "url": "https://learn.microsoft.com/api/mcp",
     },
     "Blume": {
-      "enalbed": false,
+      "enabled": false,
       "type": "remote",
       "url": "https://useblume.dev/mcp",
     },
     "Cloudflare Docs": {
-      "enalbed": false,
+      "enabled": false,
       "type": "remote",
       "url": "https://docs.mcp.cloudflare.com/mcp",
     },
+    "emdash-docs": {
+      "enabled": false,
+      "type": "remote",
+      "url": "https://docs.emdashcms.com/mcp"
+    }
   },
 }
