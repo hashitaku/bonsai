@@ -83,6 +83,23 @@ if result then
     })
 end
 
+local copilot_home
+if vim.fn.has("win32") == 1 then
+    copilot_home = vim.fs.joinpath(
+        vim.env.LOCALAPPDATA or vim.fs.joinpath(vim.env.HOME, "AppData", "Local"),
+        "copilot"
+    )
+else
+    copilot_home = vim.fs.joinpath(
+        vim.env.XDG_STATE_HOME or vim.fs.joinpath(vim.env.HOME, ".local", "state"),
+        "copilot"
+    )
+end
+
+vim.lsp.config("copilot", {
+    cmd_env = { COPILOT_HOME = copilot_home },
+})
+
 vim.lsp.enable({
     "angularls",
     "clangd",
