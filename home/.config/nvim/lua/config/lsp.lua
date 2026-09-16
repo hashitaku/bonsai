@@ -11,8 +11,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
         local bufnr = args.buf
 
         if client then
-            -- omnisharpはserver_capabilitiesを正しく出力していない？
-            if client:supports_method("textDocument/hover", bufnr) or client.name == "omnisharp" then
+            if client:supports_method("textDocument/hover", bufnr) then
                 vim.keymap.set("n", "K", function()
                     vim.lsp.buf.hover({ border = "rounded" })
                 end, { buffer = bufnr, desc = "vim.lsp.buf.hover()" })
@@ -93,9 +92,9 @@ vim.lsp.enable({
     "gopls",
     "html",
     "lua_ls",
-    "omnisharp",
     "powershell_es",
     "pyright",
+    "roslyn_ls",
     "ruff",
     "rust_analyzer",
     "taplo",
