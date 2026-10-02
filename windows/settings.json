@@ -1,204 +1,202 @@
 {
-    "$help": "https://aka.ms/terminal-documentation",
-    "$schema": "https://aka.ms/terminal-profiles-schema",
-    "actions": [
-        {
-            "id": "User.sendInput.ShiftEnterCustom",
-            "command": {
-                "action": "sendInput",
-                "input": "\u001b[13;2u"
-            }
-        },
-        {
-            "id": "User.sendInput.CtrlEnterCustom",
-            "command": {
-                "action": "sendInput",
-                "input": "\u001b[13;5u"
-            }
-        }
-    ],
-    "copyFormatting": "none",
-    "copyOnSelect": false,
-    "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
-    "initialCols": 170,
-    "initialRows": 40,
-    "keybindings":
-    [
-        {
-            "id": "Terminal.CopyToClipboard",
-            "keys": "ctrl+shift+c"
-        },
-        {
-            "id": "Terminal.PasteFromClipboard",
-            "keys": "ctrl+shift+v"
-        },
-        {
-            "id": "Terminal.FindText",
-            "keys": "ctrl+shift+f"
-        },
-        {
-            "id": "Terminal.DuplicatePaneAuto",
-            "keys": "alt+shift+d"
-        },
-        {
-            "id": "User.sendInput.ShiftEnterCustom",
-            "keys": "shift+enter"
-        },
-        {
-            "id": "User.sendInput.CtrlEnterCustom",
-            "keys": "ctrl+enter"
-        }
-    ],
-    "newTabMenu":
-    [
-        {
-            "allowEmpty": false,
-            "entries":
-            [
-                {
-                    "icon": null,
-                    "profile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
-                    "type": "profile"
-                },
-                {
-                    "icon": null,
-                    "profile": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
-                    "type": "profile"
-                },
-                {
-                    "icon": null,
-                    "profile": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
-                    "type": "profile"
-                }
-            ],
-            "icon": null,
-            "inline": "never",
-            "name": "Windows",
-            "type": "folder"
-        },
-        {
-            "allowEmpty": false,
-            "entries":
-            [
-                {
-                    "commandline": null,
-                    "name": null,
-                    "source": "Microsoft.WSL",
-                    "type": "matchProfiles"
-                }
-            ],
-            "icon": null,
-            "inline": "never",
-            "name": "WSL",
-            "type": "folder"
-        },
-        {
-            "type": "remainingProfiles"
-        }
-    ],
-    "profiles":
+  "$help": "https://aka.ms/terminal-documentation",
+  "$schema": "https://aka.ms/terminal-profiles-schema",
+  "actions": [
     {
-        "defaults":
-        {
-            "bellStyle": "window",
-            "colorScheme": "tokyonight-storm",
-            "font":
-            {
-                "face": "Inconsolata Nerd Font Mono, Noto Sans Mono CJK JP",
-                "size": 14,
-                "weight": "bold"
-            },
-            "padding": "0",
-            "rightClickContextMenu": true,
-            "scrollbarState": "hidden"
-        },
-        "list":
-        [
-            {
-                "guid": "{05a0c255-a166-5769-8d7f-18ca6bb8ac5b}",
-                "hidden": false,
-                "name": "archlinux",
-                "source": "Microsoft.WSL"
-            },
-            {
-                "guid": "{e42fe721-98d7-5bb5-91de-9a5e803b0f2d}",
-                "hidden": false,
-                "name": "NixOS",
-                "source": "Microsoft.WSL"
-            },
-            {
-                "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
-                "hidden": false,
-                "name": "PowerShell",
-                "source": "Windows.Terminal.PowershellCore"
-            },
-            {
-                "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-                "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
-                "hidden": false,
-                "name": "Windows PowerShell"
-            },
-            {
-                "commandline": "%SystemRoot%\\System32\\cmd.exe",
-                "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
-                "hidden": false,
-                "name": "Command Prompt"
-            }
-        ]
+      "command": {
+        "action": "sendInput",
+        "input": "\u001b[13;2u"
+      },
+      "id": "User.sendInput.ShiftEnterCustom"
     },
-    "schemes":
-    [
+    {
+      "command": {
+        "action": "sendInput",
+        "input": "\u001b[13;5u"
+      },
+      "id": "User.sendInput.CtrlEnterCustom"
+    },
+    {
+      "command": {
+        "action": "sendInput",
+        "input": "\u001b[107;6u"
+      },
+      "id": "User.sendInput.CtrlShiftKCustom"
+    }
+  ],
+  "copyFormatting": "none",
+  "copyOnSelect": false,
+  "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+  "initialCols": 170,
+  "initialRows": 40,
+  "keybindings": [
+    {
+      "id": "Terminal.PasteFromClipboard",
+      "keys": "ctrl+shift+v"
+    },
+    {
+      "id": "User.sendInput.CtrlShiftKCustom",
+      "keys": "ctrl+shift+k"
+    },
+    {
+      "id": "Terminal.CopyToClipboard",
+      "keys": "ctrl+shift+c"
+    },
+    {
+      "id": "User.sendInput.CtrlEnterCustom",
+      "keys": "ctrl+enter"
+    },
+    {
+      "id": "Terminal.FindText",
+      "keys": "ctrl+shift+f"
+    },
+    {
+      "id": "User.sendInput.ShiftEnterCustom",
+      "keys": "shift+enter"
+    },
+    {
+      "id": "Terminal.DuplicatePaneAuto",
+      "keys": "alt+shift+d"
+    }
+  ],
+  "newTabMenu": [
+    {
+      "allowEmpty": false,
+      "entries": [
         {
-            "background": "#24283B",
-            "black": "#1D202F",
-            "blue": "#7AA2F7",
-            "brightBlack": "#414868",
-            "brightBlue": "#7AA2F7",
-            "brightCyan": "#7DCFFF",
-            "brightGreen": "#9ECE6A",
-            "brightPurple": "#BB9AF7",
-            "brightRed": "#F7768E",
-            "brightWhite": "#C0CAF5",
-            "brightYellow": "#E0AF68",
-            "cursorColor": "#C0CAF5",
-            "cyan": "#7DCFFF",
-            "foreground": "#C0CAF5",
-            "green": "#9ECE6A",
-            "name": "tokyonight-storm",
-            "purple": "#BB9AF7",
-            "red": "#F7768E",
-            "selectionBackground": "#2E3C64",
-            "white": "#A9B1D6",
-            "yellow": "#E0AF68"
-        }
-    ],
-    "snapToGridOnResize": true,
-    "tabWidthMode": "titleLength",
-    "theme": "tokyonight-storm",
-    "themes":
-    [
+          "icon": null,
+          "profile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+          "type": "profile"
+        },
         {
-            "name": "tokyonight-storm",
-            "tab":
-            {
-                "background": "#3B4261FF",
-                "iconStyle": "default",
-                "showCloseButton": "never",
-                "unfocusedBackground": "#2F334DFF"
-            },
-            "tabRow":
-            {
-                "background": "#1E2030FF",
-                "unfocusedBackground": "#1E2030FF"
-            },
-            "window":
-            {
-                "applicationTheme": "dark",
-                "experimental.rainbowFrame": false,
-                "frame": null,
-                "unfocusedFrame": null,
-                "useMica": false
-            }
+          "icon": null,
+          "profile": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+          "type": "profile"
+        },
+        {
+          "icon": null,
+          "profile": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+          "type": "profile"
         }
+      ],
+      "icon": null,
+      "inline": "never",
+      "name": "Windows",
+      "type": "folder"
+    },
+    {
+      "allowEmpty": false,
+      "entries": [
+        {
+          "commandline": null,
+          "name": null,
+          "source": "Microsoft.WSL",
+          "type": "matchProfiles"
+        }
+      ],
+      "icon": null,
+      "inline": "never",
+      "name": "WSL",
+      "type": "folder"
+    },
+    {
+      "type": "remainingProfiles"
+    }
+  ],
+  "profiles": {
+    "defaults": {
+      "bellStyle": "window",
+      "colorScheme": "tokyonight-storm",
+      "font": {
+        "face": "Inconsolata Nerd Font Mono, Noto Sans Mono CJK JP",
+        "size": 14,
+        "weight": "bold"
+      },
+      "padding": "0",
+      "rightClickContextMenu": true,
+      "scrollbarState": "hidden"
+    },
+    "list": [
+      {
+        "guid": "{05a0c255-a166-5769-8d7f-18ca6bb8ac5b}",
+        "hidden": false,
+        "name": "archlinux",
+        "source": "Microsoft.WSL"
+      },
+      {
+        "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+        "hidden": false,
+        "name": "PowerShell",
+        "source": "Windows.Terminal.PowershellCore"
+      },
+      {
+        "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+        "hidden": false,
+        "name": "Windows PowerShell"
+      },
+      {
+        "commandline": "%SystemRoot%\\System32\\cmd.exe",
+        "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+        "hidden": false,
+        "name": "Command Prompt"
+      },
+      {
+        "guid": "{660fa857-1a82-5fac-b70f-c0ccee2e64ee}",
+        "hidden": false,
+        "name": "NixOS",
+        "source": "Microsoft.WSL"
+      }
     ]
+  },
+  "schemes": [
+    {
+      "background": "#24283B",
+      "black": "#1D202F",
+      "blue": "#7AA2F7",
+      "brightBlack": "#414868",
+      "brightBlue": "#7AA2F7",
+      "brightCyan": "#7DCFFF",
+      "brightGreen": "#9ECE6A",
+      "brightPurple": "#BB9AF7",
+      "brightRed": "#F7768E",
+      "brightWhite": "#C0CAF5",
+      "brightYellow": "#E0AF68",
+      "cursorColor": "#C0CAF5",
+      "cyan": "#7DCFFF",
+      "foreground": "#C0CAF5",
+      "green": "#9ECE6A",
+      "name": "tokyonight-storm",
+      "purple": "#BB9AF7",
+      "red": "#F7768E",
+      "selectionBackground": "#2E3C64",
+      "white": "#A9B1D6",
+      "yellow": "#E0AF68"
+    }
+  ],
+  "snapToGridOnResize": true,
+  "tabWidthMode": "titleLength",
+  "theme": "tokyonight-storm",
+  "themes": [
+    {
+      "name": "tokyonight-storm",
+      "tab": {
+        "background": "#3B4261FF",
+        "iconStyle": "default",
+        "showCloseButton": "never",
+        "unfocusedBackground": "#2F334DFF"
+      },
+      "tabRow": {
+        "background": "#1E2030FF",
+        "unfocusedBackground": "#1E2030FF"
+      },
+      "window": {
+        "applicationTheme": "dark",
+        "experimental.rainbowFrame": false,
+        "frame": null,
+        "unfocusedFrame": null,
+        "useMica": false
+      }
+    }
+  ]
 }
