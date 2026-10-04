@@ -135,15 +135,13 @@ input type:touchpad {
 # Display
 output DP-2 {
     resolution 1920x1080@144Hz
-    transform 90
-    position 0,0
+    transform normal
     scale 1
 }
 
 output DP-1 {
     resolution 1920x1080@360Hz
     transform normal
-    position 1080,840
     scale 1
 }
 
@@ -151,7 +149,6 @@ workspace 1 output DP-1
 workspace 2 output DP-1
 workspace 9 output DP-2
 
-exec swaymsg seat - cursor set 2040 1380
 exec swaymsg workspace 1
 
 # autoexec
