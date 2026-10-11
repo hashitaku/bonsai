@@ -131,17 +131,18 @@ input type:touchpad {
     pointer_accel 0.1
 }
 
-
 # Display
 output DP-2 {
     resolution 1920x1080@144Hz
     transform normal
+    position 0,0
     scale 1
 }
 
 output DP-1 {
     resolution 1920x1080@360Hz
     transform normal
+    position 1920,0
     scale 1
 }
 
