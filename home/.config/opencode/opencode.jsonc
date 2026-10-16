@@ -1,49 +1,44 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "permission": {
-    "*": "ask",
-    "bash": "ask",
-    "edit": "ask",
-    "write": "ask",
-    "read": "allow",
-    "grep": "allow",
-    "glob": "allow",
-    "lsp": "allow",
-    "patch": "ask",
-    "skill": "allow",
-    "todowrite": "allow",
-    "webfetch": "allow",
-    "websearch": "allow",
-    "question": "allow",
-  },
+  "permissions": [
+    { "action": "*", "resource": "*", "effect": "ask" },
+    { "action": "read", "resource": "*", "effect": "allow" },
+    { "action": "glob", "resource": "*", "effect": "allow" },
+    { "action": "grep", "resource": "*", "effect": "allow" },
+
+    { "action": "shell", "resource": "git status *", "effect": "allow" },
+    { "action": "shell", "resource": "git diff *", "effect": "allow" },
+    { "action": "shell", "resource": "git log *", "effect": "allow" },
+    { "action": "shell", "resource": "git push *", "effect": "deny" },
+
+    { "action": "webfetch", "resource": "*", "effect": "allow" },
+    { "action": "websearch", "resource": "*", "effect": "allow" },
+  ],
   "mcp": {
-    "playwright": {
-      "enabled": false,
-      "type": "local",
-      "command": [
-        "npx",
-        "@playwright/mcp@latest",
-      ],
+    "servers": {
+      "playwright": {
+        "type": "local",
+        "command": [
+          "npx",
+          "@playwright/mcp@latest",
+        ],
+      },
+      "MSLearn": {
+        "type": "remote",
+        "url": "https://learn.microsoft.com/api/mcp",
+      },
+      "Blume": {
+        "type": "remote",
+        "url": "https://useblume.dev/mcp",
+      },
+      "Cloudflare Docs": {
+        "type": "remote",
+        "url": "https://docs.mcp.cloudflare.com/mcp",
+      },
+      "emdash-docs": {
+        "type": "remote",
+        "url": "https://docs.emdashcms.com/mcp",
+      },
     },
-    "MSLearn": {
-      "enabled": false,
-      "type": "remote",
-      "url": "https://learn.microsoft.com/api/mcp",
-    },
-    "Blume": {
-      "enabled": false,
-      "type": "remote",
-      "url": "https://useblume.dev/mcp",
-    },
-    "Cloudflare Docs": {
-      "enabled": false,
-      "type": "remote",
-      "url": "https://docs.mcp.cloudflare.com/mcp",
-    },
-    "emdash-docs": {
-      "enabled": false,
-      "type": "remote",
-      "url": "https://docs.emdashcms.com/mcp"
-    }
   },
 }
