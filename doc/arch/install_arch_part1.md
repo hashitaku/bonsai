@@ -248,6 +248,7 @@ declare -a pacstrap_packages=(
     'github-cli'
 
     # Desktop Environment
+    'ly'
     'sway'
     'swaybg'
     'hyprlock'
