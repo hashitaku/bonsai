@@ -41,6 +41,8 @@ vim.api.nvim_set_option_value("winblend", 10, {})
 -- 様々なプラグインが対応したら一括で設定できるwinborderオプションを使用する予定
 -- vim.api.nvim_set_option_value("winborder", "rounded", {})
 
+require("vim._core.ui2").enable({ enable = true })
+
 if vim.loop.os_uname().sysname == "Windows_NT" then
     vim.api.nvim_set_option_value("shell", vim.fn.executable("pwsh") and "pwsh" or "powershell", {})
     vim.api.nvim_set_option_value(

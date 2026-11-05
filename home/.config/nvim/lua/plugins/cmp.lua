@@ -20,11 +20,6 @@ return {
     },
 
     {
-        "hrsh7th/cmp-vsnip",
-        cond = not vim.g.vscode,
-    },
-
-    {
         "hrsh7th/nvim-cmp",
         cond = not vim.g.vscode,
         dependencies = {
@@ -33,7 +28,6 @@ return {
             "hrsh7th/cmp-nvim-lsp",
             "hrsh7th/cmp-omni",
             "hrsh7th/cmp-path",
-            "hrsh7th/cmp-vsnip",
             "windwp/nvim-autopairs",
         },
         event = { "InsertEnter", "CmdLineEnter" },
@@ -59,12 +53,6 @@ return {
                         if cmp.visible() then
                             -- 選択されている項目を自動で入力しない
                             cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-                        elseif vim.fn["vsnip#jumpable"](1) == 1 then
-                            vim.api.nvim_feedkeys(
-                                vim.api.nvim_replace_termcodes("<Plug>(vsnip-jump-next)", true, true, true),
-                                "",
-                                false
-                            )
                         else
                             fallback()
                         end
@@ -73,12 +61,6 @@ return {
                     ["<S-Tab>"] = cmp.mapping(function(fallback)
                         if cmp.visible() then
                             cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
-                        elseif vim.fn["vsnip#jumpable"](-1) == 1 then
-                            vim.api.nvim_feedkeys(
-                                vim.api.nvim_replace_termcodes("<Plug>(vsnip-jump-prev)", true, true, true),
-                                "",
-                                false
-                            )
                         else
                             fallback()
                         end
@@ -100,11 +82,6 @@ return {
                         cmp.complete()
                     end, { "i" }),
                 }),
-                snippet = {
-                    expand = function(args)
-                        vim.fn["vsnip#anonymous"](args.body)
-                    end,
-                },
                 formatting = {
                     format = function(_, vim_item)
                         local max_width = 50
@@ -119,7 +96,6 @@ return {
                     { name = "cmp-omni" },
                     { name = "nvim_lsp" },
                     { name = "path" },
-                    { name = "vsnip" },
                     { name = "lazydev", group_index = 0 },
                 },
                 window = {
