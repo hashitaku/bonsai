@@ -16,6 +16,14 @@
     { "action": "webfetch", "resource": "*", "effect": "allow" },
     { "action": "websearch", "resource": "*", "effect": "allow" },
   ],
+  "agents": {
+    "general": {
+      "model": "openrouter/deepseek/deepseek-v4.1-flash-1017#max",
+    },
+    "explore": {
+      "model": "openrouter/deepseek/deepseek-v4.1-flash-1017#max",
+    },
+  },
   "mcp": {
     "servers": {
       "playwright": {
