@@ -20,7 +20,7 @@ jobs:
         run: echo "SHORT_HASH=${GITHUB_SHA:0:8}" >> $GITHUB_ENV
 
       - name: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: build
         run: |
@@ -30,7 +30,7 @@ jobs:
         run: tar cfz install_scripts.tar.gz install_arch.sh
 
       - name: release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ env.CURRENT_DATETIME }}-${{ env.SHORT_HASH }}
           files: install_scripts.tar.gz
