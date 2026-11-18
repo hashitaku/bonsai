@@ -5,14 +5,12 @@ XDG_DATA_HOME="${HOME}/.local/share"
 XDG_STATE_HOME="${HOME}/.local/state"
 export XDG_CONFIG_HOME XDG_CACHE_HOME XDG_DATA_HOME XDG_STATE_HOME
 
-# linuxbrew
-[ -x /home/linuxbrew/.linuxbrew/bin/brew ] && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
-
 # Rust
 CARGO_HOME="${XDG_DATA_HOME}/cargo"
 RUSTUP_HOME="${XDG_DATA_HOME}/rustup"
 export CARGO_HOME RUSTUP_HOME
-[ -f "${XDG_DATA_HOME}/cargo/env" ] && . "${XDG_DATA_HOME}/cargo/env"
+PATH="${PATH}:${CARGO_HOME}/bin"
+export PATH
 
 # Go
 GOPATH="${XDG_DATA_HOME}/go"
@@ -53,10 +51,25 @@ XAUTHORITY="${XDG_RUNTIME_DIR}/Xauthority"
 export INPUTRC GNUPGHOME XAUTHORITY
 
 # WSL用設定
-if [ "$(systemd-detect-virt)" = "wsl" ]; then
-    # Waylandの設定をしてしまうとfirefoxに不具合があるためX11を使用する
-    # ln -sf /mnt/wslg/runtime-dir/wayland-0* /run/user/$(id -u)/
-    ln -sf /mnt/wslg/.X11-unix/* /tmp/.X11-unix/
+if [ "$(systemd-detect-virt)" = 'wsl' ]; then
+    if [ ! -L /run/user/$(id -u)/wayland-0 ]; then
+        ln -sf /mnt/wslg/runtime-dir/wayland-0 /run/user/$(id -u)/wayland-0
+        ln -sf /mnt/wslg/runtime-dir/wayland-0.lock /run/user/$(id -u)/wayland-0.lock
+    fi
+
+    # WSLgでWaylandがあまりうまく動作しないためXを使用
+    unset WAYLAND_DISPLAY
+
+    LANG=ja_JP.UTF-8
+    LC_ALL=ja_JP.UTF-8
+    export LANG LC_ALL
+
+    DefaultImModule=fcitx
+    GTK_IM_MODULE=fcitx
+    QT_IM_MODULE=fcitx
+    XMODIFIERS=@im=fcitx
+    GLFW_IM_MODULE=ibus
+    export DefaultImModule GTK_IM_MODULE QT_IM_MODULE XMODIFIERS GLFW_IM_MODULE
 fi
 
 # bashrc

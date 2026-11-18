@@ -1,0 +1,193 @@
+* {
+    font-family: "Inconsolata Nerd Font Mono", "FontAwesome", sans-serif;
+    font-size: 14px;
+    min-height: 0;
+}
+
+window#waybar {
+    /* Translucent TokyoNight Storm background */
+    background-color: rgba(36, 40, 59, 0.75);
+    color: #c0caf5;
+    border-bottom: none;
+    transition-property: background-color;
+    transition-duration: 0.5s;
+
+    /* Opaque version */
+    /* background-color: #24283b; */
+    /* border-bottom: 2px solid #1f2335; */
+}
+
+window#waybar.hidden {
+    opacity: 0.2;
+}
+
+button {
+    box-shadow: none;
+    border: none;
+    border-radius: 8px;
+}
+
+button:hover {
+    background: rgba(122, 162, 247, 0.2);
+}
+
+#workspaces button {
+    padding: 0 12px;
+    margin: 4px 2px;
+    background-color: transparent;
+    color: #565f89;
+    border-radius: 8px;
+}
+
+#workspaces button:hover {
+    background: rgba(122, 162, 247, 0.2);
+    color: #c0caf5;
+}
+
+#workspaces button.focused,
+#workspaces button.active {
+    background-color: #7aa2f7;
+    color: #1f2335;
+}
+
+#workspaces button.urgent {
+    background-color: #f7768e;
+    color: #1f2335;
+}
+
+#mode,
+#scratchpad,
+#clock,
+#battery,
+#network,
+#wireplumber,
+#tray,
+#custom-media,
+#custom-notification {
+    padding: 0 12px;
+    margin: 4px 2px;
+    border-radius: 8px;
+    color: #c0caf5;
+    background-color: transparent;
+}
+
+/* If workspaces is the leftmost module, omit left margin */
+.modules-left > widget:first-child > #workspaces {
+    margin-left: 0;
+}
+
+/* If tray is the rightmost module, omit right margin */
+.modules-right > widget:last-child > #tray {
+    margin-right: 0;
+}
+
+#mode {
+    background-color: rgba(224, 175, 104, 0.9);
+    color: #1f2335;
+}
+
+#scratchpad {
+    background-color: rgba(41, 46, 66, 0.6);
+}
+
+#scratchpad.empty {
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+#clock {
+    background-color: rgba(122, 162, 247, 0.9);
+    color: #1f2335;
+}
+
+#wireplumber {
+    background-color: rgba(187, 154, 247, 0.9);
+    color: #1f2335;
+}
+
+#wireplumber.muted {
+    background-color: rgba(247, 118, 142, 0.9);
+    color: #1f2335;
+}
+
+#network {
+    background-color: rgba(125, 207, 255, 0.9);
+    color: #1f2335;
+}
+
+#network.disconnected {
+    background-color: rgba(247, 118, 142, 0.9);
+    color: #1f2335;
+}
+
+#battery {
+    background-color: rgba(158, 206, 106, 0.9);
+    color: #1f2335;
+}
+
+#battery.charging,
+#battery.plugged {
+    background-color: rgba(224, 175, 104, 0.9);
+    color: #1f2335;
+}
+
+#battery.critical:not(.charging) {
+    background-color: rgba(247, 118, 142, 0.9);
+    color: #1f2335;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: steps(12);
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+#custom-notification {
+    background-color: rgba(255, 158, 100, 0.9);
+    color: #1f2335;
+}
+
+#custom-notification.dnd {
+    background-color: rgba(86, 95, 137, 0.9);
+    color: #c0caf5;
+}
+
+#custom-notification.none {
+    background-color: rgba(65, 72, 104, 0.9);
+    color: #c0caf5;
+}
+
+#tray {
+    background-color: rgba(65, 72, 104, 0.6);
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    background-color: rgba(247, 118, 142, 0.9);
+}
+
+#custom-media {
+    background-color: rgba(26, 188, 156, 0.9);
+    color: #1f2335;
+}
+
+#custom-media.stopped {
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+#custom-media.custom-spotify {
+    background-color: rgba(158, 206, 106, 0.9);
+}
+
+@keyframes blink {
+    to {
+        background-color: #c0caf5;
+        color: #24283b;
+    }
+}

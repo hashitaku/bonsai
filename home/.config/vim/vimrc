@@ -61,7 +61,7 @@ let g:loaded_zipPlugin = 1
 
 packadd termdebug
 packadd vim-jetpack
-call jetpack#begin()
+call jetpack#begin(expand("<sfile>:p:h"))
 call jetpack#add("tani/vim-jetpack", { "opt": v:true })
 
 call jetpack#add("dracula/vim", { "as": "dracula" })

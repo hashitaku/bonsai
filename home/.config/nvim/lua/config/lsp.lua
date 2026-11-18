@@ -11,11 +11,24 @@ vim.api.nvim_create_autocmd("LspAttach", {
         local bufnr = args.buf
 
         if client then
-            -- omnisharpはserver_capabilitiesを正しく出力していない？
-            if client:supports_method("textDocument/hover", bufnr) or client.name == "omnisharp" then
+            if client:supports_method("textDocument/hover", bufnr) then
                 vim.keymap.set("n", "K", function()
                     vim.lsp.buf.hover({ border = "rounded" })
                 end, { buffer = bufnr, desc = "vim.lsp.buf.hover()" })
+            end
+
+            if client:supports_method("textDocument/inlayHint", bufnr) then
+                vim.keymap.set("n", "<Leader>v", function()
+                    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
+                end, { buffer = bufnr, desc = "Toggle Inlay Hint" })
+            end
+
+            if client:supports_method("textDocument/inlineCompletion", bufnr) then
+                vim.lsp.inline_completion.enable(true, {})
+
+                vim.keymap.set("i", "<M-l>", function()
+                    vim.lsp.inline_completion.get({ bufnr = bufnr })
+                end, { buffer = bufnr, desc = "Select Inline Completion" })
             end
 
             local result, lsp_signature = pcall(require, "lsp_signature")
@@ -40,14 +53,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
                     end,
                 })
             end
-
-            vim.keymap.set("n", "<Leader>v", function()
-                if client:supports_method("textDocument/inlayHint", bufnr) then
-                    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
-                else
-                    vim.notify("Inlay hints not supported by the LSP server", vim.log.levels.WARN)
-                end
-            end, { buffer = bufnr, desc = "Toggle Inlay Hint" })
 
             if
                 client:supports_method("textDocument/formatting", bufnr)
@@ -78,21 +83,37 @@ if result then
     })
 end
 
+local copilot_home
+if vim.fn.has("win32") == 1 then
+    copilot_home = vim.fs.joinpath(
+        vim.env.LOCALAPPDATA or vim.fs.joinpath(vim.env.HOME, "AppData", "Local"),
+        "copilot"
+    )
+else
+    copilot_home = vim.fs.joinpath(
+        vim.env.XDG_STATE_HOME or vim.fs.joinpath(vim.env.HOME, ".local", "state"),
+        "copilot"
+    )
+end
+
+vim.lsp.config("copilot", {
+    cmd_env = { COPILOT_HOME = copilot_home },
+})
+
 vim.lsp.enable({
     "angularls",
     "clangd",
+    "copilot",
     "cssls",
     "denols",
     "gopls",
     "html",
     "lua_ls",
-    "mesonlsp",
-    "omnisharp",
     "powershell_es",
     "pyright",
+    "roslyn_ls",
     "ruff",
     "rust_analyzer",
-    "slint_lsp",
     "taplo",
     "tinymist",
     "ts_ls",

@@ -25,6 +25,12 @@ return {
                     winblend = 10,
                 },
             },
+            confirmation = {
+                border = "rounded",
+                win_options = {
+                    winblend = 10,
+                },
+            },
         },
         -- 遅延ロードすると`nvim .`のような開き方でOilが読み込まれないため
         lazy = false,
