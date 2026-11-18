@@ -1,4 +1,5 @@
 local wezterm = require("wezterm")
+local act = wezterm.action
 
 local target = wezterm.target_triple
 
@@ -25,6 +26,8 @@ config.default_prog = shell
 
 config.initial_cols = 130
 config.initial_rows = 30
+
+config.audible_bell = "Disabled"
 
 config.show_new_tab_button_in_tab_bar = false
 -- nightly build
@@ -53,13 +56,107 @@ config.window_frame = {
     inactive_titlebar_bg = "none",
 }
 
+config.disable_default_key_bindings = true
 config.keys = {
+    -- Tab
+    {
+        key = "Tab",
+        mods = "CTRL",
+        action = act.ActivateTabRelative(1),
+    },
+    {
+        key = "Tab",
+        mods = "CTRL|SHIFT",
+        action = act.ActivateTabRelative(-1),
+    },
+    {
+        key = "T",
+        mods = "CTRL|SHIFT",
+        action = act.SpawnTab("CurrentPaneDomain"),
+    },
+
+    -- Pane
+    {
+        key = "W",
+        mods = "CTRL|SHIFT",
+        action = act.CloseCurrentPane({
+            confirm = true,
+        }),
+    },
+    {
+        key = "H",
+        mods = "CTRL|SHIFT",
+        action = act.SplitPane({
+            direction = "Left",
+        }),
+    },
+    {
+        key = "J",
+        mods = "CTRL|SHIFT",
+        action = act.SplitPane({
+            direction = "Down",
+        }),
+    },
     {
         key = "K",
-        mods = "SHIFT|CTRL",
-        action = wezterm.action.DisableDefaultAssignment,
+        mods = "CTRL|SHIFT",
+        action = act.SplitPane({
+            direction = "Up",
+        }),
+    },
+    {
+        key = "L",
+        mods = "CTRL|SHIFT",
+        action = act.SplitPane({
+            direction = "Right",
+        }),
+    },
+    {
+        key = "M",
+        mods = "CTRL|SHIFT",
+        action = act.PaneSelect({ mode = "SwapWithActive" }),
+    },
+
+    -- clipboard
+    {
+        key = "C",
+        mods = "CTRL|SHIFT",
+        action = act.CopyTo("Clipboard"),
+    },
+    {
+        key = "V",
+        mods = "CTRL|SHIFT",
+        action = act.PasteFrom("Clipboard"),
+    },
+
+    -- fonts
+    {
+        key = "mapped:+",
+        mods = "CTRL|SHIFT",
+        action = act.IncreaseFontSize,
+    },
+    {
+        -- shift押した際の"-"
+        key = "mapped:_",
+        mods = "CTRL|SHIFT",
+        action = act.DecreaseFontSize,
+    },
+    {
+        -- shift押した際の"0"
+        key = "mapped:0",
+        mods = "CTRL|SHIFT",
+        action = act.ResetFontSize,
+    },
+
+    -- cmd
+    {
+        key = "P",
+        mods = "CTRL|SHIFT",
+        action = act.ActivateCommandPalette,
     },
 }
+config.debug_key_events = false
+
 config.enable_kitty_keyboard = true
 
 config.default_cursor_style = "SteadyBar"

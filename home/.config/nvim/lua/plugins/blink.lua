@@ -1,11 +1,18 @@
 return {
     {
+        "saghen/blink.lib",
+        cond = not vim.g.vscode and false,
+    },
+
+    {
         "Saghen/blink.cmp",
-        build = "cargo build --release",
+        build = function()
+            require("blink.cmp").build():wait(60000)
+        end,
         cond = not vim.g.vscode and false,
         lazy = false,
         dependencies = {
-            "fang2hou/blink-copilot",
+            "Saghen/blink.cmp",
         },
         ---@module "blink.cmp"
         ---@type blink.cmp.Config
@@ -53,15 +60,7 @@ return {
                 ["<CR>"] = { "accept", "fallback" },
             },
             sources = {
-                default = { "lsp", "buffer", "snippets", "path", "copilot" },
-                providers = {
-                    copilot = {
-                        name = "copilot",
-                        module = "blink-copilot",
-                        score_offset = 100,
-                        async = true,
-                    },
-                },
+                default = { "lsp", "buffer", "snippets", "path" },
             },
         },
         keys = {
@@ -77,10 +76,4 @@ return {
             },
         },
     },
-
-    {
-        "fang2hou/blink-copilot",
-        cond = not vim.g.vscode and false,
-        opts = {},
-    }
 }

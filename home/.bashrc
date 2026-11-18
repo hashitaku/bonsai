@@ -4,7 +4,9 @@ case $- in
 esac
 
 export LESSHISTFILE=-
-export MANPAGER='less -M +Gg'
+export LESS='-iRMS'
+
+export MANPAGER='less'
 export HISTCONTROL='ignoreboth'
 
 shopt -s histappend
@@ -40,16 +42,9 @@ alias eman='LC_ALL=C man'
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-alias pbcopy='xclip -selection c'
-alias pbpaste='xclip -selection c -o'
 
-# 関数・コマンド
-if type walk >/dev/null 2>&1; then
-    function lk() {
-        # type tput >/dev/null 2>&1 && tput smcup && tput home
-        cd "$(walk --icons --with-border "${@}")"
-        # type tput >/dev/null 2>&1 && tput rmcup
-    }
+if [[ "${TERM}" == "xterm-kitty" ]]; then
+    alias ssh="kitty +kitten ssh"
 fi
 
 # セットアップ
@@ -57,6 +52,7 @@ type fnm >/dev/null 2>&1 && eval "$(fnm env)"
 type fzf >/dev/null 2>&1 && eval "$(fzf --bash)" && bind -r '\ec'
 
 # 補完
+type wezterm >/dev/null 2>&1 && eval "$(wezterm shell-completion --shell bash)"
 type deno >/dev/null 2>&1 && eval "$(deno completions bash)"
 type erd >/dev/null 2>&1 && eval "$(erd --completions bash)"
 type fnm >/dev/null 2>&1 && eval "$(fnm completions --shell bash)"
@@ -65,10 +61,14 @@ type rustup >/dev/null 2>&1 && eval "$(rustup completions bash cargo)"
 type rustup >/dev/null 2>&1 && eval "$(rustup completions bash rustup)"
 type uv >/dev/null 2>&1 && eval "$(uv generate-shell-completion bash)"
 type uvx >/dev/null 2>&1 && eval "$(uvx --generate-shell-completion bash)"
+type tree-sitter >/dev/null 2>&1 && eval "$(tree-sitter complete --shell bash)"
+type warp-cli >/dev/null 2>&1 && eval "$(warp-cli generate-completions bash)"
+type wrangler >/dev/null 2>&1 && eval "$(wrangler complete bash)"
+type cf >/dev/null 2>&1 && eval "$(cf complete bash)"
 
 # プロンプト設定
 if type oh-my-posh >/dev/null 2>&1 &&
-    [[ "${TERM}" == 'xterm-256color' ]]; then
+    [[ "${TERM}" == 'xterm-256color' || "${TERM}" == 'xterm-kitty' ]]; then
     eval "$(oh-my-posh init bash --config ${XDG_CONFIG_HOME}/oh-my-posh/config.toml)"
 else
     test -f /usr/share/git/git-prompt.sh && source /usr/share/git/git-prompt.sh

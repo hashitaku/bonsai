@@ -1,6 +1,10 @@
 [Hotkey]
-# トリガーキーを押すたびに切り替える
+# トグルキーの修飾キーを押し続けたときは列挙
 EnumerateWithTriggerKeys=False
+# 入力メソッドを有効にする
+ActivateKeys=
+# 入力メソッドをオフにする
+DeactivateKeys=
 # 次の入力メソッドに切り替える
 EnumerateForwardKeys=
 # 前の入力メソッドに切り替える
@@ -11,20 +15,18 @@ EnumerateSkipFirst=False
 EnumerateGroupForwardKeys=
 # 前の入力メソッドグループに切り替える
 EnumerateGroupBackwardKeys=
-# 入力メソッドを有効にする
-ActivateKeys=
-# 入力メソッドをオフにする
-DeactivateKeys=
-# デフォルトの前ページ
+# フォールバックの前ページ
 PrevPage=
-# デフォルトの次ページ
+# フォールバックの次ページ
 NextPage=
-# デフォルトの前候補
+# フォールバックの前候補
 PrevCandidate=
-# デフォルトの次候補
+# フォールバックの次候補
 NextCandidate=
-# プリエディットの埋め込みを切り替える
+# 埋め込みプリエディットの切り替え
 TogglePreedit=
+# 修飾キーのショートカットをトリガーするための時間制限（ミリ秒）
+ModifierOnlyKeyTimeout=250
 
 [Hotkey/TriggerKeys]
 0=Zenkaku_Hankaku
@@ -37,6 +39,8 @@ TogglePreedit=
 [Behavior]
 # デフォルトで有効にする
 ActiveByDefault=False
+# フォーカス時に状態をリセット
+resetStateWhenFocusIn=No
 # 入力状態を共有する
 ShareInputState=No
 # アプリケーションにプリエディットを表示する
@@ -51,10 +55,20 @@ CompactInputMethodInformation=True
 ShowFirstInputMethodInformation=True
 # デフォルトのページサイズ
 DefaultPageSize=5
+# XKB オプションの上書き
+OverrideXkbOption=False
+# カスタム XKB オプション
+CustomXkbOption=
 # Force Enabled Addons
 EnabledAddons=
 # Force Disabled Addons
 DisabledAddons=
 # Preload input method to be used by default
 PreloadInputMethod=True
+# パスワード欄に入力メソッドを許可する
+AllowInputMethodForPassword=False
+# パスワード入力時にプリエディットテキストを表示する
+ShowPreeditForPassword=False
+# ユーザーデータを保存する間隔（分）
+AutoSavePeriod=30
 

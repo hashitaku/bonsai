@@ -4,7 +4,7 @@ on:
   push:
     branches: ["main"]
     paths:
-      - doc/arch/**
+      - doc/arch/install_arch.md
 
 jobs:
   build:
@@ -24,11 +24,10 @@ jobs:
 
       - name: build
         run: |
-          python3 doc/scripts/md2src.py doc/arch/install_arch_part1.md install_arch_part1.sh
-          python3 doc/scripts/md2src.py doc/arch/install_arch_part2.md install_arch_part2.sh
+          python3 doc/scripts/md2src.py doc/arch/install_arch.md install_arch.sh
 
       - name: archive
-        run: tar cfz install_scripts.tar.gz install_arch_part1.sh install_arch_part2.sh
+        run: tar cfz install_scripts.tar.gz install_arch.sh
 
       - name: release
         uses: softprops/action-gh-release@v2

@@ -60,6 +60,15 @@ vim.api.nvim_create_user_command("DiffOrig", function()
 
     vim.api.nvim_buf_set_lines(new_bufnr, 0, 1, true, lines)
 
+    local ft = vim.filetype.match({
+        filename = alt_file_path,
+        buf = new_bufnr,
+    })
+
+    vim.api.nvim_set_option_value("filetype", ft, {
+        buf = new_bufnr,
+    })
+
     vim.api.nvim_set_current_win(new_winnr)
     vim.cmd.diffthis()
     vim.api.nvim_set_current_win(current_winnr)
