@@ -5,6 +5,13 @@
     { "action": "read", "resource": "*", "effect": "allow" },
     { "action": "glob", "resource": "*", "effect": "allow" },
     { "action": "grep", "resource": "*", "effect": "allow" },
+    { "action": "subagent", "resource": "*", "effect": "allow" },
+    { "action": "skill", "resource": "*", "effect": "allow" },
+    { "action": "question", "resource": "*", "effect": "allow" },
+    { "action": "webfetch", "resource": "*", "effect": "allow" },
+    { "action": "websearch", "resource": "*", "effect": "allow" },
+    { "action": "opencode_list_mcp_resources", "resource": "*", "effect": "allow" },
+    { "action": "opencode_read_mcp_resource", "resource": "*", "effect": "allow" },
 
     { "action": "shell", "resource": "git status *", "effect": "allow" },
     { "action": "shell", "resource": "git diff *", "effect": "allow" },
@@ -13,8 +20,11 @@
 
     { "action": "shell", "resource": "git push *", "effect": "deny" },
 
-    { "action": "webfetch", "resource": "*", "effect": "allow" },
-    { "action": "websearch", "resource": "*", "effect": "allow" },
+    { "action": "Google_Cloud_Docs_*", "resource": "*", "effect": "allow" },
+    { "action": "MSLearn_*", "resource": "*", "effect": "allow" },
+    { "action": "Blume_*", "resource": "*", "effect": "allow" },
+    { "action": "Cloudflare_Docs_*", "resource": "*", "effect": "allow" },
+    { "action": "emdash-docs_*", "resource": "*", "effect": "allow" },
   ],
   "agents": {
     "general": {
@@ -48,6 +58,13 @@
       "emdash-docs": {
         "type": "remote",
         "url": "https://docs.emdashcms.com/mcp",
+      },
+      "Google Cloud Docs": {
+        "type": "remote",
+        "url": "https://developerknowledge.googleapis.com/mcp",
+        "headers": {
+          "X-Goog-Api-Key": "${env:GOOGLE_CLOUD_API_KEY}",
+        },
       },
     },
   },
